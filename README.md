@@ -24,6 +24,12 @@ mankon-dictionary/
 |--audio # Recordings for word and sentence pronunciation
 |--image # Functional images and definition clarifying images
 |--src # Source code for the application
+| |--aboutItems # Source code for about page
+| |--alphabetItems # Source code for Language Help page
+| |--browseItems # Source code for Browse Dictionary page
+| |--entryItems # Source code for Entry pages
+| |--headerItems # Source code for Header
+| |--homeItems # Source code for Home page
 ```
 
 ---
