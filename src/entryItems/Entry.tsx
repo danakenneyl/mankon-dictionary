@@ -6,7 +6,7 @@ function Entry() {
                     {/* <!-- Word will be inserted here --> */}
                         <strong>bɨŋə</strong>
                         <span className="entry__pos" id="posEntry"> verb</span>
-                        <img src="https://raw.githubusercontent.com/danakenneyl/MankonDictionary/main/speaker.png" alt="Speech Icon" width="30" className="word-audio-icon"/>
+                        <img src="image/speaker.png" alt="Speech Icon" width="30" className="word-audio-icon"/>
                     </div>
                     <p id="translationEntry" className="translationEntry">dance</p>
                     <p id="definitionEntry" className="definitionEntry"> (Definition would be in Mankon) to move one's body rhythmically usually to music</p>
@@ -19,7 +19,7 @@ function Entry() {
                             <ul className="list-group">
                                 <li className="list-group-item">
                                     <strong>a bɨ̂ŋ ʃìʔínɛ́</strong>
-                                    <img src="https://raw.githubusercontent.com/danakenneyl/MankonDictionary/main/speaker.png" 
+                                    <img src="image/speaker.png" 
                                         alt="Speech Icon" 
                                         width="30" 
                                         className="word-audio-icon"
@@ -30,7 +30,7 @@ function Entry() {
                                 </li>
                                 <li className="list-group-item">
                                     <strong>a bɨ́ŋɛ́</strong>
-                                    <img src="https://raw.githubusercontent.com/danakenneyl/MankonDictionary/main/speaker.png" 
+                                    <img src="image/speaker.png"
                                         alt="Speech Icon" 
                                         width="30" 
                                         className="word-audio-icon"
