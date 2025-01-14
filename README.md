@@ -1,50 +1,96 @@
-# React + TypeScript + Vite
+# Mankon Online Dictionary
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This repository contains the source code for publishing an online searchable dictionary for the Mankon language. The project is designed to provide an intuitive, user-friendly interface to explore and learn the Mankon language, offering a rich set of features for browsing, searching, and understanding word meanings, pronunciations, and example usages.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# Features
 
-## Expanding the ESLint configuration
+- Search Functionality: Quickly look up words and their translations.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- Browse by Categories: Explore words in alphabetical order.
 
-- Configure the top-level `parserOptions` property like this:
+- Pronunciation Support: Listen to audio clips for accurate pronunciation.
+- Language Support: Learn to read and write using the Mankon alphabet.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- Example Sentences: Learn through real-world contextual examples.
+
+---
+
+# Project Structure
+
+```
+mankon-dictionary/
+|--audio # Recordings for word and sentence pronunciation
+|--image # Functional images and definition clarifying images
+|--src # Source code for the application
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+---
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+# Getting Started
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+### Prerequisites
+
+- Node.js
+
+- npm
+
+### Installation
+
+1. Clone this repository:
+
 ```
+git clone https://github.com/danakenneyl/mankon-dictionary.git
+cd mankon-dictionary
+```
+
+2. Install dependencies:
+
+```
+npm install
+```
+
+### Running the Project Locally
+
+1. Start the development server:
+
+```
+npm run dev
+```
+
+2. Open your browser and navigate to the url specified in your terminal.
+
+---
+
+# Contributing
+
+We welcome contributions! Please follow these steps:
+
+1. Fork the repository.
+
+2. Create a new branch for your feature or fix:
+
+```
+git checkout -b feature-name
+```
+
+3. Commit your changes:
+
+```
+git commit -m "Add feature-name"
+```
+
+4. Push to your branch:
+
+```
+git push origin feature-name
+```
+
+5. Open a pull request.
+
+---
+
+# Acknowledgments
+
+This project is a collaborative effort to document and preserve the Mankon language, supporting its study and use in the community and beyond. Special thanks to native speakers for their invaluable input.
