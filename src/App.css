@@ -13,4 +13,9 @@ body {
   color:#000;
   min-height: 85vh;
   border-radius: 10px;
+
+}
+.notFound {
+  margin: 7% 30% 7% 30%; /*top right bottom left*/
+  font-size: x-large;
 }

@@ -8,7 +8,7 @@
     color: #000;
     margin:2% 0% 2% 2%; 
 }
-.word-audio-icon {
+.pronunciation {
     vertical-align: middle; /* Aligns the image vertically with the text */
     margin-bottom: 15px;    /* Adjust this value to fine-tune the position */
     margin-left: 2%;

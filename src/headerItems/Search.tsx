@@ -1,167 +1,95 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from "react";
+import './headerItems.css';
+import LangButton from "./LangButton";
+import { useNavigate } from "react-router-dom";
+import { DataProps } from "./Header";
 
-export interface MankonEntry {
-  partOfSpeech: string;
-  wordAudioFiles: string[];
-  translation: string[];
+export interface MankonWordInfo {
+  mankon: string;
+  english: string;
+  pos: string;
+  pronunciation: string[];
   definition: string;
   sentencesMankon: string[];
-  sentencesTranslation: string[];
-  sentencesAudioFiles: string[];
+  sentencesEnglish: string[];
+  sentencesPronunciation: string[];
 }
 
-interface DictionaryData {
-  searchMankon: {
-    [key: string]: MankonEntry;
-  };
-  searchEnglish: Array<{
-    [key: string]: string;
-  }>;
-}
+function SearchBar({ data, searchEng, setSearchEng }: DataProps) {
+    const navigate = useNavigate();
+    const [filteredData, setFilteredData] = useState<MankonWordInfo[]>([]);
+    const [inputValue, setInputValue] = useState<string>("");
 
-export interface SearchResult extends MankonEntry {
-  englishWord: string;
-  mankonWord: string;
-}
-
-export interface SearchError {
-  error: string;
-}
-
-type SearchResultOrError = SearchResult | SearchError;
-
-interface SearchProps {
-  onSearch: (result: SearchResultOrError) => void;
-}
-
-const Search: React.FC<SearchProps> = ({ onSearch }) => {
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const [isComposing, setIsComposing] = useState<boolean>(false);
-  const [suggestions, setSuggestions] = useState<Array<{ [key: string]: string }>>([]);
-  const [dictionaryData, setDictionaryData] = useState<DictionaryData>({
-    searchMankon: {},
-    searchEnglish: []
-  });
-
-  useEffect(() => {
-    const loadDictionaryData = async () => {
-      try {
-        const response = await fetch('/dictionary.json');
-        const data: DictionaryData = await response.json();
-        console.log("Loaded dictionary data:", data);
-        setDictionaryData(data);
-      } catch (error) {
-        console.error('Error loading dictionary:', error);
-      }
+    const handleFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const searchWord = event.target.value.toLowerCase();
+        setInputValue(searchWord); // Update input value for tracking
+        if (!searchWord) {
+          clearData();
+        } else {
+            const newFilter = data.filter((value) =>
+                searchEng
+                    ? value.english.toLowerCase().startsWith(searchWord) // Search in English
+                    : value.mankon.toLowerCase().startsWith(searchWord) // Search in Mankon
+            );
+            setFilteredData(newFilter);
+        }
     };
 
-    loadDictionaryData();
-  }, []);
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "Enter" && inputValue) {
+            const match = searchEng
+                ? filteredData.find((value) => value.english.toLowerCase() === inputValue)
+                : filteredData.find((value) => value.mankon.toLowerCase() === inputValue);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-
-    if (!isComposing && value.trim() !== '') {
-      const filtered = dictionaryData.searchEnglish
-        .filter(entry => {
-          const englishWord = Object.keys(entry)[0];
-          return englishWord.toLowerCase().startsWith(value.toLowerCase());
-        })
-        .slice(0, 5);
-
-      setSuggestions(filtered);
-    } else {
-      setSuggestions([]);
+            if (match) {
+                handleNavigate(searchEng ? match.english : match.mankon);
+            } else {
+              handleNotFound();
+            }
+        }
+    };
+    const clearData = () => {
+      setFilteredData([]);
+      setInputValue("");
     }
-  };
-
-  const handleCompositionStart = () => {
-    setIsComposing(true);
-  };
-
-  const handleCompositionEnd = () => {
-    setIsComposing(false);
-    // Update suggestions after composition ends
-    if (searchTerm.trim() !== '') {
-      const filtered = dictionaryData.searchEnglish
-        .filter(entry => {
-          const englishWord = Object.keys(entry)[0];
-          return englishWord.toLowerCase().startsWith(searchTerm.toLowerCase());
-        })
-        .slice(0, 5);
-
-      setSuggestions(filtered);
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && !isComposing) {
-      performSearch(searchTerm);
-      setSuggestions([]);
-    }
-  };
-
-  const handleSuggestionClick = (suggestion: { [key: string]: string }) => {
-    const englishWord = Object.keys(suggestion)[0];
-    setSearchTerm(englishWord);
-    performSearch(englishWord);
-    setSuggestions([]);
-  };
-
-  const performSearch = (term: string) => {
-    const englishEntry = dictionaryData.searchEnglish.find(
-      entry => Object.keys(entry)[0].toLowerCase() === term.toLowerCase()
-    );
-
-    if (!englishEntry) {
-      onSearch({ error: 'Word not found in English dictionary' });
-      return;
+    const handleNavigate = (word: string) => {
+        clearData();
+        navigate(`/mankon-dictionary/entry/${word}`);
+    };
+    const handleNotFound = () => {
+      clearData();
+      navigate("/mankon-dictionary/page-does-not-exist");
     }
 
-    const mankonWord = englishEntry[Object.keys(englishEntry)[0]];
-    const mankonEntry = dictionaryData.searchMankon[mankonWord];
-
-    if (!mankonEntry) {
-      onSearch({ error: 'Mankon translation not found' });
-      return;
-    }
-
-    onSearch({
-      englishWord: term,
-      mankonWord,
-      ...mankonEntry
-    });
-  };
-
-  return (
-    <div className="header__search-bar">
-      <input
-        type="text"
-        className="search-input"
-        placeholder="Search in English..."
-        value={searchTerm}
-        onChange={handleInputChange}
-        onCompositionStart={handleCompositionStart}
-        onCompositionEnd={handleCompositionEnd}
-        onKeyDown={handleKeyDown}
-      />
-      <div id="searchResults" className={suggestions.length > 0 ? '' : 'hidden'}>
-        {suggestions.map((suggestion, index) => {
-          const englishWord = Object.keys(suggestion)[0];
-          return (
-            <div
-              key={index}
-              className="p-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => handleSuggestionClick(suggestion)}
-            >
-              {englishWord} - {suggestion[englishWord]}
+    return (
+        <div className="search">
+            <div className="searchInputs">
+                <input
+                    type="text"
+                    placeholder={searchEng ? "Search in English" : "Search in Mankon"}
+                    value={inputValue}
+                    onChange={handleFilter}
+                    onKeyDown={handleKeyDown} // Handle Enter key press
+                />
+                <div className="searchIcon">
+                    <LangButton searchEng={searchEng} setSearchEng={setSearchEng} />
+                </div>
             </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
+            {filteredData.length > 0 && (
+                <div className="dataResult">
+                    {filteredData.slice(0, 5).map((value, index) => (
+                        <div
+                            key={index}
+                            className="dataItem"
+                            onClick={() => handleNavigate(searchEng ? value.english : value.mankon)}
+                        >
+                            <p>{searchEng ? value.english : value.mankon}</p>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+}
 
-export default Search;
+export default SearchBar;

@@ -6,7 +6,7 @@ interface ButtonProps {
     to: string;
 }
 
-function Button({pageName, to}: ButtonProps) {
+function NavButton({pageName, to}: ButtonProps) {
     const navigate = useNavigate();
 
     const handleClick = () => {
@@ -16,4 +16,4 @@ function Button({pageName, to}: ButtonProps) {
     return <button className="nav-button" onClick={handleClick}>{pageName}</button>;
 }
 
-export default Button
+export default NavButton

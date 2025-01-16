@@ -11,7 +11,7 @@ function Emblem({to}:ButtonProps) {
         navigate(to);
     };
     return <img 
-                src="image/MACUDAMN.jpg" 
+                src="public/image/MACUDAMN.jpg"
                 alt="Company Emblem" 
                 className="emblem"
                 onClick={handleClick}

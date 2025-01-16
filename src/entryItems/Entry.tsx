@@ -1,44 +1,47 @@
+import { useParams } from "react-router-dom";
 import "./entryItems.css"
-function Entry() {
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import { MankonWordInfo} from '../headerItems/Search';
+
+interface EntryProps {
+    data: MankonWordInfo[];
+}
+
+function Entry({data}:EntryProps) {
+    const { id } = useParams<{ id: string }>();
+    const value = data.find((item) => item.mankon === id || item.english === id);
+    if (!value) {
+        return <div>Word not found</div>;
+    }
+    
     return <center>
                 <div className="content"> 
                     <div className="entry__word" id="wordEntry">
                     {/* <!-- Word will be inserted here --> */}
-                        <strong>bɨŋə</strong>
-                        <span className="entry__pos" id="posEntry"> verb</span>
-                        <img src="image/speaker.png" alt="Speech Icon" width="30" className="word-audio-icon"/>
+                        <strong>{value.mankon}</strong>
+                        <span className="entry__pos" id="posEntry">{value.pos}</span>
+                        <VolumeUpIcon className="pronunciation"/>
                     </div>
-                    <p id="translationEntry" className="translationEntry">dance</p>
-                    <p id="definitionEntry" className="definitionEntry"> (Definition would be in Mankon) to move one's body rhythmically usually to music</p>
+                    <p id="translationEntry" className="translationEntry">{value.english}</p>
+                    <p id="definitionEntry" className="definitionEntry"> {value.definition}</p>
                     <div className="card">
                     
                         <div className="card-header">
                                 Sentence Examples
                         </div>
                         <div className="card-body">
-                            <ul className="list-group">
-                                <li className="list-group-item">
-                                    <strong>a bɨ̂ŋ ʃìʔínɛ́</strong>
-                                    <img src="image/speaker.png" 
-                                        alt="Speech Icon" 
-                                        width="30" 
-                                        className="word-audio-icon"
-                                    />
-                                    <div className="emphasized-text">
-                                        <em>She dances well</em>
-                                    </div>
-                                </li>
-                                <li className="list-group-item">
-                                    <strong>a bɨ́ŋɛ́</strong>
-                                    <img src="image/speaker.png"
-                                        alt="Speech Icon" 
-                                        width="30" 
-                                        className="word-audio-icon"
-                                    />
-                                    <div className="emphasized-text">
-                                        <em>She dances </em>
-                                    </div>
-                                </li>
+                            <ul className="list-group"> 
+                            {value.sentencesMankon.map((example, index) => {
+                                return (
+                                    <li className="list-group-item" key={index}>
+                                        <strong>{example}</strong>
+                                        <VolumeUpIcon className="pronunciation" />
+                                        <div className="emphasized-text">
+                                            <em>{value.sentencesEnglish[index]}</em> 
+                                        </div>
+                                    </li>
+                                );
+                            })}
                             </ul>
                         </div>
                         
