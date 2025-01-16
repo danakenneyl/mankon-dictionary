@@ -1,12 +1,12 @@
 import "./headerItems.css";
 import { useNavigate } from "react-router-dom";
 
-interface ButtonProps {
+interface NavButtonParams {
     pageName: string;
     to: string;
 }
 
-function NavButton({pageName, to}: ButtonProps) {
+function NavButton({pageName, to}: NavButtonParams) {
     const navigate = useNavigate();
 
     const handleClick = () => {

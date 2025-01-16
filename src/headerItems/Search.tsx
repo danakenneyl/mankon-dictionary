@@ -2,20 +2,11 @@ import React, { useState } from "react";
 import './headerItems.css';
 import LangButton from "./LangButton";
 import { useNavigate } from "react-router-dom";
-import { DataProps } from "./Header";
+import { SearchParams  } from "../Datatypes";
+import { MankonWordInfo } from "../Datatypes";
 
-export interface MankonWordInfo {
-  mankon: string;
-  english: string;
-  pos: string;
-  pronunciation: string[];
-  definition: string;
-  sentencesMankon: string[];
-  sentencesEnglish: string[];
-  sentencesPronunciation: string[];
-}
 
-function SearchBar({ data, searchEng, setSearchEng }: DataProps) {
+function SearchBar({ data, searchEng, setSearchEng }: SearchParams) {
     const navigate = useNavigate();
     const [filteredData, setFilteredData] = useState<MankonWordInfo[]>([]);
     const [inputValue, setInputValue] = useState<string>("");
