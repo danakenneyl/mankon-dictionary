@@ -21,15 +21,18 @@ This repository contains the source code for publishing an online searchable dic
 
 ```
 mankon-dictionary/
-|--audio # Recordings for word and sentence pronunciation
-|--image # Functional images and definition clarifying images
-|--src # Source code for the application
-| |--aboutItems # Source code for about page
-| |--alphabetItems # Source code for Language Help page
-| |--browseItems # Source code for Browse Dictionary page
-| |--entryItems # Source code for Entry pages
-| |--headerItems # Source code for Header
-| |--homeItems # Source code for Home page
+|--public
+| |--audio            # Recordings for word and sentence pronunciation
+| |--image            # Functional images and definition clarifying images
+|--src
+| |--aboutItems       # About MACUDA-MN / MACUDA-A page
+| |--alphabetItems    # Language Resources
+| |--assets           # the dictionary
+| |--browseItems      # Dictionary rendered to screen in alphabetical order
+| |--entryItems       # Basic template for Entry pages
+| |--headerItems      # Elements that appear in the Header
+| |--homeItems        # Home page
+| |--notFoundItems    # Source
 ```
 
 ---
