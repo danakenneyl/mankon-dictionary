@@ -11,7 +11,7 @@ function Emblem({to}:ButtonProps) {
         navigate(to);
     };
     return <img 
-                src="public/image/MACUDAMN.jpg"
+                src="/mankon-dictionary/image/MACUDAMN.jpg"
                 alt="Company Emblem" 
                 className="emblem"
                 onClick={handleClick}
