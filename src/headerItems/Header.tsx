@@ -1,35 +1,24 @@
-import Button from "./Button"
+import NavButton from "./NavButton"
 import Emblem from "./Emblem"
 import Search from "./Search"
 import Title from "./Title"
-import { SearchResult, SearchError } from './Search';
-import { useNavigate } from "react-router-dom";
+import BrowseMenu from "./BrowseMenu"
+import { SearchParams } from "../Datatypes"
 
-function Header() {
-  const navigate = useNavigate();
-  const handleSearch = (result: SearchResult | SearchError) => {
-    if ('error' in result) {
-      console.error(result.error);
-      return;
-    }
-    navigate("/entry");
-    // Now TypeScript knows all the properties available in result
-    console.log(result.englishWord);    // The English word searched
-    console.log(result.mankonWord);     // The Mankon translation
-    console.log(result.definition);     // The Mankon definition
-    console.log(result.wordAudioFiles); // Array of audio files
-    // etc.
-  };
+
+function Header({data, searchEng, setSearchEng}:SearchParams) {
     return <div className = "header">
                 <Emblem to="/mankon-dictionary/" />
                 <Title/>
-                <Search onSearch={handleSearch} />
+                <Search data = {data} searchEng={searchEng} setSearchEng={setSearchEng} />
                 <div className="nav-buttons">
-                  <Button pageName="About" to="/mankon-dictionary/about" />
-                  <Button pageName="Browse Dictionary" to="/mankon-dictionary/browse-dictionary" />
-                  <Button pageName="Language Help" to="/mankon-dictionary/language-help" />
+                  <NavButton pageName="About" to="/mankon-dictionary/about/" />
+                  <BrowseMenu/>
+                  <NavButton pageName="Language Help" to="/mankon-dictionary/language-help" />
               </div>
             </div>
 }
 
 export default Header
+
+{/* <NavButton pageName="Browse Dictionary" to="/mankon-dictionary/browse-dictionary" /> */}

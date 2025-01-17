@@ -1,27 +1,53 @@
 import { Link } from 'react-router-dom';
-function Browse() {
-    return <center>
-                <div className="content"> 
-                    <ul className="list-group">
-                        <li className="list-group-item">A</li>
-                        <li className="list-group-item">
-                            B
+import { JsonData } from '../Datatypes';
+import { useParams } from "react-router-dom";
+
+// Alphabet definitions
+const englishAlphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+const mankonAlphabet = ["A", "B", "Tʃ", "Ɣ", "Ɨ", "K", "L", "M", "N", "Ŋ", "O", "Ʃ", "T", "W", "Y", "Z", "Ʒ"];
+
+function Browse({ data }: JsonData) {
+    const { id } = useParams<{ id: string }>();
+    const isEnglish = id === "browse-english";
+
+    // Choose the correct alphabet and sorting key
+    const alphabet = isEnglish ? englishAlphabet : mankonAlphabet;
+    const key = isEnglish ? "english" : "mankon";
+
+    // Group words by their starting letter
+    const groupedWords = data.reduce((acc, entry) => {
+        const firstLetter = entry[key][0].toUpperCase(); // Extract first letter
+        if (!acc[firstLetter]) acc[firstLetter] = []; // Initialize if empty
+        acc[firstLetter].push(entry);
+        return acc;
+    }, {} as Record<string, typeof data>);
+
+    return (
+        <center>
+            <div className="content">
+                <ul className="list-group">
+                    {alphabet.map(letter => (
+                        <li key={letter} className="list-group-item">
+                            {letter}
                             <div className="list-group">
-                                <Link to="/mankon-dictionary/entry" className="list-group-item list-group-item-action">
-                                    <div>
-                                        <h5 className="mb-1">bɨŋə v.</h5>
-                                    </div>
-                                    <p className="mb-1">dance</p>
-                                    {/* <small>And some small print.</small> */}
-                                </Link>
+                                {groupedWords[letter]?.map(entry => (
+                                    <Link key={entry.mankon} to={`/mankon-dictionary/entry/${entry.mankon}`} className="list-group-item list-group-item-action">
+                                        <div>
+                                            <h5 className="mb-1">{isEnglish ? entry.english : entry.mankon} ({entry.pos})</h5>
+                                            <p className="mb-1">{isEnglish ? entry.mankon : entry.english}</p>
+                                        </div>
+                                    </Link>
+                                ))}
                             </div>
                         </li>
-                        <li className="list-group-item">Tʃ</li>
-                        <li className="list-group-item">Ɣ</li>
-                        <li className="list-group-item">Ɨ</li>
-                    </ul>
-                </div>
-            </center>
+                    ))}
+                </ul>
+            </div>
+        </center>
+    );
 }
 
-export default Browse
+export default Browse;
+
+
+
