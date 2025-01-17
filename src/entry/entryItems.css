@@ -1,0 +1,53 @@
+.entry__word strong {
+  font-size: 300%;
+  color: #009E58;
+  margin:2%; 
+}
+
+.entry__pos {
+  font-size: 200%;
+  color: #000;
+  margin:2% 0% 2% 2%; 
+}
+
+.pronunciation {
+  vertical-align: middle; 
+  margin-bottom: 15px;    
+  margin-left: 2%;
+}
+
+.translationEntry, .definitionEntry {
+  margin:2%; 
+  line-height: .1;
+  font-size: larger;
+}
+
+.card {
+  width: 95%;
+  margin: 2%;
+  color: #000000; 
+  border: 1px solid rgba(212, 8, 42, 0.8); 
+  border-radius: 8px; 
+}
+
+.card-header {
+  background-color: rgba(212, 8, 42, 0.4); 
+}
+
+.card-body {
+  background-color: rgba(212, 8, 42, 0.3); 
+}
+
+.card-body strong {
+  line-height: .1;
+  font-size: large;
+}
+
+.list-group-item img {
+  margin: 2%;
+}
+
+.emphasized-text {
+  line-height: .5;
+  margin-bottom: 15px;
+}
