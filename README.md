@@ -8,7 +8,7 @@ This repository contains the source code for publishing an online searchable dic
 
 - Search Functionality: Quickly look up words and their translations.
 
-- Browse by Categories: Explore words in alphabetical order.
+- Browse by Language: Explore words in alphabetical order.
 
 - Pronunciation Support: Listen to audio clips for accurate pronunciation.
 - Language Support: Learn to read and write using the Mankon alphabet.
