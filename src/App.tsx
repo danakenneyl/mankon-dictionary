@@ -1,15 +1,15 @@
-import Header from "./headerItems/Header"
-import HomePage from "./homeItems/HomePage"
-import Alphabet from "./alphabetItems/Alphabet"
-import Browse from "./browseItems/Browse";
-import About from "./aboutItems/About";
-import Entry from "./entryItems/Entry";
-import './App.css'
 import { BrowserRouter as Router, Route, Routes} from "react-router-dom";
-import dictionary from './assets/data/dictionary.json';
-import { useState } from "react";
-import NotFound from "./notFoundItems/NotFound";
 import { MankonWordInfo } from "./Datatypes";
+import { useState } from "react";
+import './App.css'
+import About from "./about/About";
+import Alphabet from "./alphabet/Alphabet"
+import Browse from "./browse/Browse";
+import Entry from "./entry/Entry";
+import Header from "./header/Header"
+import HomePage from "./home/HomePage"
+import NotFound from "./notFound/NotFound";
+import dictionary from './assets/dictionary.json';
 
 function App() {
   const dict:MankonWordInfo[] = dictionary; 
