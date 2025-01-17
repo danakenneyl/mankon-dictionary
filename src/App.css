@@ -1,10 +1,10 @@
 body {
-  background-color: #000;
-  color: #ffffff;
-  margin: 0;
-  font-family: "Charis SIL", serif;
+  background-color: #000;           /*Website's default background color*/
+  color: #ffffff;                   /*Website's default text color*/
+  margin: 0;        
+  font-family: "Charis SIL", serif;   /*Website's default font*/
 }
-.content {
+.content {                            /*Design specs for main white page on each webpage*/
   display: flex;
   flex-direction: column;
   width: 72%;
@@ -13,4 +13,9 @@ body {
   color:#000;
   min-height: 85vh;
   border-radius: 10px;
+
+}
+.notFound {                           /*Design specs for when searched word does not exist*/
+  margin: 7% 30% 7% 30%;              /*top right bottom left*/
+  font-size: x-large;
 }
