@@ -28,6 +28,7 @@ mankon-dictionary/
 | |--aboutItems       # About MACUDA-MN / MACUDA-A page
 | |--alphabetItems    # Language Resources
 | |--assets           # the dictionary
+| | |--data           # Dictionary json file and notes.txt for json guidance
 | |--browseItems      # Dictionary rendered to screen in alphabetical order
 | |--entryItems       # Basic template for Entry pages
 | |--headerItems      # Elements that appear in the Header
