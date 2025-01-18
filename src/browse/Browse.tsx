@@ -24,6 +24,7 @@ function Browse({ data }: JsonData) {
 
   return (
     <center>
+      <div className="content-wrapper">
       <div className="content">
         <ul className="list-group">
           {alphabet.map(letter => (
@@ -42,6 +43,7 @@ function Browse({ data }: JsonData) {
             </li>
           ))}
         </ul>
+      </div>
       </div>
     </center>
   );
