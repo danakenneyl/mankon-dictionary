@@ -58,7 +58,7 @@ html, body {
   }
   
   .content-wrapper {
-    top: 140px; /* Match navbar height */
+    top: 300px; /* Match navbar height */
     padding: 10px;
   }
   

@@ -13,7 +13,7 @@ function NavButton({pageName, to}: NavButtonParams) {
     navigate(to);
   };
   
-  return <button className="nav-button" onClick={() => handleClick}>{pageName}</button>;
+  return <button className="nav-button" onClick={handleClick}>{pageName}</button>;
 }
 
 export default NavButton
