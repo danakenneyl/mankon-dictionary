@@ -1,87 +1,109 @@
-/* Header Background */
-.header {
-  background-color: #000000;
+/* Fix navbar width and ensure it spans the entire screen */
+.navbar {
+  background-color: black;
+  height: 180px; /* Fixed height instead of vh */
+  width: 100%;
   display: flex;
-  flex-direction: row;
   align-items: center;
-  justify-content: space-between; 
-  width: 100%; 
+  justify-content: space-between; /* Space out the elements: logo/title on left, buttons on right */
+  padding: 0 20px; /* Padding on both sides */
 }
 
-/* MACUDA-MN Logo */
-img.emblem {
-  width: 20vh;
-  max-width: 12%; 
-  max-height: 12%; 
-  margin: 1%;
+/* Ensure brand container stays together on the left */
+.brand-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-shrink: 0; /* Prevent logo/title from shrinking */
+}
+
+/* Fix logo scaling and ensure text is visible */
+.logo {
+  height: 150px;
+  width: 150px;
   border: 3px solid #E87200;
 }
 
-/* Dictionary's Name' */
+/* Ensure title is visible next to the logo */
 .title {
   display: flex;
   flex-direction: column;
-  font-family: "Charis SIL", serif; 
-  color: #E87200; 
-  font-size:x-large;
+  color: #E87200;
+  font-size: 1.3rem;
   font-weight: bold;
-  align-items: center;
+  line-height: 1.2;
+  font-family: "Charis SIL", serif;
+  white-space: nowrap;
 }
 
-/* Search Bar Components*/
+.title-line2 {
+  text-align: center; /* Ensures "Dictionary" is aligned correctly */
+}
 
+/* Search Bar */
 .search {
-  margin: 0.5%;                 /* Control spacing between title and search bar */
   display: flex;
-  flex-grow: 1; 
-  position: relative; 
-  width: 10%;
+  flex-grow: 1;
+  position: relative;
+  width: 20%;
+  min-width: 200px;
+  max-height: 80px;
+  min-height: 79px;
 }
 
 .searchInputs {
   display: flex;
-  flex-grow: 1; 
-  padding: 0;
+  flex-grow: 1;
   border-radius: 4px;
   border: 2px solid #E87200;
-  border-radius: 4px;
-  margin: 2%;
-  width: 100%; 
-  position: relative;           /* Make `.dataResult` relative to this */
+  margin: 3%;
+  width: 100%;
+  position: relative;
+  max-height: 80px;
+  min-height: 60px;
 }
 
+/* Adjust search input for better usability */
 .search input {
   background-color: white;
   color: black;
-  border: 0;
-  border-radius: 2px;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  font-size: 18px;
-  padding: 15px;
-  flex-grow: 1; 
-  width: auto; 
+  border: none;
+  font-size: 16px;
+  padding: 10px;
+  width: 100%;
 }
 
-.search input::placeholder {
-  color: gray; 
-  opacity: 1;  
-}
-
-input:focus {
+.search input:focus {
   outline: none;
 }
-
+/* The MNK/ENG button */
+.chooseLang {
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  padding: 10%;
+  font-size: 18px;
+}
+/* The MNK/ENG button */
+.searchIcon {                 
+  color: black;
+  background-color: white;
+  display: grid;
+  place-items: center;
+  padding: 1% 3% 1% 1%;
+}
 .dataResult {
   position: absolute;
   top: 95%;
-  left: 2%;
-  width: 100%;                  /* Match the width of `.searchInputs` */
+  left: 3%;
+  width: 100%;                  /* Match the width of .searchInputs */
   max-height: 250px;
   background-color: white;
-  z-index: 10;
+  z-index: 10002;
   overflow-y: auto;
-  width: 96%;
+  width: 94%;
   font-size: large;
   justify-content: center;
   border: 2px solid #083e88; 
@@ -111,40 +133,47 @@ a {
 a:hover {
   background-color: lightgrey;
 }
-
-/* The MNK/ENG button */
-.searchIcon {                 
-  color: black;
-  background-color: white;
-  display: grid;
-  place-items: center;
-  font-size: 40px;
+/* Hamburger button styling */
+.navbar .navbar-toggler {
+  border: none !important;
+  padding: 0 !important;
+  width: 2.5em !important;
+  height: 2em !important;
+  margin-right: 1em !important;
+  box-shadow: none !important;
+  z-index: 1001; /* Ensure it stays above the menu */
 }
 
-/* The MNK/ENG button cont. */
-.chooseLang {
-  color: white;
-  border: none;
-  border-radius: 5px; 
-  cursor: pointer; 
-  transition: background-color 0.3s ease; 
-  padding: 10px;
-  margin-right: 20%;
-  line-height: 1.2;
-  font-size: 25px;
+.navbar .navbar-toggler-icon {
+  background-color: #E87200 !important; /* Set background color to orange */
+  width: 100% !important;
+  height: 100% !important;
+  background-size: contain !important;
+  border-radius: 5px !important;
 }
 
-/* Navigation to other pages */
+/* Remove focus outlines */
+.navbar .navbar-toggler:focus,
+.navbar .navbar-toggler-icon:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+/* Navigation Buttons */
+.nav {
+  display: flex;
+  gap: 10px; /* Adds space between items in the navbar */
+  align-items: center; /* Align items vertically */
+  justify-content: flex-end; /* Aligns buttons to the right */
+  flex-shrink: 0; /* Prevent nav from shrinking */
+}
 
 .nav-buttons {
   display: flex;
-  gap: 1rem;
-  margin-left: auto; 
-  margin-right: 2%;
+  flex-wrap: wrap;
 }
 
 .nav-button {
-  padding: 0.5rem 1rem;
+  padding: 0.5rem .5rem;
   background-color: #E87200;
   color: white;
   border: 2px solid white;
@@ -155,11 +184,10 @@ a:hover {
 }
 
 .nav-button:hover {
-  background-color: #000000 !important;
-}  
+  background-color: black !important;
+}
 
-/* Specialized navigation for browse dicitonary */
-
+/* Dropdown Navigation */
 .browse {
   padding: 0.5rem 1rem;
   background-color: #E87200;
@@ -173,26 +201,69 @@ a:hover {
 
 .dropdown .browse:hover {
   background-color: black !important;
-  color: white;
-  border: 2px solid white;
-  margin: 0;
 }
 
 .browse:focus,
 .browse:active,
-.dropdown.show,
-.browse {
+.dropdown.show .browse {
   background-color: #E87200;
-  color: white !important;
-  border: 2px solid white !important;
-  box-shadow: none !important;
+  border-color: white;
 }
 
+/* Ensure Dropdown Menu Stays Visible */
 .dropdown-menu {
-  top: -5% !important; 
+  top: 95% !important;
+  position: absolute;
+  z-index: 1000;
 }
 
 .arrow::after {
   display: none !important;
   margin: 0;
+}
+
+/* Media query for smaller screens (max-width) */
+@media (max-width: 768px) {
+  /* Stack logo, title, and search bar vertically */
+  .navbar {
+    flex-direction: column; /* Stack elements vertically */
+    height: auto; /* Allow the navbar to adjust based on content */
+    padding: 10px; /* Adjust padding for better fit */
+  }
+
+  .logo {
+    max-height: 120px;
+    max-width: 120px;
+    margin: 0 auto 10px auto; /* Center logo */
+  }
+
+  .title {
+    font-size: 1.2rem;
+    text-align: center;
+    margin: 10px 10px;
+  }
+
+  .search {
+    width: 80%;
+    margin-top: 20px;
+  }
+
+  .searchInputs {
+    width: 100%;
+  }
+
+  .navbar-toggler {
+    margin-top: 10px;
+  }
+}
+
+/* Extra handling for very small screens */
+@media (max-width: 480px) {
+  .navbar {
+    padding: 5px;
+  }
+
+  .search {
+    width: 90%;
+  }
 }

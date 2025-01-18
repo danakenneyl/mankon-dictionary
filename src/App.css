@@ -1,21 +1,69 @@
-body {
-  background-color: #000;           /*Website's default background color*/
-  color: #ffffff;                   /*Website's default text color*/
-  margin: 0;        
-  font-family: "Charis SIL", serif;   /*Website's default font*/
+/* Base styles */
+html, body {
+  background-color: black;
+  margin: 0;
+  padding: 0;
+  font-family: "Charis SIL", serif;
+  min-height: 100%;
 }
-.content {                            /*Design specs for main white page on each webpage*/
+
+/* Fixed navbar */
+.navbar {
+  position: fixed;
+  width: 100%;
+  height: 180px; /* Fixed height instead of viewport units */
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+/* Content wrapper */
+.content-wrapper {
+  position: fixed;
+  top: 180px; /* Match navbar height */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
   display: flex;
-  flex-direction: column;
-  width: 72%;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Content section */
+.content {
+  width: 1000px; /* Fixed width */
   text-align: left;
   background-color: #ffffff;
-  color:#000;
-  min-height: 85vh;
+  color: #000;
   border-radius: 10px;
-
+  padding: 20px;
+  margin-bottom: 20px;
+  height: fit-content;
+  min-height: 1300px;
 }
-.notFound {                           /*Design specs for when searched word does not exist*/
-  margin: 7% 30% 7% 30%;              /*top right bottom left*/
-  font-size: x-large;
+
+/* Tablet breakpoint */
+@media (max-width: 1100px) {
+  .content {
+    width: 85%;
+  }
+}
+
+/* Mobile breakpoint */
+@media (max-width: 768px) {
+  .navbar {
+    height: 140px; /* Slightly smaller for mobile */
+  }
+  
+  .content-wrapper {
+    top: 140px; /* Match navbar height */
+    padding: 10px;
+  }
+  
+  .content {
+    width: 95%;
+    padding: 15px;
+  }
 }

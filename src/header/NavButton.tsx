@@ -4,9 +4,10 @@ import "./headerItems.css";
 interface NavButtonParams {
   pageName: string;
   to: string;
+  onClick?: () => void; 
 }
 
-function NavButton({pageName, to}: NavButtonParams) {
+function NavButton({pageName, to, onClick}: NavButtonParams) {
   const navigate = useNavigate();
   // Directs user to new webpage 
   const handleClick = () => {

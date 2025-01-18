@@ -20,6 +20,7 @@ function Entry({ data }: JsonData) {
 
   return (
     <center>
+      <div className="content-wrapper">
       <div className="content">
         <div className="entry__word" id="wordEntry">
           <strong>{value.mankon}</strong>
@@ -39,7 +40,7 @@ function Entry({ data }: JsonData) {
             <ul className="list-group">
               {value.sentencesMankon.map((example, index) => (
                 <li className="list-group-item" key={index}>
-                  <strong>{example}</strong>
+                  <strong className="mankonExample">{example}</strong>
                   {value.sentencesPronunciation?.[index] && (
                     <VolumeUpIcon 
                       className="pronunciation" 
@@ -47,8 +48,8 @@ function Entry({ data }: JsonData) {
                       style={{ cursor: "pointer" }}
                     />
                   )}
-                  <div className="emphasized-text">
-                    <em>{value.sentencesEnglish[index]}</em>
+                  <div>
+                    <em className="englishExample">{value.sentencesEnglish[index]}</em>
                   </div>
                 </li>
               ))}
@@ -56,8 +57,9 @@ function Entry({ data }: JsonData) {
           </div>
         </div>
       </div>
+      </div>
     </center>
   );
 }
 
-export default Entry;
+export default Entry
