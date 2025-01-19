@@ -10,12 +10,12 @@ import { Link } from 'react-router-dom';
 function Header({data, searchEng, setSearchEng}:SearchParams) {
 
 return (
-  <Navbar expand="xl" className="navbar">
+  <Navbar expand="xl" className="navbar" data-bs-theme="dark">
     <Navbar.Brand className="brand-container">
       <Link className="toHome" to="/mankon-dictionary/">
         <img
           alt=""
-          src="https://danakenneyl.github.io/mankon-dictionary/image/MACUDAMN.jpg"
+          src="https://danakenneyl.github.io/mankon-dictionary/image/MACUDAMN.png"
           className="logo"
         />
       </Link>
