@@ -1,27 +1,16 @@
-/* Fix navbar width and ensure it spans the entire screen */
-.navbar {
-  background-color: black;
-  height: 180px; /* Fixed height instead of vh */
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between; /* Space out the elements: logo/title on left, buttons on right */
-  padding: 0 20px; /* Padding on both sides */
-}
-
 /* Ensure brand container stays together on the left */
 .brand-container {
   display: flex;
   align-items: center;
-  gap: 20px;
-  flex-shrink: 0; /* Prevent logo/title from shrinking */
+  gap: 10px; /* Space between logo and title */
 }
-
+.toHome:hover {
+  background-color: black;
+}
 /* Fix logo scaling and ensure text is visible */
 .logo {
-  height: 150px;
-  width: 150px;
-  border: 3px solid #E87200;
+  max-height: 100px;
+  max-width: 100px;
 }
 
 /* Ensure title is visible next to the logo */
@@ -29,15 +18,13 @@
   display: flex;
   flex-direction: column;
   color: #E87200;
-  font-size: 1.3rem;
-  font-weight: bold;
   line-height: 1.2;
   font-family: "Charis SIL", serif;
   white-space: nowrap;
+  text-align: center;
 }
-
-.title-line2 {
-  text-align: center; /* Ensures "Dictionary" is aligned correctly */
+.title-line1, .title-line2 {
+  font-size: 1.6rem; /* Ensure both lines inherit the intended size */
 }
 
 /* Search Bar */
@@ -47,7 +34,7 @@
   position: relative;
   width: 20%;
   min-width: 200px;
-  max-height: 80px;
+  max-width: 500px;
   min-height: 79px;
 }
 
@@ -97,7 +84,7 @@
 }
 .dataResult {
   position: absolute;
-  top: 95%;
+  top: 89%;
   left: 3%;
   width: 100%;                  /* Match the width of .searchInputs */
   max-height: 250px;
@@ -105,10 +92,9 @@
   z-index: 10002;
   overflow-y: auto;
   width: 94%;
-  font-size: large;
-  justify-content: center;
-  border: 2px solid #083e88; 
   border-radius: 4px;
+  border: 2px solid #083e88; 
+  justify-content: center;
 }
 
 .dataResult::-webkit-scrollbar {
@@ -117,23 +103,23 @@
 
 .dataResult .dataItem {
   width: 100%;
-  height: 50px;
+  height: 30px;
+  padding-top: 15px;
   display: flex;
   align-items: center;
   color: black;
 }
-
+.dataItem.selected {
+  background-color: rgb(230, 230, 230);
+  border-radius: 4px;
+}
+.dataItem:hover {
+  background-color: rgb(230, 230, 230);
+}
 .dataItem p {
   margin-left: 10px;
 }
 
-a {
-  text-decoration: none;
-}
-
-a:hover {
-  background-color: lightgrey;
-}
 /* Hamburger button styling */
 .navbar .navbar-toggler {
   border: none !important;
@@ -144,7 +130,11 @@ a:hover {
   box-shadow: none !important;
   z-index: 1001; /* Ensure it stays above the menu */
 }
-
+.navbar-nav {
+  display: flex;
+  justify-content: flex-end;
+  flex: 1; /* Ensure equal spacing */
+}
 .navbar .navbar-toggler-icon {
   background-color: #E87200 !important; /* Set background color to orange */
   width: 100% !important;
@@ -182,6 +172,7 @@ a:hover {
   cursor: pointer;
   font-size: 1rem;
   transition: background-color 0.3s ease;
+  width: 100%;
 }
 
 .nav-button:hover {
@@ -224,38 +215,33 @@ a:hover {
   margin: 0;
 }
 
-/* Media query for smaller screens (max-width) */
 @media (max-width: 768px) {
-  /* Stack logo, title, and search bar vertically */
   .navbar {
     flex-direction: column; /* Stack elements vertically */
-    height: auto; /* Allow the navbar to adjust based on content */
-    padding: 10px; /* Adjust padding for better fit */
+    align-items: center;
+    height: auto;
+    padding: 10px;
+    position: relative; /* Ensures toggle can be positioned */
   }
 
-  .logo {
-    max-height: 120px;
-    max-width: 120px;
-    margin: 0 auto 10px auto; /* Center logo */
+  .navbar-toggler {
+    position: absolute;
+    top: 15px;
+    right: 15px; /* Position it in the top-right corner */
+  }
+
+  .brand-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .title {
     font-size: 1.2rem;
     text-align: center;
-    margin: 10px 10px;
   }
-
   .search {
-    width: 80%;
-    margin-top: 20px;
-  }
-
-  .searchInputs {
-    width: 100%;
-  }
-
-  .navbar-toggler {
-    margin-top: 10px;
+    width: 90%;
   }
 }
 

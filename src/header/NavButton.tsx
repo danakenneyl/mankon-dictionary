@@ -1,19 +1,21 @@
-import { useNavigate } from "react-router-dom";
-import "./headerItems.css";
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 interface NavButtonParams {
   pageName: string;
   to: string;
+  onClick?: () => void; // Optional onClick prop
 }
 
-function NavButton({pageName, to}: NavButtonParams) {
-  const navigate = useNavigate();
-  // Directs user to new webpage 
-  const handleClick = () => {
-    navigate(to);
-  };
-  
-  return <button className="nav-button" onClick={handleClick}>{pageName}</button>;
-}
+const NavButton: React.FC<NavButtonParams> = ({ pageName, to, onClick }) => {
+  return (
+    <div>
+      <Link to={to}>
+        <button className="nav-button" onClick={onClick}>{pageName}</button> 
+      </Link>
+    </div>
+  );
+};
 
-export default NavButton
+export default NavButton;
+

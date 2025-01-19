@@ -9,8 +9,8 @@ function SearchBar({ data, searchEng, setSearchEng }: SearchParams) {
   const navigate = useNavigate();
   const [filteredData, setFilteredData] = useState<MankonWordInfo[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
+  const [selectedIndex, setSelectedIndex] = useState<number>(-1); 
 
-  // Only display relevant words in drop down menu as user types search word
   const handleFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
     const searchWord = event.target.value.toLowerCase();
     setInputValue(searchWord);                         
@@ -19,18 +19,18 @@ function SearchBar({ data, searchEng, setSearchEng }: SearchParams) {
     } else {
       const newFilter = data.filter((value) =>
         searchEng
-        // Search in English
-        ? value.english.toLowerCase().startsWith(searchWord) 
-        // Search in Mankon   
-        : value.mankon.toLowerCase().startsWith(searchWord)     
+          ? value.english.toLowerCase().startsWith(searchWord) // Filter in English
+          : value.mankon.toLowerCase().startsWith(searchWord)     // Filter in Mankon
       );
-      setFilteredData(newFilter);
+      setFilteredData(newFilter); // Set the filtered data
+      setSelectedIndex(-1); // Reset selection
     }
   };
-  // Initiate search when user hits enter
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     // Don't search if search bar is empty
-    if (event.key === "Enter" && inputValue) {
+    if (inputValue === "") return;
+  
+    if (event.key === "Enter") {
       const match = searchEng
         ? filteredData.find((value) => value.english.toLowerCase() === inputValue)
         : filteredData.find((value) => value.mankon.toLowerCase() === inputValue);
@@ -39,8 +39,21 @@ function SearchBar({ data, searchEng, setSearchEng }: SearchParams) {
       } else {
         handleNotFound();
       }
+    } else if (event.key === "ArrowDown" && selectedIndex < filteredData.length - 1) {
+      // Move selection down
+      const newIndex = selectedIndex + 1;
+      setSelectedIndex(newIndex);
+      setInputValue(searchEng ? filteredData[newIndex].english : filteredData[newIndex].mankon); // Update input value
+    } else if (event.key === "ArrowUp" && selectedIndex > 0) {
+      // Move selection up
+      const newIndex = selectedIndex - 1;
+      setSelectedIndex(newIndex);
+      setInputValue(searchEng ? filteredData[newIndex].english : filteredData[newIndex].mankon); // Update input value
     }
-};
+  };
+  
+
+
   // Dropbox disappears after search
   const clearData = () => {
     setFilteredData([]);
@@ -72,18 +85,18 @@ function SearchBar({ data, searchEng, setSearchEng }: SearchParams) {
         </div>
       </div>
       {filteredData.length > 0 && (
-        <div className="dataResult">
-          {filteredData.slice(0, 5).map((value, index) => (
-            <div
-              key={index}
-              className="dataItem"
-              onClick={() => handleNavigate(searchEng ? value.english : value.mankon)}
-            >
-              <p>{searchEng ? value.english : value.mankon}</p>
+            <div className="dataResult">
+              {filteredData.slice(0, 5).map((value, index) => (
+                <div
+                  key={index}
+                  className={`dataItem ${selectedIndex === index ? "selected" : ""}`} // Highlight the selected item
+                  onClick={() => handleNavigate(searchEng ? value.english : value.mankon)}
+                >
+                  <p>{searchEng ? value.english : value.mankon}</p>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      )}
+          )}
     </div>
   );
 }
