@@ -6,7 +6,7 @@ import NavButton from '../header/NavButton';
 import BrowseMenu from '../header/BrowseMenu';
 import { SearchParams } from '../Datatypes';
 import { Link } from 'react-router-dom';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 function Header({data, searchEng, setSearchEng}:SearchParams) {
   const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false); // State to control Offcanvas visibility
