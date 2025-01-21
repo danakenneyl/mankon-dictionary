@@ -6,43 +6,50 @@ import NavButton from '../header/NavButton';
 import BrowseMenu from '../header/BrowseMenu';
 import { SearchParams } from '../Datatypes';
 import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
 
 function Header({data, searchEng, setSearchEng}:SearchParams) {
+  const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false); // State to control Offcanvas visibility
 
+  // Toggle Offcanvas open/close
+  const handleToggle = () => setIsOffcanvasOpen(!isOffcanvasOpen);
+
+  // Close Offcanvas when a NavButton or BrowseMenu item is clicked
+  const closeOffcanvas = () => setIsOffcanvasOpen(false);
 return (
-  <Navbar expand="xl" className="navbar" data-bs-theme="dark">
+  <Navbar expand="xxl" className="navbar" data-bs-theme="dark">
     <Navbar.Brand className="brand-container">
       <Link className="toHome" to="/mankon-dictionary/">
         <img
           alt=""
-          src="https://danakenneyl.github.io/mankon-dictionary/image/MACUDAMN.png"
+          src="https://github.com/danakenneyl/mankon-dictionary/blob/main/public/image/MACUDAMN.png?raw=true"
+          // src="https://danakenneyl.github.io/mankon-dictionary/image/MACUDAMN.png"
           className="logo"
         />
       </Link>
       <div className="title">
-        <div className="title-line1">Mankon People's</div>
+        <div className="title-line1">The Mankon</div>
         <div className="title-line2">Dictionary</div>
       </div>
     </Navbar.Brand>
     <SearchBar data = {data} searchEng={searchEng} setSearchEng={setSearchEng}/>
-    <Navbar.Toggle aria-controls="navbarScroll" />
+    <Navbar.Toggle aria-controls="navbarScroll" onClick={handleToggle} />
     <Navbar.Offcanvas
             id="offcanvasNavbar-expand-md"
-            aria-labelledby="offcanvasNavbarLabel-expand-xl"
+            aria-labelledby="offcanvasNavbarLabel-expand-xxl"
             placement="end"
             className="navbar-nav"
+            show={isOffcanvasOpen} // Control Offcanvas visibility
+        onHide={() => setIsOffcanvasOpen(false)} 
           >
             <Offcanvas.Header closeButton>
-              <Offcanvas.Title id="offcanvasNavbarLabel-expand-xl">
-                Mankon People's Dictionary
-              </Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
               <Nav className="justify-content-end flex-grow-1 pe-3 nav">
-                <NavButton pageName="About" to="/mankon-dictionary/about/" />
-                <BrowseMenu/>
-                <NavButton pageName="Language Help" to="/mankon-dictionary/language-help" />
-                <NavButton pageName="Contribute" to="/mankon-dictionary/contribute" />
+                <NavButton onClick={closeOffcanvas} pageName="About" to="/mankon-dictionary/about/" />
+                <BrowseMenu onItemClick={closeOffcanvas}/>
+                <NavButton onClick={closeOffcanvas} pageName="Language Help" to="/mankon-dictionary/language-help" />
+                <NavButton onClick={closeOffcanvas} pageName="Contribute" to="/mankon-dictionary/contribute" />
               </Nav>
             </Offcanvas.Body>
           </Navbar.Offcanvas>
