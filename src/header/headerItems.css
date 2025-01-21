@@ -119,8 +119,21 @@
 .dataItem p {
   margin-left: 10px;
 }
+.show {
+  background-color: black;
+}
 
-/* Hamburger button styling */
+.offcanvas {
+  /* background-color: rgba(0, 0, 0, 0.7) !important; */
+  background-color: white;
+}
+.offcanvas-backdrop.fade {
+  opacity:0;
+}
+.btn-close svg path {
+  fill: #ff4545 !important; /* Set your desired color */
+}
+
 .navbar .navbar-toggler {
   border: none !important;
   padding: 0 !important;
@@ -130,6 +143,7 @@
   box-shadow: none !important;
   z-index: 1001; /* Ensure it stays above the menu */
 }
+
 .navbar-nav {
   display: flex;
   justify-content: flex-end;

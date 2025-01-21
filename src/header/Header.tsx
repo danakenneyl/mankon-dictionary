@@ -43,9 +43,6 @@ return (
         onHide={() => setIsOffcanvasOpen(false)} 
           >
             <Offcanvas.Header closeButton>
-              <Offcanvas.Title id="offcanvasNavbarLabel-expand-xxl">
-                Mankon People's Dictionary
-              </Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
               <Nav className="justify-content-end flex-grow-1 pe-3 nav">
