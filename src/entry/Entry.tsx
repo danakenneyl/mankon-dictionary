@@ -5,7 +5,8 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 
 function Entry({ data }: JsonData) {
   const { id } = useParams<{ id: string }>();
-  const value = data.find((item) => item.mankon === id || item.english === id);
+  const value = data.find((item) => item.mankon === id || item.english.some((engWord) => engWord === id));
+
   // This is for Typescript's for error checking. 
   // The the SearchBar will not open a page that doesn't exist
   if (!value) {
@@ -24,7 +25,7 @@ function Entry({ data }: JsonData) {
       <div className="content">
         <div className="entry__word" id="wordEntry">
           <strong>{value.mankon}</strong>
-          <span className="entry__pos" id="posEntry">{value.pos}</span>
+          <span className="entry__pos" id="posEntry">{value.posENG}</span>
           {value.pronunciation?.[0] && (
             <VolumeUpIcon 
                 className="pronunciation" 
@@ -33,23 +34,35 @@ function Entry({ data }: JsonData) {
             />
           )}
         </div>
-        <p id="translationEntry" className="translationEntry">{value.english}</p>
-        <div className="card">
+        <p id="translationEntry" className="translationEntry">
+          {value.english.map((item, idx) => idx != (value.english.length-1) ? <span>{item}, </span> : <span>{item}</span>)}
+        </p>
+        <div className="card pair">
+          <div className="card-header">Paired Word</div>
+          <div className="card-body">
+            <ul className="list-group">
+              <li className="list-group-item" key={value.pair}>
+                  <strong className="mankonExample">{value.pair}</strong> 
+                  </li>
+            </ul>
+          </div>
+        </div>
+        <div className="card sentences">
           <div className="card-header">Sentence Examples</div>
           <div className="card-body">
             <ul className="list-group">
-              {value.sentencesMankon.map((example, index) => (
+              {value.sentencesMANK.map((example, index) => (
                 <li className="list-group-item" key={index}>
                   <strong className="mankonExample">{example}</strong>
-                  {value.sentencesPronunciation?.[index] && (
+                  {value.sentencesPRON?.[index] && (
                     <VolumeUpIcon 
                       className="pronunciation" 
-                      onClick={() => playAudio(value.sentencesPronunciation[index])}
+                      onClick={() => playAudio(value.sentencesPRON[index])}
                       style={{ cursor: "pointer" }}
                     />
                   )}
                   <div>
-                    <em className="englishExample">{value.sentencesEnglish[index]}</em>
+                    <em className="englishExample">{value.sentencesENG[index]}</em>
                   </div>
                 </li>
               ))}

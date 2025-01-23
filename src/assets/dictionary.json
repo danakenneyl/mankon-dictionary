@@ -1,22 +1,646 @@
 [
     {
         "mankon": "bɨŋə",
-        "english": "dance",
-        "pos": "verb",
+        "english": ["dance"],
+        "posMANK": "",
+        "posENG":"verb",
+        "classSING": "",
+        "classPLUR": "",
         "pronunciation": ["audio/bɨŋə_dance.wav"],
-        "pairWords" : [],
-        "sentencesMankon": ["a bɨ̂ŋ ʃìʔínɛ́", "à bɨ́ŋɛ́"],
-        "sentencesEnglish": ["S/he dances well", "S/he dances"],
-        "sentencesPronunciation": ["bɨŋə_dance_sentence_1.wav", "bɨŋə_dance_sentence_2.wav"]
+        "pair" : "bɨŋ",
+        "sentencesMANK": ["a bɨ̂ŋ ʃìʔínɛ́", "à bɨ́ŋɛ́"],
+        "sentencesENG": ["S/he dances well", "S/he dances"],
+        "sentencesPRON": ["bɨŋə_dance_sentence_1.wav", "bɨŋə_dance_sentence_2.wav"]
     },
     {
-        "mankon":"atsɛʔɛ",
-        "english":"cloth", 
-        "pos": "noun",
+        "mankon":"àtsɛʔɛ",
+        "english":["cloth", "clothing"], 
+        "posMANK": "az",
+        "posENG": "noun",
+        "classSING": "7",
+        "classPLUR": "8",
         "pronunciation": ["audio/atsɛʔɛ_cloth.wav"],
-        "pairWords" : [],
-        "sentencesMankon": [],
-        "sentencesEnglish":[],
-        "sentencesPronunciation": []
+        "pair" : "ɨ̀tsɛʔɛ",
+        "sentencesMANK": [],
+        "sentencesENG":[],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "á",
+        "english": [],
+        "posMANK": "",
+        "posENG": "obj",
+        "classSING": "",
+        "classPLUR": "",
+        "pronunciation": [
+            "audio/á_.wav"
+        ],
+        "pair": "",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "á",
+        "english": [],
+        "posMANK": "",
+        "posENG": "loc",
+        "classSING": "",
+        "classPLUR": "",
+        "pronunciation": [
+            "audio/á_.wav"
+        ],
+        "pair": "",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "á",
+        "english": [],
+        "posMANK": "",
+        "posENG": "conj",
+        "classSING": "",
+        "classPLUR": "",
+        "pronunciation": [
+            "audio/á_.wav"
+        ],
+        "pair": "",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "á",
+        "english": [
+            "let"
+        ],
+        "posMANK": "nt",
+        "posENG": "verb",
+        "classSING": "",
+        "classPLUR": "",
+        "pronunciation": [
+            "audio/á_let.wav"
+        ],
+        "pair": "",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "à lú",
+        "english": [
+            "not to talk of"
+        ],
+        "posMANK": "",
+        "posENG": "expr",
+        "classSING": "",
+        "classPLUR": "",
+        "pronunciation": [
+            "audio/à lú_not to talk of.wav"
+        ],
+        "pair": "",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "á ngùʔu",
+        "english": [
+            "the next year"
+        ],
+        "posMANK": "ŋ.a",
+        "posENG": "adv",
+        "classSING": "",
+        "classPLUR": "",
+        "pronunciation": [
+            "audio/á ngùʔu_the next year.wav"
+        ],
+        "pair": "",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "à nguʔu",
+        "english": [
+            "the previous year"
+        ],
+        "posMANK": "ŋ.a",
+        "posENG": "adv",
+        "classSING": "",
+        "classPLUR": "",
+        "pronunciation": [
+            "audio/à nguʔu_the previous year.wav"
+        ],
+        "pair": "",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "àbaɣɨ",
+        "english": [
+            "part",
+            "a piece/portion of"
+        ],
+        "posMANK": "az",
+        "posENG": "noun",
+        "classSING": "7",
+        "classPLUR": "8",
+        "pronunciation": [
+            "audio/àbaɣɨ_part.wav"
+        ],
+        "pair": "ɨ̀baɣɨ",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "àbaʔa",
+        "english": [
+            "door lid"
+        ],
+        "posMANK": "az",
+        "posENG": "noun",
+        "classSING": "7",
+        "classPLUR": "8",
+        "pronunciation": [
+            "audio/àbaʔa_door lid.wav"
+        ],
+        "pair": "ɨ̀baʔa",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "àban/àbə̰",
+        "english": [
+            "bag",
+            "betrothal",
+            "wealth"
+        ],
+        "posMANK": "az",
+        "posENG": "noun",
+        "classSING": "7",
+        "classPLUR": "8",
+        "pronunciation": [
+            "audio/àban/àbə̰_bag.wav"
+        ],
+        "pair": "ɨ̀ban/ɨ̀bə̰",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "àbáŋ",
+        "english": [
+            "attic"
+        ],
+        "posMANK": "az",
+        "posENG": "noun",
+        "classSING": "7",
+        "classPLUR": "8",
+        "pronunciation": [
+            "audio/àbáŋ_attic.wav"
+        ],
+        "pair": "ɨ̀baŋ",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "àbaŋ",
+        "english": [
+            "embankment"
+        ],
+        "posMANK": "az",
+        "posENG": "noun",
+        "classSING": "7",
+        "classPLUR": "8",
+        "pronunciation": [
+            "audio/àbaŋ_embankment.wav"
+        ],
+        "pair": "ɨ̀baŋ",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "àbáŋə-ɨʃe",
+        "english": [
+            "car"
+        ],
+        "posMANK": "az",
+        "posENG": "noun",
+        "classSING": "7",
+        "classPLUR": "8",
+        "pronunciation": [
+            "audio/àbáŋə-ɨʃe_car.wav"
+        ],
+        "pair": "ɨ̀báŋ-ɨ̀ʃe",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "àbáŋə-nɨ̀kaŋ",
+        "english": [
+            "airplane"
+        ],
+        "posMANK": "az",
+        "posENG": "noun",
+        "classSING": "7",
+        "classPLUR": "8",
+        "pronunciation": [
+            "audio/àbáŋə-nɨ̀kaŋ_airplane.wav"
+        ],
+        "pair": "ɨ̀báŋ-nɨ̀kaŋ",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "àbáŋə-nkyì",
+        "english": [
+            "ship"
+        ],
+        "posMANK": "az",
+        "posENG": "noun",
+        "classSING": "7",
+        "classPLUR": "8",
+        "pronunciation": [
+            "audio/àbáŋə-nkyì_ship.wav"
+        ],
+        "pair": "ɨ̀báŋ-nkyì",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "àbaŋə-tɨzɔʔɔ",
+        "english": [
+            "the white person"
+        ],
+        "posMANK": "az",
+        "posENG": "noun",
+        "classSING": "7",
+        "classPLUR": "8",
+        "pronunciation": [
+            "audio/àbaŋə-tɨzɔʔɔ_the white person.wav"
+        ],
+        "pair": "ɨ̀baŋə-tɨzɔʔɔ",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "àbaŋkɨ",
+        "english": [
+            "pretence"
+        ],
+        "posMANK": "az. tɨ̀kw",
+        "posENG": "non-count noun",
+        "classSING": "",
+        "classPLUR": "",
+        "pronunciation": [
+            "audio/àbaŋkɨ_pretence.wav"
+        ],
+        "pair": "",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "àbaŋnɨ",
+        "english": [
+            "cross"
+        ],
+        "posMANK": "az",
+        "posENG": "noun",
+        "classSING": "7",
+        "classPLUR": "8",
+        "pronunciation": [
+            "audio/àbaŋnɨ_cross.wav"
+        ],
+        "pair": "ɨ̀baŋnɨ",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "àbarə́",
+        "english": [
+            "mad person"
+        ],
+        "posMANK": "az",
+        "posENG": "noun",
+        "classSING": "7",
+        "classPLUR": "8",
+        "pronunciation": [
+            "audio/àbarə́_mad person.wav"
+        ],
+        "pair": "ɨ̀barə́",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "àbarə́-ndâ",
+        "english": [
+            "veranda"
+        ],
+        "posMANK": "az",
+        "posENG": "noun",
+        "classSING": "7",
+        "classPLUR": "8",
+        "pronunciation": [
+            "audio/àbarə́-ndâ_veranda.wav"
+        ],
+        "pair": "ɨ̀bárə́-ndâ",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "àbárɨ",
+        "english": [
+            "space",
+            "room",
+            "concession"
+        ],
+        "posMANK": "az",
+        "posENG": "noun",
+        "classSING": "7",
+        "classPLUR": "8",
+        "pronunciation": [
+            "audio/àbárɨ_space.wav"
+        ],
+        "pair": "ɨ̀bárɨ",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "àbatɨ",
+        "english": [
+            "25 CFA franc"
+        ],
+        "posMANK": "az",
+        "posENG": "noun",
+        "classSING": "7",
+        "classPLUR": "8",
+        "pronunciation": [
+            "audio/àbatɨ_25 CFA franc.wav"
+        ],
+        "pair": "ɨ̀batɨ",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "Abegley",
+        "english": [
+            "male name"
+        ],
+        "posMANK": "az",
+        "posENG": "noun",
+        "classSING": "",
+        "classPLUR": "",
+        "pronunciation": [
+            "audio/Abegley_male name.wav"
+        ],
+        "pair": "àbəɣɨrə",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "àbémnɨ̀",
+        "english": [
+            "agreement",
+            "entente",
+            "harmony",
+            "marriage",
+            "concord"
+        ],
+        "posMANK": "az",
+        "posENG": "noun",
+        "classSING": "7",
+        "classPLUR": "8",
+        "pronunciation": [
+            "audio/àbémnɨ̀_agreement.wav"
+        ],
+        "pair": "ɨ̀bémnɨ̀",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "àbémnɨ̀",
+        "english": [
+            "complement"
+        ],
+        "posMANK": "ɲ.n",
+        "posENG": "gram. ent",
+        "classSING": "",
+        "classPLUR": "",
+        "pronunciation": [
+            "audio/àbémnɨ̀_complement.wav"
+        ],
+        "pair": "ɨ̀bémnɨ̀",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "àbɛ́b",
+        "english": [
+            "he-goat"
+        ],
+        "posMANK": "az",
+        "posENG": "noun",
+        "classSING": "7",
+        "classPLUR": "8",
+        "pronunciation": [
+            "audio/àbɛ́b_he-goat.wav"
+        ],
+        "pair": "ɨ̀bɛ́b",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "àbɛ́ʔɛ",
+        "english": [
+            "a piece of"
+        ],
+        "posMANK": "az",
+        "posENG": "noun",
+        "classSING": "7",
+        "classPLUR": "8",
+        "pronunciation": [
+            "audio/àbɛ́ʔɛ_a piece of.wav"
+        ],
+        "pair": "ɨ̀bɛ́ʔɛ",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "àbə̰́",
+        "english": [
+            "fufu",
+            "loaf of bread"
+        ],
+        "posMANK": "az",
+        "posENG": "noun",
+        "classSING": "7",
+        "classPLUR": "8",
+        "pronunciation": [
+            "audio/àbə̰́_fufu.wav"
+        ],
+        "pair": "ɨ̀bə̰́",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "àbə̰-ɨʃwɨɣɨnə",
+        "english": [
+            "fibre bag"
+        ],
+        "posMANK": "az",
+        "posENG": "noun",
+        "classSING": "7",
+        "classPLUR": "8",
+        "pronunciation": [
+            "audio/àbə̰-ɨʃwɨɣɨnə_fibre bag.wav"
+        ],
+        "pair": "ɨ̀bə̰-ɨʃwɨɣɨnə",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "àbə̰-ŋkáb",
+        "english": [
+            "a bag of money (10,000 CFA franc)"
+        ],
+        "posMANK": "az",
+        "posENG": "noun",
+        "classSING": "7",
+        "classPLUR": "8",
+        "pronunciation": [
+            "audio/àbə̰-ŋkáb_a bag of money (10.wav",
+            "audio/àbə̰-ŋkáb_000 CFA franc).wav"
+        ],
+        "pair": "ɨ̀bə̰-ŋkáb",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "àbərɨ",
+        "english": [
+            "Fon's seat"
+        ],
+        "posMANK": "az",
+        "posENG": "noun",
+        "classSING": "7",
+        "classPLUR": "8",
+        "pronunciation": [
+            "audio/àbərɨ_Fon's seat.wav"
+        ],
+        "pair": "ɨ̀bərɨ",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "àbərɨ",
+        "english": [
+            "fool"
+        ],
+        "posMANK": "az",
+        "posENG": "noun",
+        "classSING": "7",
+        "classPLUR": "8",
+        "pronunciation": [
+            "audio/àbərɨ_fool.wav"
+        ],
+        "pair": "ɨ̀bərɨ",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "àbiʔi(nɨ)",
+        "english": [
+            "palm-win collector made from calabash"
+        ],
+        "posMANK": "az",
+        "posENG": "noun",
+        "classSING": "7",
+        "classPLUR": "8",
+        "pronunciation": [
+            "audio/àbiʔi(nɨ)_palm-win collector made from calabash.wav"
+        ],
+        "pair": "ɨ̀biʔi(nɨ)",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "àbiʔi(tɨ)",
+        "english": [
+            "pillow"
+        ],
+        "posMANK": "az",
+        "posENG": "noun",
+        "classSING": "7",
+        "classPLUR": "8",
+        "pronunciation": [
+            "audio/àbiʔi(tɨ)_pillow.wav"
+        ],
+        "pair": "ɨ̀biʔi(tɨ)",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "àbiʔi(tɨ)",
+        "english": [
+            "unsteadiness"
+        ],
+        "posMANK": "az",
+        "posENG": "noun",
+        "classSING": "7",
+        "classPLUR": "8",
+        "pronunciation": [
+            "audio/àbiʔi(tɨ)_unsteadiness.wav"
+        ],
+        "pair": "ɨ̀biʔi(tɨ)",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
+    },
+    {
+        "mankon": "àbi",
+        "english": [
+            "profit",
+            "interest"
+        ],
+        "posMANK": "az",
+        "posENG": "noun",
+        "classSING": "7",
+        "classPLUR": "8",
+        "pronunciation": [
+            "audio/àbi_profit.wav"
+        ],
+        "pair": "ɨ̀bi",
+        "sentencesMANK": [],
+        "sentencesENG": [],
+        "sentencesPRON": []
     }
 ]

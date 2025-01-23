@@ -19,23 +19,24 @@ function SearchBar({ data, searchEng, setSearchEng }: SearchParams) {
     } else {
       const newFilter = data.filter((value) =>
         searchEng
-          ? value.english.toLowerCase().startsWith(searchWord) // Filter in English
-          : value.mankon.toLowerCase().startsWith(searchWord)     // Filter in Mankon
+          ? value.english.some((engWord) => engWord.toLowerCase().startsWith(searchWord)) // Check if any English word matches
+          : value.mankon.toLowerCase().startsWith(searchWord)  // Filter in Mankon
       );
       setFilteredData(newFilter); // Set the filtered data
       setSelectedIndex(-1); // Reset selection
     }
   };
+
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     // Don't search if search bar is empty
     if (inputValue === "") return;
   
     if (event.key === "Enter") {
       const match = searchEng
-        ? filteredData.find((value) => value.english.toLowerCase() === inputValue)
+        ? filteredData.find((value) => value.english.some((engWord) => engWord.toLowerCase() === inputValue)) // Check any English word matches
         : filteredData.find((value) => value.mankon.toLowerCase() === inputValue);
-      if (match) {
-        handleNavigate(searchEng ? match.english : match.mankon);
+      if (match && (match.english.length === 1)) {
+        handleNavigateToEntry(searchEng ? match.english[0] : match.mankon);
       } else {
         handleNotFound();
       }
@@ -43,12 +44,12 @@ function SearchBar({ data, searchEng, setSearchEng }: SearchParams) {
       // Move selection down
       const newIndex = selectedIndex + 1;
       setSelectedIndex(newIndex);
-      setInputValue(searchEng ? filteredData[newIndex].english : filteredData[newIndex].mankon); // Update input value
+      setInputValue(searchEng ? filteredData[newIndex].english[0] : filteredData[newIndex].mankon); // Update input value
     } else if (event.key === "ArrowUp" && selectedIndex > 0) {
       // Move selection up
       const newIndex = selectedIndex - 1;
       setSelectedIndex(newIndex);
-      setInputValue(searchEng ? filteredData[newIndex].english : filteredData[newIndex].mankon); // Update input value
+      setInputValue(searchEng ? filteredData[newIndex].english[0] : filteredData[newIndex].mankon); // Update input value
     }
   };
   
@@ -60,7 +61,7 @@ function SearchBar({ data, searchEng, setSearchEng }: SearchParams) {
     setInputValue("");
   }
   // Successful search sends user to parameter word's entry page
-  const handleNavigate = (word: string) => {
+  const handleNavigateToEntry = (word: string) => {
     clearData();
     navigate(`/mankon-dictionary/entry/${word}`);
   };
@@ -83,20 +84,25 @@ function SearchBar({ data, searchEng, setSearchEng }: SearchParams) {
         <div className="searchIcon">
             <LangButton searchEng={searchEng} setSearchEng={setSearchEng} />
         </div>
-      </div>
+    </div>
       {filteredData.length > 0 && (
-            <div className="dataResult">
-              {filteredData.slice(0, 5).map((value, index) => (
-                <div
-                  key={index}
-                  className={`dataItem ${selectedIndex === index ? "selected" : ""}`} // Highlight the selected item
-                  onClick={() => handleNavigate(searchEng ? value.english : value.mankon)}
-                >
-                  <p>{searchEng ? value.english : value.mankon}</p>
-                </div>
-              ))}
+        <div className="dataResult">
+          {filteredData.slice(0, 5).map((value, index) => (
+            <div
+              key={index}
+              className={`dataItem ${selectedIndex === index ? "selected" : ""}`} // Highlight the selected item
+              onClick={() => handleNavigateToEntry(value.mankon)} // Navigate using mankon value
+            >
+              {searchEng
+                ? value.english.map((engWord, idx) => (
+                  <p key={idx}>{engWord}</p> // Each English word in a new <p>
+                ))
+                : <p>{value.mankon}</p> // Otherwise, display Mankon word
+              }
             </div>
-          )}
+          ))}
+        </div>
+      )}
     </div>
   );
 }

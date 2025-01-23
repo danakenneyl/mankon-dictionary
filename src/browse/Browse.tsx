@@ -14,39 +14,62 @@ function Browse({ data }: JsonData) {
   const alphabet = isEnglish ? englishAlphabet : mankonAlphabet;
   const key = isEnglish ? "english" : "mankon";
 
-  // Group words by their starting letter
-  const groupedWords = data.reduce((acc, entry) => {
-    const firstLetter = entry[key][0].toUpperCase();  // Extract first letter
-    if (!acc[firstLetter]) acc[firstLetter] = [];     // Initialize if empty
+  // Prepare data based on language mode
+  const processedData = isEnglish
+    ? data.flatMap(entry =>
+        entry.english.map(engWord => ({
+          english: engWord,
+          mankon: entry.mankon,
+          posENG: entry.posENG
+        }))
+      ).sort((a, b) => a.english.localeCompare(b.english)) // Sort alphabetically by English
+    : data.sort((a, b) => a.mankon.localeCompare(b.mankon)); // Sort alphabetically by Mankon
+
+  // Group words by first letter
+  const groupedWords = processedData.reduce((acc, entry) => {
+    const firstLetter = isEnglish 
+      ? entry.english[0].toUpperCase() 
+      : entry.mankon[0].toUpperCase();
+
+    if (!acc[firstLetter]) acc[firstLetter] = [];
     acc[firstLetter].push(entry);
     return acc;
-  }, {} as Record<string, typeof data>);
+  }, {} as Record<string, typeof processedData>);
 
   return (
     <center>
       <div className="content-wrapper">
-      <div className="content">
-        <ul className="list-group">
-          {alphabet.map(letter => (
-            <li key={letter} className="list-group-item">
-              {letter}
-              <div className="list-group">
-                {groupedWords[letter]?.map(entry => (
-                  <Link key={entry.mankon} to={`/mankon-dictionary/entry/${entry.mankon}`} className="list-group-item list-group-item-action">
-                    <div>
-                      <h5 className="mb-1">{isEnglish ? entry.english : entry.mankon} ({entry.pos})</h5>
-                      <p className="mb-1">{isEnglish ? entry.mankon : entry.english}</p>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
+        <div className="content">
+          <ul className="list-group">
+            {alphabet.map(letter => (
+              <li key={letter} className="list-group-item">
+                {letter}
+                <div className="list-group">
+                  {groupedWords[letter]?.map(entry => (
+                    <Link 
+                      key={`${entry.mankon}-${isEnglish ? entry.english : "mankon"}`} 
+                      to={`/mankon-dictionary/entry/${entry.mankon}`} 
+                      className="list-group-item list-group-item-action"
+                    >
+                      <div>
+                        <h5 className="mb-1">
+                          {isEnglish ? entry.english : entry.mankon} ({entry.posENG})
+                        </h5>
+                        <p className="mb-1">
+                          {isEnglish ? entry.mankon : entry.english.join(", ")}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </center>
   );
 }
 
 export default Browse;
+
