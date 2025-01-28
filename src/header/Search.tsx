@@ -11,6 +11,7 @@ function SearchBar({ data, searchEng, setSearchEng }: SearchParams) {
   const [inputValue, setInputValue] = useState<string>("");
   const [selectedIndex, setSelectedIndex] = useState<number>(-1); 
 
+
   const handleFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
     const searchWord = event.target.value.toLowerCase();
     setInputValue(searchWord);                         
@@ -53,8 +54,6 @@ function SearchBar({ data, searchEng, setSearchEng }: SearchParams) {
     }
   };
   
-
-
   // Dropbox disappears after search
   const clearData = () => {
     setFilteredData([]);
@@ -94,9 +93,7 @@ function SearchBar({ data, searchEng, setSearchEng }: SearchParams) {
               onClick={() => handleNavigateToEntry(value.mankon)} // Navigate using mankon value
             >
               {searchEng
-                ? value.english.map((engWord, idx) => (
-                  <p key={idx}>{engWord}</p> // Each English word in a new <p>
-                ))
+                ? <p>{value.english.join(", ")}</p>
                 : <p>{value.mankon}</p> // Otherwise, display Mankon word
               }
             </div>
