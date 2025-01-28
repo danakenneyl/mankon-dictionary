@@ -22,7 +22,7 @@ return (
       <Link className="toHome" to="/mankon-dictionary/">
         <img
           alt=""
-          src="https://github.com/danakenneyl/mankon-dictionary/blob/gh-pages/image/MACUDA.jpg?raw=true"
+          src="https://raw.githubusercontent.com/danakenneyl/mankon-dictionary/gh-pages/image/MACUDA.jpg"
           className="logo"
         />
       </Link>
