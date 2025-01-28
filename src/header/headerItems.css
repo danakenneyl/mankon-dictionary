@@ -11,6 +11,7 @@
 .logo {
   max-height: 100px;
   max-width: 100px;
+  border-radius: 50%;
 }
 
 /* Ensure title is visible next to the logo */
@@ -103,29 +104,31 @@
 
 .dataResult .dataItem {
   width: 100%;
-  height: 30px;
+  height: auto;
   padding-top: 15px;
   display: flex;
-  align-items: center;
+  flex-direction: column; /* Stack items vertically */
+  align-items: flex-start; /* Adjust alignment if necessary */
   color: black;
 }
 .dataItem.selected {
   background-color: rgb(230, 230, 230);
   border-radius: 4px;
 }
-.dataItem:hover {
+.dataItem p:hover {
   background-color: rgb(230, 230, 230);
+  width: 95%;
 }
 .dataItem p {
   margin-left: 10px;
 }
 .show {
-  background-color: black;
+  background-color: rgb(255, 255, 255);
 }
 
 .offcanvas {
   /* background-color: rgba(0, 0, 0, 0.7) !important; */
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.805);
 }
 .offcanvas-backdrop.fade {
   opacity:0;
@@ -222,7 +225,12 @@
   top: 95% !important;
   position: absolute;
   z-index: 1000;
+  background-color: black;
 }
+
+  .dropdown-item {
+    color: white;
+  }
 
 .arrow::after {
   display: none !important;
@@ -257,6 +265,7 @@
   .search {
     width: 90%;
   }
+
 }
 
 /* Extra handling for very small screens */
@@ -268,4 +277,5 @@
   .search {
     width: 90%;
   }
+
 }
