@@ -1,2 +1,4 @@
 1. When contributing audio and image files to the Json, include only the name of the file. Do not include path information.
 2. Do not include english articles (the, a) in entries
+
+//"homepage": "https://danakenneyl.github.io/mankon-dictionary",
