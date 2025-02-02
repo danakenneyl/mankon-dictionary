@@ -19,7 +19,7 @@ function Header({data, searchEng, setSearchEng}:SearchParams) {
 return (
   <Navbar expand="xxl" className="navbar" data-bs-theme="dark">
     <Navbar.Brand className="brand-container">
-      <Link className="toHome" to="/mankon-dictionary/">
+      <Link className="toHome" to="/">
         <img
           alt=""
           src="https://raw.githubusercontent.com/danakenneyl/mankon-dictionary/gh-pages/image/MACUDA.jpg"
