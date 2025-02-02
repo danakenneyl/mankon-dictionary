@@ -21,7 +21,7 @@ function App() {
       <Header data = {dict} searchEng = {searchEng} setSearchEng={setSearchEng}/>
       {/* <Header data = {dict} searchEng={searchEng} setSearchEng={setSearchEng}/> */}
       <Routes>
-        <Route path="/mankon-dictionary" element={<HomePage />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/mankon-dictionary/about" element={<About />} />
         <Route path="/mankon-dictionary/browse/:id" element={<Browse data={dict} />} />
         <Route path="/mankon-dictionary/language-help" element={<Alphabet />} />
