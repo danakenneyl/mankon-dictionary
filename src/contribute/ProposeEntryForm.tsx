@@ -1,4 +1,5 @@
 import { useState } from "react";
+import ProposeEntryRecord from "./ProposeEntryRecord";
 
 export default function App() {
   const [formData, setFormData] = useState({ name: "", email: "" });
@@ -34,6 +35,8 @@ export default function App() {
           className="border p-2 w-full mb-2"
           required
         />
+        <p/>
+        <ProposeEntryRecord/>
         <button type="submit" className="bg-blue-500 text-white p-2 w-full">Submit</button>
       </form>
     </div>

@@ -1,10 +1,10 @@
-import EntryForm from "./EntryForm";
+import ProposeEntryForm from "./ProposeEntryForm";
 
 function Contribute() {
     return <center>
               <div className="content-wrapper">
                 <div className="content"> 
-                  <EntryForm/>
+                  <ProposeEntryForm/>
                 </div>
               </div>
             </center>
