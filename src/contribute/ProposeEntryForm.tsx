@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ProposeEntryRecord from "./ProposeEntryRecord";
-import './ProposeEntry.css'; // Import the CSS file
+import './proposeEntry.css'; // Import the CSS file
 
 export default function App() {
   const [formData, setFormData] = useState({ name: "", email: "" });
