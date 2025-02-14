@@ -1,5 +1,7 @@
+// ProposeEntryRecord.tsx
 import { useReactMediaRecorder } from "react-media-recorder";
 import React, { useEffect, useState } from "react";
+import './ProposeEntryRecord.css'; // Import the CSS file
 
 const ProposeEntryRecord: React.FC = () => {
   const [second, setSecond] = useState<string>("00");
@@ -41,86 +43,33 @@ const ProposeEntryRecord: React.FC = () => {
   });
 
   return (
-    <div
-      style={{
-        border: "1px solid black",
-        backgroundColor: "black",
-        width: "700px",
-        height: "350px"
-      }}
-    >
-      <div
-        style={{
-          border: "1px solid #bd9f61",
-          height: "70px",
-          backgroundColor: "#bd9f61",
-          display: "flex"
-        }}
-      >
-        <h4
-          style={{
-            marginLeft: "10px",
-            textTransform: "capitalize",
-            fontFamily: "sans-serif",
-            fontSize: "18px",
-            color: "white"
-          }}
-        >
-          {status}
-        </h4>
+    <div className="record-container">
+      <div className="record-header">
+        <h4 className="record-status">{status}</h4>
       </div>
-      <div style={{ height: "38px" }}>
-        <video src={mediaBlobUrl || ""} controls loop />
+      <div className="record-video-container">
+        <video src={mediaBlobUrl || ""} controls loop className="record-video" />
       </div>
 
-      <div
-        style={{
-          backgroundColor: "black",
-          color: "white",
-          marginLeft: "357px"
-        }}
-      >
-        <button
-          style={{
-            backgroundColor: "black",
-            borderRadius: "8px",
-            color: "white"
-          }}
-          onClick={stopTimer}
-        >
+      <div className="record-controls">
+        <button className="record-clear-button" onClick={stopTimer}>
           Clear
         </button>
-        <div style={{ marginLeft: "70px", fontSize: "54px" }}>
+        <div className="record-timer">
           <span>{minute}</span>
           <span>:</span>
           <span>{second}</span>
         </div>
 
-        <div style={{ marginLeft: "20px", display: "flex" }}>
-          <label
-            style={{
-              fontSize: "15px",
-              fontWeight: "Normal"
-            }}
-          >
-            <h3 style={{ marginLeft: "15px", fontWeight: "normal" }}>
+        <div className="record-start-stop">
+          <label className="record-label">
+            <h3 className="record-instruction">
               Press the Start to record
             </h3>
 
-            <div>
+            <div className="record-button-group">
               <button
-                style={{
-                  padding: "0.8rem 2rem",
-                  border: "none",
-                  marginLeft: "15px",
-                  fontSize: "1rem",
-                  cursor: "pointer",
-                  borderRadius: "5px",
-                  fontWeight: "bold",
-                  backgroundColor: "#42b72a",
-                  color: "white",
-                  transition: "all 300ms ease-in-out"
-                }}
+                className="record-start-button"
                 onClick={() => {
                   if (!isActive) {
                     startRecording();
@@ -133,18 +82,7 @@ const ProposeEntryRecord: React.FC = () => {
                 {isActive ? "Pause" : "Start"}
               </button>
               <button
-                style={{
-                  padding: "0.8rem 2rem",
-                  border: "none",
-                  backgroundColor: "#df3636",
-                  marginLeft: "15px",
-                  fontSize: "1rem",
-                  cursor: "pointer",
-                  color: "white",
-                  borderRadius: "5px",
-                  fontWeight: "bold",
-                  transition: "all 300ms ease-in-out"
-                }}
+                className="record-stop-button"
                 onClick={() => {
                   stopRecording();
                   pauseRecording();
