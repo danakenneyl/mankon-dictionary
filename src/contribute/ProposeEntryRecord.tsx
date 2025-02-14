@@ -1,7 +1,6 @@
 // ProposeEntryRecord.tsx
 import { useReactMediaRecorder } from "react-media-recorder";
 import React, { useEffect, useState } from "react";
-import './ProposeEntryRecord.css'; // Import the CSS file
 
 const ProposeEntryRecord: React.FC = () => {
   const [second, setSecond] = useState<string>("00");
