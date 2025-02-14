@@ -1,7 +1,7 @@
 import { useReactMediaRecorder } from "react-media-recorder";
 import React, { useEffect, useState } from "react";
 
-const RecordView: React.FC = () => {
+const ProposeEntryRecord: React.FC = () => {
   const [second, setSecond] = useState<string>("00");
   const [minute, setMinute] = useState<string>("00");
   const [isActive, setIsActive] = useState<boolean>(false);
@@ -160,4 +160,4 @@ const RecordView: React.FC = () => {
   );
 };
 
-export default RecordView;
+export default ProposeEntryRecord;
