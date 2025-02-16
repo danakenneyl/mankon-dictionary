@@ -12,7 +12,7 @@ const uploadSingleFile = async (fileName, filePath) => {
       parents: [folderId]
     },
     media: {
-      mimeType: 'application/pdf',
+      mimeType: 'audio/wav', // MIME type for audio files (WAV in this case)
       body: fs.createReadStream(filePath)
     },
     fields: 'id,name'
@@ -23,10 +23,10 @@ const uploadSingleFile = async (fileName, filePath) => {
 const scanFolderForFiles = async (folderPath) => {
   const folder = await fs.promises.opendir(folderPath);
   for await (const dirent of folder) {
-    if (dirent.isFile() && dirent.name.endsWith('.pdf')) {
+    if (dirent.isFile() && dirent.name.endsWith('.wav')) {
       const filePath = path.join(folderPath, dirent.name); 
       await uploadSingleFile(dirent.name, filePath);
-      await fs.promises.rm(filePath);
+      await fs.promises.rm(filePath);  // Optionally delete the file after upload
     }
   }
 };
