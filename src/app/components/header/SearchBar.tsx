@@ -1,16 +1,16 @@
-import { MankonWordInfo } from "../Datatypes";
-import { SearchParams } from "../Datatypes";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import './headerItems.css';
-import LangButton from "./LangButton";
+'use client'; // Need this since we're using state and browser APIs
 
-function SearchBar({ data, searchEng, setSearchEng }: SearchParams) {
-  const navigate = useNavigate();
+import { MankonWordInfo } from "@/types/Datatypes";
+import { SearchParams } from "@/types/Datatypes";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import ToggleLang from "./ToggleLang";
+
+export default function SearchBar({ data, searchEng, setSearchEng }: SearchParams) {
+  const router = useRouter();
   const [filteredData, setFilteredData] = useState<MankonWordInfo[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const [selectedIndex, setSelectedIndex] = useState<number>(-1); 
-
 
   const handleFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
     const searchWord = event.target.value.toLowerCase();
@@ -20,21 +20,20 @@ function SearchBar({ data, searchEng, setSearchEng }: SearchParams) {
     } else {
       const newFilter = data.filter((value) =>
         searchEng
-          ? value.english.some((engWord) => engWord.toLowerCase().startsWith(searchWord)) // Check if any English word matches
-          : value.mankon.toLowerCase().startsWith(searchWord)  // Filter in Mankon
+          ? value.english.some((engWord) => engWord.toLowerCase().startsWith(searchWord))
+          : value.mankon.toLowerCase().startsWith(searchWord)
       );
-      setFilteredData(newFilter); // Set the filtered data
-      setSelectedIndex(-1); // Reset selection
+      setFilteredData(newFilter);
+      setSelectedIndex(-1);
     }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    // Don't search if search bar is empty
     if (inputValue === "") return;
   
     if (event.key === "Enter") {
       const match = searchEng
-        ? filteredData.find((value) => value.english.some((engWord) => engWord.toLowerCase() === inputValue)) // Check any English word matches
+        ? filteredData.find((value) => value.english.some((engWord) => engWord.toLowerCase() === inputValue))
         : filteredData.find((value) => value.mankon.toLowerCase() === inputValue);
       if (match && (match.english.length === 1)) {
         handleNavigateToEntry(searchEng ? match.english[0] : match.mankon);
@@ -42,32 +41,29 @@ function SearchBar({ data, searchEng, setSearchEng }: SearchParams) {
         handleNotFound();
       }
     } else if (event.key === "ArrowDown" && selectedIndex < filteredData.length - 1) {
-      // Move selection down
       const newIndex = selectedIndex + 1;
       setSelectedIndex(newIndex);
-      setInputValue(searchEng ? filteredData[newIndex].english[0] : filteredData[newIndex].mankon); // Update input value
+      setInputValue(searchEng ? filteredData[newIndex].english[0] : filteredData[newIndex].mankon);
     } else if (event.key === "ArrowUp" && selectedIndex > 0) {
-      // Move selection up
       const newIndex = selectedIndex - 1;
       setSelectedIndex(newIndex);
-      setInputValue(searchEng ? filteredData[newIndex].english[0] : filteredData[newIndex].mankon); // Update input value
+      setInputValue(searchEng ? filteredData[newIndex].english[0] : filteredData[newIndex].mankon);
     }
   };
   
-  // Dropbox disappears after search
   const clearData = () => {
     setFilteredData([]);
     setInputValue("");
   }
-  // Successful search sends user to parameter word's entry page
+
   const handleNavigateToEntry = (word: string) => {
     clearData();
-    navigate(`/mankon-dictionary/entry/${word}`);
+    router.push(`/entry/${word}`);
   };
-  // Unsuccessful search sends user to "Word Not Found" page
+
   const handleNotFound = () => {
     clearData();
-    navigate("/mankon-dictionary/page-does-not-exist");
+    router.push("/page-does-not-exist");
   }
 
   return (
@@ -81,20 +77,20 @@ function SearchBar({ data, searchEng, setSearchEng }: SearchParams) {
           onKeyDown={handleKeyDown}
         />
         <div className="searchIcon">
-            <LangButton searchEng={searchEng} setSearchEng={setSearchEng} />
+            <ToggleLang searchEng={searchEng} setSearchEng={setSearchEng} />
         </div>
-    </div>
+      </div>
       {filteredData.length > 0 && (
         <div className="dataResult">
           {filteredData.slice(0, 5).map((value, index) => (
             <div
               key={index}
-              className={`dataItem ${selectedIndex === index ? "selected" : ""}`} // Highlight the selected item
-              onClick={() => handleNavigateToEntry(value.mankon)} // Navigate using mankon value
+              className={`dataItem ${selectedIndex === index ? "selected" : ""}`}
+              onClick={() => handleNavigateToEntry(value.mankon)}
             >
               {searchEng
                 ? <p>{value.english.join(", ")}</p>
-                : <p>{value.mankon}</p> // Otherwise, display Mankon word
+                : <p>{value.mankon}</p>
               }
             </div>
           ))}
@@ -103,5 +99,3 @@ function SearchBar({ data, searchEng, setSearchEng }: SearchParams) {
     </div>
   );
 }
-
-export default SearchBar;

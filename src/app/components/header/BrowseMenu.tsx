@@ -1,26 +1,27 @@
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+'use client';
+
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 
 interface BrowseMenuProps {
-  onItemClick: () => void;  // Prop to close the menu when an item is clicked
+  onItemClick: () => void;
 }
 
-function BrowseMenu({ onItemClick }: BrowseMenuProps) {
-  const navigate = useNavigate();
+export default function BrowseMenu({ onItemClick }: BrowseMenuProps) {
+  const router = useRouter();
   const [show, setShow] = useState(false);
 
-  // Drop down menu disappears and user is directed to new webpage
   const handleNavigate = (word: string) => {
-    setShow(false); 
-    onItemClick();  // Close the menu
-    navigate(`/mankon-dictionary/browse/${word}`);
+    setShow(false);
+    onItemClick();
+    router.push(`/browse/${word}`);
   };
 
   return (
     <Dropdown
-      onMouseEnter={() => setShow(true)} 
-      onMouseLeave={() => setShow(false)} 
+      onMouseEnter={() => setShow(true)}
+      onMouseLeave={() => setShow(false)}
       show={show}
     >
       <Dropdown.Toggle className="browse arrow" id="dropdown-basic">
@@ -38,5 +39,3 @@ function BrowseMenu({ onItemClick }: BrowseMenuProps) {
     </Dropdown>
   );
 }
-
-export default BrowseMenu;
