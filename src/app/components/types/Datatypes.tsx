@@ -16,6 +16,4 @@ export interface JsonData {
   }
   export interface SearchParams {
     data : MankonWordInfo[];
-    searchEng: boolean;
-    setSearchEng: React.Dispatch<React.SetStateAction<boolean>>;
   }

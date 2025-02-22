@@ -5,13 +5,14 @@ import { SearchParams } from "@/types/Datatypes";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import ToggleLang from "./ToggleLang";
+import { useSearch } from '@/context/SearchContext';
 
-export default function SearchBar({ data, searchEng, setSearchEng }: SearchParams) {
+export default function SearchBar({ data}: SearchParams) {
   const router = useRouter();
   const [filteredData, setFilteredData] = useState<MankonWordInfo[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const [selectedIndex, setSelectedIndex] = useState<number>(-1); 
-
+  const { searchEng, setSearchEng } = useSearch();
   const handleFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
     const searchWord = event.target.value.toLowerCase();
     setInputValue(searchWord);                         
@@ -77,7 +78,7 @@ export default function SearchBar({ data, searchEng, setSearchEng }: SearchParam
           onKeyDown={handleKeyDown}
         />
         <div className="searchIcon">
-            <ToggleLang searchEng={searchEng} setSearchEng={setSearchEng} />
+            <ToggleLang/>
         </div>
       </div>
       {filteredData.length > 0 && (

@@ -9,42 +9,43 @@ import SearchBar from './SearchBar';
 import NavButton from './NavButton';
 import BrowseMenu from './BrowseMenu';
 import { SearchParams } from '@/types/Datatypes';
+import styles from './header.module.css';
+import { useSearch } from '@/context/SearchContext';
 
-export default function Header({data, searchEng, setSearchEng}: SearchParams) {
+export default function Header({data}: SearchParams) {
   const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false);
-
+  const { searchEng, setSearchEng } = useSearch();
   const handleToggle = () => setIsOffcanvasOpen(!isOffcanvasOpen);
   const closeOffcanvas = () => setIsOffcanvasOpen(false);
 
   return (
-    <Navbar expand="xxl" className="navbar" data-bs-theme="dark">
-      <Navbar.Brand className="brand-container">
-        <Link className="toHome" href="/">
+    <Navbar expand="xxl" className={styles.navbar} data-bs-theme="dark">
+      <Navbar.Brand className={styles.brandContainer}>
+        <Link className={styles.toHome} href="/">
           <img
             alt=""
             src="/images/MACUDA.jpg" // Move to public directory
-            className="logo"
+            className={styles.logo}
           />
         </Link>
-        <div className="title">
-          <div className="title-line1">The Mankon</div>
-          <div className="title-line2">Dictionary</div>
+        <div className={styles.title}>
+          <div className={styles.titleLine1}>The Mankon</div>
+          <div className={styles.titleLine2}>Dictionary</div>
         </div>
       </Navbar.Brand>
-      <SearchBar data={data} searchEng={searchEng} setSearchEng={setSearchEng}/>
+      <SearchBar data={data}/>
       <Navbar.Toggle aria-controls="navbarScroll" onClick={handleToggle} />
       <Navbar.Offcanvas
         id="offcanvasNavbar-expand-md"
         aria-labelledby="offcanvasNavbarLabel-expand-xxl"
         placement="end"
-        className="navbar-nav"
+        className={styles.navbarNav}
         show={isOffcanvasOpen}
         onHide={() => setIsOffcanvasOpen(false)}
       >
-        <Offcanvas.Header closeButton>
-        </Offcanvas.Header>
+        <Offcanvas.Header closeButton />
         <Offcanvas.Body>
-          <Nav className="justify-content-end flex-grow-1 pe-3 nav">
+          <Nav className={styles.nav}>
             <NavButton onClick={closeOffcanvas} pageName="About" href="/about" />
             <BrowseMenu onItemClick={closeOffcanvas}/>
             <NavButton onClick={closeOffcanvas} pageName="Language Help" href="/language-help" />

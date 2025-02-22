@@ -1,4 +1,11 @@
 // app/layout.tsx
+import 'bootstrap/dist/css/bootstrap.min.css'
+import './styles/globals.css'
+import { SearchProvider } from './context/SearchContext'
+import Header from './components/header/Header';
+
+
+
 export const metadata = {
   title: 'Mankon People\'s Dictionary',
   description: 'Your description here'
@@ -11,8 +18,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head />
-      <body>{children}</body>
+      <body>
+        <SearchProvider>
+          <Header data={[]} />
+          {children}
+        </SearchProvider>
+      </body>
     </html>
   )
 }

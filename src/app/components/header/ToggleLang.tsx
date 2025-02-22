@@ -1,11 +1,9 @@
 'use client'; // Need this since we're using state and interactivity
+import { useSearch } from '@/context/SearchContext';
 
-interface LangParams {
-  searchEng: boolean;
-  setSearchEng: React.Dispatch<React.SetStateAction<boolean>>;
-}
+export default function ToggleLang() {
 
-export default function ToggleLang({ searchEng, setSearchEng }: LangParams) {
+  const { searchEng, setSearchEng } = useSearch();
   const toggleLang = () => {
     const newSearchEng = !searchEng;
     setSearchEng(newSearchEng);
