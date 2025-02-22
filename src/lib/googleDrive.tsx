@@ -1,57 +1,82 @@
 // src/lib/googleDrive.ts
 import { google } from 'googleapis';
 import { createReadStream } from 'fs';
-import path from 'path';
 
-// Replace this with your folder ID where you want to store the audio files
-const GOOGLE_DRIVE_FOLDER_ID = '1AqHxs-AnqTD8z_virKJpFybOrmJ28EFP';
-
-// Initialize the Google Drive API client
-const initializeDrive = () => {
+// Function to get credentials from environment variable
+const getCredentials = () => {
+  const credentials = process.env.GOOGLE_SERVICE_ACCOUNT_KEY;
+  if (!credentials) {
+    throw new Error('Google service account credentials not found');
+  }
+  
   try {
-    const auth = new google.auth.GoogleAuth({
-      keyFile: path.join(process.cwd(), 'credentials', 'secret.json'),
-      scopes: ['https://www.googleapis.com/auth/drive.file'],
-    });
-
-    return google.drive({ version: 'v3', auth });
+    // Parse the JSON string from environment variable
+    return JSON.parse(credentials);
   } catch (error) {
-    console.error('Failed to initialize Google Drive client:', error);
-    throw new Error('Failed to initialize Google Drive');
+    throw new Error('Failed to parse Google service account credentials');
   }
 };
 
-export const uploadToDrive = async (filePath: string, fileName: string): Promise<string> => {
+// Initialize the Google Drive API client
+const initializeDrive = () => {
+  const folderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
+  if (!folderId) {
+    throw new Error('Google Drive folder ID not configured');
+  }
+
   try {
-    const drive = initializeDrive();
+    const auth = new google.auth.GoogleAuth({
+      credentials: getCredentials(),
+      scopes: ['https://www.googleapis.com/auth/drive.file']
+    });
+
+    return {
+      drive: google.drive({ version: 'v3', auth }),
+      folderId
+    };
+  } catch (error) {
+    console.error('Drive initialization error:', error);
+    throw new Error(`Failed to initialize Google Drive: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+};
+
+export const uploadToDrive = async (buffer: Buffer, fileName: string): Promise<string> => {
+  console.log('Starting upload process for:', fileName);
+  
+  try {
+    const { drive, folderId } = initializeDrive();
 
     const fileMetadata = {
       name: fileName,
-      parents: [GOOGLE_DRIVE_FOLDER_ID],
+      parents: [folderId]
     };
 
     const media = {
       mimeType: 'audio/wav',
-      body: createReadStream(filePath),
+      body: buffer
     };
 
-    console.log('Uploading file to Google Drive:', { fileName, filePath });
+    console.log('Uploading to Google Drive:', { fileName });
 
     const response = await drive.files.create({
       requestBody: fileMetadata,
       media: media,
-      fields: 'id,webViewLink',
+      fields: 'id,webViewLink'
     });
 
     if (!response.data.id) {
-      throw new Error('Failed to get file ID from Google Drive');
+      throw new Error('No file ID returned from Google Drive');
     }
 
-    console.log('File uploaded successfully:', response.data);
+    console.log('Upload successful:', {
+      fileId: response.data.id,
+      link: response.data.webViewLink
+    });
+
     return response.data.id;
 
   } catch (error) {
-    console.error('Error uploading to Google Drive:', error);
-    throw new Error(error instanceof Error ? error.message : 'Failed to upload to Google Drive');
+    console.error('Upload error details:', error);
+    throw new Error(`Failed to upload to Google Drive: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 };

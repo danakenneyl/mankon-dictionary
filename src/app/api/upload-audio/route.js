@@ -1,7 +1,5 @@
 // src/app/api/upload/route.ts
-import { writeFile, mkdir, unlink } from 'fs/promises';
 import { NextResponse } from 'next/server';
-import { join } from 'path';
 import { uploadToDrive } from '@/lib/googleDrive';
 
 export async function POST(request) {
@@ -25,26 +23,14 @@ export async function POST(request) {
       size: file.size
     });
 
-    // Create temp directory
-    const tempDir = join(process.cwd(), 'tmp');
-    await mkdir(tempDir, { recursive: true }).catch(() => {});
-
-    // Create temp file path
-    const tempFilePath = join(tempDir, file.name);
-
     try {
-      // Save file to temp location
+      // Convert file to buffer
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
-      await writeFile(tempFilePath, buffer);
-      console.log('File saved to temp location:', tempFilePath);
 
-      // Upload to Google Drive
-      const fileId = await uploadToDrive(tempFilePath, file.name);
+      // Upload directly to Google Drive
+      const fileId = await uploadToDrive(buffer, file.name);
       console.log('File uploaded to Google Drive:', fileId);
-
-      // Clean up temp file
-      await unlink(tempFilePath).catch(console.error);
 
       return NextResponse.json({
         success: true,
@@ -53,9 +39,6 @@ export async function POST(request) {
       });
 
     } catch (error) {
-      // Clean up temp file if it exists
-      await unlink(tempFilePath).catch(() => {});
-
       console.error('Upload error:', error);
       return NextResponse.json(
         { 
