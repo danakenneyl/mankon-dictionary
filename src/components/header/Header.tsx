@@ -8,7 +8,7 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import SearchBar from './SearchBar';
 import NavButton from './NavButton';
 import BrowseMenu from './BrowseMenu';
-import { SearchParams } from '@/types/Datatypes';
+import { SearchParams } from '@/components/types/Datatypes';
 import styles from './header.module.css';
 import { useSearch } from '@/context/SearchContext';
 

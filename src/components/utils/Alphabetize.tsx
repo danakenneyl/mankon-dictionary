@@ -1,4 +1,4 @@
-import { MankonWordInfo } from '@/types/Datatypes';
+import { MankonWordInfo } from '@/components/types/Datatypes';
 
 export interface BrowseWord {
   english?: string;
