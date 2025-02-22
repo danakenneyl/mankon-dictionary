@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import './styles/globals.css'
 import { SearchProvider } from './context/SearchContext'
 import Header from './components/header/Header';
+import dictionary from '@/data/dictionary.json';
 
 
 
@@ -20,7 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <SearchProvider>
-          <Header data={[]} />
+          <Header data={dictionary} />
           {children}
         </SearchProvider>
       </body>
