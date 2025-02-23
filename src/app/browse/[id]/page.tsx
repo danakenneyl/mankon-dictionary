@@ -28,7 +28,7 @@ const { id } = useParams<{ id: string }>();
                 {alphabetized[letter]?.map((entry) => (
                   <Link 
                     key={`${entry.mankon}-${entry.english}`} 
-                    href={`/mankon-dictionary/entry/${entry.mankon}`}
+                    href={`/entry/${entry.mankon}-${entry.english}`}
                     className="list-group-item list-group-item-action"
                   >
                     <div>

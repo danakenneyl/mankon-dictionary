@@ -65,7 +65,7 @@ export default function SearchBar({ data}: SearchParams) {
 
   const handleNotFound = () => {
     clearData();
-    router.push("/page-does-not-exist");
+    router.push("/not-found");
   }
 
   return (
