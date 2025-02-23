@@ -12,7 +12,8 @@ export default function SearchBar({ data}: SearchParams) {
   const [filteredData, setFilteredData] = useState<MankonWordInfo[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const [selectedIndex, setSelectedIndex] = useState<number>(-1); 
-  const { searchEng } = useSearch();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { searchEng, setSearchEng } = useSearch();
   const handleFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
     const searchWord = event.target.value.toLowerCase();
     setInputValue(searchWord);                         

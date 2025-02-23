@@ -11,7 +11,9 @@ const getCredentials = () => {
   try {
     // Parse the JSON string from environment variable
     return JSON.parse(credentials);
-  } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {// eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     throw new Error('Failed to parse Google service account credentials');
   }
 };

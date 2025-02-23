@@ -10,7 +10,6 @@ import NavButton from './NavButton';
 import BrowseMenu from './BrowseMenu';
 import { SearchParams } from '@/components/types/Datatypes';
 import styles from './header.module.css';
-import { useSearch } from '@/context/SearchContext';
 
 export default function Header({data}: SearchParams) {
   const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false);
