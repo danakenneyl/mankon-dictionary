@@ -1,7 +1,7 @@
 import { MankonWordInfo } from '@/components/types/Datatypes';
 
 export interface BrowseWord {
-  english?: string;
+  english: string;
   mankon: string;
   pos: string;
 }
@@ -27,7 +27,7 @@ export default function alphabetize(data: MankonWordInfo[], isEnglish: boolean):
     for (const entry of data) {
       if (entry.mankon?.length) {
         const letter = entry.mankon[0].toUpperCase();
-        const english = entry.english?.join(', ') || 'Unknown';
+        const english = entry.english?.join(', ') || '';
         const pair: BrowseWord = { english, mankon: entry.mankon, pos: entry.posENG };
 
         if (!groups[letter]) {
