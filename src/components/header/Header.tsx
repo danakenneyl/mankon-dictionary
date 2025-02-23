@@ -14,7 +14,6 @@ import { useSearch } from '@/context/SearchContext';
 
 export default function Header({data}: SearchParams) {
   const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false);
-  const { searchEng, setSearchEng } = useSearch();
   const handleToggle = () => setIsOffcanvasOpen(!isOffcanvasOpen);
   const closeOffcanvas = () => setIsOffcanvasOpen(false);
 

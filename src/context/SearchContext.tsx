@@ -5,6 +5,7 @@ import { createContext, useState, useContext } from 'react';
 
 const SearchContext = createContext({
   searchEng: true,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   setSearchEng: (value: boolean) => {},
 });
 
