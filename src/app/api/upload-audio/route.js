@@ -1,64 +1,66 @@
-// src/app/api/upload/route.ts
-import { NextResponse } from 'next/server';
-import { uploadToDrive } from '@/lib/googleDrive';
+// app/api/upload-audio/route.js
+import { google } from 'googleapis';
+import { PassThrough } from 'stream';
 
 export async function POST(request) {
-  console.log('Received upload request');
-
   try {
     const formData = await request.formData();
     const file = formData.get('file');
-
+    
     if (!file) {
-      return NextResponse.json(
-        { success: false, message: 'No file received' },
-        { status: 400 }
-      );
+      return new Response('No file provided', { status: 400 });
     }
 
-    // Log file details
-    console.log('Processing file:', {
-      name: file.name,
-      type: file.type,
-      size: file.size
+    // Convert File to Buffer
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    // Create a PassThrough stream
+    const stream = new PassThrough();
+    stream.end(buffer);
+
+    const auth = new google.auth.GoogleAuth({
+      credentials: JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY || ''),
+      scopes: ['https://www.googleapis.com/auth/drive.file'],
     });
 
-    try {
-      // Convert file to buffer
-      const bytes = await file.arrayBuffer();
-      const buffer = Buffer.from(bytes);
+    const drive = google.drive({ version: 'v3', auth });
 
-      // Upload directly to Google Drive
-      const fileId = await uploadToDrive(buffer, file.name);
-      console.log('File uploaded to Google Drive:', fileId);
+    const response = await drive.files.create({
+      requestBody: {
+        name: file.name,
+        parents: [process.env.GOOGLE_DRIVE_FOLDER_ID],
+      },
+      media: {
+        mimeType: file.type,
+        body: stream,
+      },
+      fields: 'id,name,webViewLink',
+    });
 
-      return NextResponse.json({
-        success: true,
-        message: 'File uploaded successfully',
-        fileId: fileId
-      });
+    console.log('Upload successful:', response.data);
 
-    } catch (error) {
-      console.error('Upload error:', error);
-      return NextResponse.json(
-        { 
-          success: false, 
-          message: 'Failed to upload to Google Drive',
-          error: error instanceof Error ? error.message : 'Unknown error'
-        },
-        { status: 500 }
-      );
-    }
+    return new Response(JSON.stringify(response.data), {
+      headers: { 'Content-Type': 'application/json' },
+    });
 
   } catch (error) {
-    console.error('Server error:', error);
-    return NextResponse.json(
+    console.error('Upload error details:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name,
+      cause: error.cause
+    });
+
+    return new Response(
+      JSON.stringify({ 
+        error: `Failed to upload to Google Drive: ${error.message}`,
+        details: error.stack
+      }), 
       { 
-        success: false, 
-        message: 'Server error',
-        error: error instanceof Error ? error.message : 'Unknown error'
-      },
-      { status: 500 }
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      }
     );
   }
 }
