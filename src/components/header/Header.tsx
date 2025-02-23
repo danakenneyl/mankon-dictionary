@@ -1,6 +1,7 @@
 'use client'; // Add this since we're using state
 
 import { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -20,11 +21,13 @@ export default function Header({data}: SearchParams) {
     <Navbar expand="xxl" className={styles.navbar} data-bs-theme="dark">
       <Navbar.Brand className={styles.brandContainer}>
         <Link className={styles.toHome} href="/">
-          <img
-            alt=""
-            src="/images/MACUDA.jpg" // Move to public directory
-            className={styles.logo}
-          />
+        <Image
+          src="/images/MACUDA.jpg"
+          alt=""
+          className={styles.logo}
+          width={500}  // Replace with your actual desired width
+          height={300} // Replace with your actual desired height
+        />
         </Link>
         <div className={styles.title}>
           <div className={styles.titleLine1}>The Mankon</div>

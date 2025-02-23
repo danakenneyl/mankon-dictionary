@@ -26,6 +26,7 @@ export default function Browse() {
         const jsonData: JsonData = await response.json();
         setData(jsonData.data);
         setIsLoading(false);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (err) {
         setError('Failed to load dictionary data');
         setIsLoading(false);
