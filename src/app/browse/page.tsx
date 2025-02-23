@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { JsonData, MankonWordInfo } from '@/components/types/Datatypes';
 import alphabetize from '@/components/utils/Alphabetize';
 import { useState, useEffect } from 'react';
-
+// comment to be deleted later
 const englishAlphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
 const mankonAlphabet = ["A", "B", "Tʃ", "Ɣ", "Ɨ", "K", "L", "M", "N", "Ŋ", "O", "Ʃ", "T", "W", "Y", "Z", "Ʒ"];
 
