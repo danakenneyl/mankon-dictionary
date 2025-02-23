@@ -5,12 +5,19 @@ const nextConfig: NextConfig = {
     GOOGLE_DRIVE_FOLDER_ID: process.env.GOOGLE_DRIVE_FOLDER_ID,
     GOOGLE_SERVICE_ACCOUNT_KEY: process.env.GOOGLE_SERVICE_ACCOUNT_KEY,
   },
-  output: "standalone",  // This enables better deployment optimization
+  output: "standalone",
+  webpack: (config, { dev, isServer }) => {
+    // Enable source maps in production
+    if (!dev && isServer) {
+      config.devtool = 'source-map';
+    }
+    return config;
+  },
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "**",  // Adjust this based on your image domains
+        hostname: "**",
       },
     ],
   },

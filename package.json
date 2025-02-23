@@ -16,7 +16,8 @@
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.9",
     "react-dom": "^19.0.0",
-    "react-media-recorder": "^1.7.1"
+    "react-media-recorder": "^1.7.1",
+    "source-map-support": "^0.5.21"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
