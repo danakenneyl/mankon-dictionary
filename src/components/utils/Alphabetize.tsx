@@ -1,4 +1,4 @@
-import { MankonWordInfo } from '@/components/types/Datatypes';
+import { BaseEntry } from '@/components/types/Datatypes';
 
 export interface BrowseWord {
   english: string;
@@ -6,15 +6,15 @@ export interface BrowseWord {
   pos: string;
 }
 
-export default function alphabetize(data: MankonWordInfo[], isEnglish: boolean): Record<string, BrowseWord[]> {
+export default function alphabetize(data: BaseEntry[], isEnglish: boolean): Record<string, BrowseWord[]> {
   const groups: Record<string, BrowseWord[]> = {};
 
   if (isEnglish) {
     for (const entry of data) {
-      if (entry.english?.length) {
-        for (const word of entry.english) {
+      if (entry.englishWord.length) {
+        for (const word of entry.englishWord) {
           const letter = word[0].toUpperCase();
-          const pair: BrowseWord = { english: word, mankon: entry.mankon, pos: entry.posENG };
+          const pair: BrowseWord = { english: word, mankon: entry.mankonWord, pos: entry.partOfSpeech };
 
           if (!groups[letter]) {
             groups[letter] = [];
@@ -25,10 +25,10 @@ export default function alphabetize(data: MankonWordInfo[], isEnglish: boolean):
     }
   } else {
     for (const entry of data) {
-      if (entry.mankon?.length) {
-        const letter = entry.mankon[0].toUpperCase();
-        const english = entry.english?.join(', ') || '';
-        const pair: BrowseWord = { english, mankon: entry.mankon, pos: entry.posENG };
+      if (entry.mankonWord.length) {
+        const letter = entry.mankonWord.toUpperCase();
+        const english = entry.englishWord.join(', ') || '';
+        const pair: BrowseWord = { english, mankon: entry.mankonWord, pos: entry.partOfSpeech };
 
         if (!groups[letter]) {
           groups[letter] = [];

@@ -1,0 +1,12 @@
+[
+    {
+        "age": 22,
+        "location": ["Minnesota", "USA"],
+        "languagesSpoken": ["English", "Spanish"],
+        "currentLanguages": ["English"],
+        "childhoodLanguages": ["English"],
+        "readingProficiency": 3,
+        "writingProficiency": 4,
+        "contributor": 0
+    }
+]

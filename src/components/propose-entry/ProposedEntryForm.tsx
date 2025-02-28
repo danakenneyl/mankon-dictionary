@@ -14,9 +14,13 @@ export default function ProposeEntryForm() {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [checked, setChecked] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+  const handleCheck = () => {
+    setChecked(!checked);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -62,7 +66,7 @@ export default function ProposeEntryForm() {
 
       const data = await response.json();
       console.log('Upload successful:', data);
-      
+
       // Reset form
       setFormData({ mankonWord: '', englishWord: '' });
       setAudioUrl(null);
@@ -138,6 +142,13 @@ export default function ProposeEntryForm() {
             {isSubmitting ? 'Submitting...' : 'Submit'}
           </button>
         </div>
+
+        <div>
+          <span>Words </span>
+          <input type="checkbox" checked={checked} onChange={handleCheck} />
+        </div>
+
+
       </form>
     </div>
   );

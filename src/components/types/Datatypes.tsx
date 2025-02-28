@@ -1,16 +1,32 @@
-export interface MankonWordInfo {
-  mankon: string;
-  english: string[];
-  posMANK: string;
-  posENG: string;
-  classSING: string;
-  classPLUR: string;
+export interface BaseEntry {
+  mankonWord: string;
   pronunciation: string[];
-  pair: string;
-  sentencesMANK: string[];
-  sentencesENG: string[];
-  sentencesPRON: string[];
+  englishWord: string[];
+  partOfSpeech: string;
+  mankonSentence: string[];
+  englishSentence: string[];
+  sentenceRecording: string[];
+  pair: string[];
+  contributor: number[];
 }
-export interface SearchParams {
-  data : MankonWordInfo[];
+export interface NounEntry extends BaseEntry {
+  classSING: number;
+  classPLUR: number;
+}
+
+export interface VerbEntry extends BaseEntry{}
+
+export interface AdjectiveEntry extends BaseEntry{}
+
+export type DictionaryEntry = NounEntry | VerbEntry | AdjectiveEntry;
+
+export interface DemographicInfo {
+  age: number;
+  location: [];
+  languagesSpoken: [];
+  currentLanguages: [];
+  childhoodLanguages: [];
+  readingProficiency: number,
+  writingProficiency: number,
+  contributor: number
 }
