@@ -38,7 +38,9 @@ export default function Entry() {
           )}
         </div>
         <p id="translationEntry" className="translationEntry">
-          {value.englishWord.map((item, idx) => idx != (value.englishWord.length-1) ? <span>{item}, </span> : <span>{item}</span>)}
+          {value.englishWord.map((item, idx) => (
+            <span key={idx}>{item}{idx !== value.englishWord.length - 1 ? ", " : ""}</span>
+          ))}
         </p>
         <div className="card pair">
           <div className="card-header">Paired Word</div>

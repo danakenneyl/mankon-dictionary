@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 interface GoogleDriveFile {
   id: string;
@@ -23,22 +23,22 @@ const FileList: React.FC = () => {
     json: process.env.GOOGLE_DRIVE_JSON_FOLDER_ID || ''
   };
 
-  const fetchFiles = async () => {
+  const fetchFiles = useCallback(async () => {
     try {
       setLoading(true);
       const folderId = folders[folderType as keyof typeof folders];
-      
+  
       if (!folderId) {
         throw new Error(`No folder ID available for type: ${folderType}`);
       }
-      
+  
       const url = `/api/list-files?folderId=${folderId}${fileType ? `&fileType=${fileType}` : ''}`;
       const response = await fetch(url);
-      
+  
       if (!response.ok) {
         throw new Error(`Error: ${response.status} ${response.statusText}`);
       }
-      
+  
       const data: ListFilesResponse = await response.json();
       setFiles(data.files || []);
       setError(null);
@@ -48,11 +48,12 @@ const FileList: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
-
+  }, [folderType, fileType]); // Dependencies for useCallback
+  
   useEffect(() => {
     fetchFiles();
-  }, [folderType, fileType]);
+  }, [fetchFiles]); // Stable function reference, avoiding infinite loop
+
 
   const handleFolderChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFolderType(e.target.value);
