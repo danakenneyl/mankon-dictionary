@@ -1,15 +1,16 @@
 'use client'; // Need this since we're using state and browser APIs
 
-import { MankonWordInfo } from "@/components/types/Datatypes";
+import { BaseEntry } from "@/components/types/Datatypes";
 import { SearchParams } from "@/components/types/Datatypes";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import ToggleLang from "./ToggleLang";
 import { useSearch } from '@/context/SearchContext';
 
-export default function SearchBar({ data}: SearchParams) {
+export default function SearchBar( data: SearchParams) {
+  const dictionary = data.data;
   const router = useRouter();
-  const [filteredData, setFilteredData] = useState<MankonWordInfo[]>([]);
+  const [filteredData, setFilteredData] = useState<BaseEntry[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const [selectedIndex, setSelectedIndex] = useState<number>(-1); 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -20,10 +21,10 @@ export default function SearchBar({ data}: SearchParams) {
     if (!searchWord) {
       clearData();
     } else {
-      const newFilter = data.filter((value) =>
+      const newFilter = dictionary.filter((value) =>
         searchEng
-          ? value.english.some((engWord) => engWord.toLowerCase().startsWith(searchWord))
-          : value.mankon.toLowerCase().startsWith(searchWord)
+          ? value.englishWord.some((engWord) => engWord.toLowerCase().startsWith(searchWord))
+          : value.mankonWord.toLowerCase().startsWith(searchWord)
       );
       setFilteredData(newFilter);
       setSelectedIndex(-1);
@@ -35,21 +36,21 @@ export default function SearchBar({ data}: SearchParams) {
   
     if (event.key === "Enter") {
       const match = searchEng
-        ? filteredData.find((value) => value.english.some((engWord) => engWord.toLowerCase() === inputValue))
-        : filteredData.find((value) => value.mankon.toLowerCase() === inputValue);
-      if (match && (match.english.length === 1)) {
-        handleNavigateToEntry(searchEng ? match.english[0] : match.mankon);
+        ? filteredData.find((value) => value.englishWord.some((engWord) => engWord.toLowerCase() === inputValue))
+        : filteredData.find((value) => value.mankonWord.toLowerCase() === inputValue);
+      if (match && (match.englishWord.length === 1)) {
+        handleNavigateToEntry(searchEng ? match.englishWord[0] : match.mankonWord);
       } else {
         handleNotFound();
       }
     } else if (event.key === "ArrowDown" && selectedIndex < filteredData.length - 1) {
       const newIndex = selectedIndex + 1;
       setSelectedIndex(newIndex);
-      setInputValue(searchEng ? filteredData[newIndex].english[0] : filteredData[newIndex].mankon);
+      setInputValue(searchEng ? filteredData[newIndex].englishWord[0] : filteredData[newIndex].mankonWord);
     } else if (event.key === "ArrowUp" && selectedIndex > 0) {
       const newIndex = selectedIndex - 1;
       setSelectedIndex(newIndex);
-      setInputValue(searchEng ? filteredData[newIndex].english[0] : filteredData[newIndex].mankon);
+      setInputValue(searchEng ? filteredData[newIndex].englishWord[0] : filteredData[newIndex].mankonWord);
     }
   };
   
@@ -88,11 +89,11 @@ export default function SearchBar({ data}: SearchParams) {
             <div
               key={index}
               className={`dataItem ${selectedIndex === index ? "selected" : ""}`}
-              onClick={() => handleNavigateToEntry(value.mankon)}
+              onClick={() => handleNavigateToEntry(value.mankonWord)}
             >
               {searchEng
-                ? <p>{value.english.join(", ")}</p>
-                : <p>{value.mankon}</p>
+                ? <p>{value.englishWord.join(", ")}</p>
+                : <p>{value.mankonWord}</p>
               }
             </div>
           ))}

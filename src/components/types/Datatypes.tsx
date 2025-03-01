@@ -30,3 +30,7 @@ export interface DemographicInfo {
   writingProficiency: number,
   contributor: number
 }
+
+export interface SearchParams {
+  data: BaseEntry[];
+}

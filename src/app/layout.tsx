@@ -13,12 +13,11 @@ export const metadata = {
 }
 
 export default function RootLayout({children }: {children: React.ReactNode}) {
-  const dictionaryData: BaseEntry[] = dictionary as BaseEntry[];
   return (
     <html lang="en">
       <body>
         <SearchProvider>
-          <Header data = {dictionaryData} />
+          <Header data = {dictionary} />
           {children}
         </SearchProvider>
       </body>
