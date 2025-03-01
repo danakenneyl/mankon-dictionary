@@ -54,7 +54,7 @@ export default function ProposeEntryForm() {
       formDataToSubmit.append('englishWord', formData.englishWord);
 
       // Send the request
-      const response = await fetch('/api/upload-audio', {
+      const response = await fetch('/api/upload-file', {
         method: 'POST',
         body: formDataToSubmit,
       });

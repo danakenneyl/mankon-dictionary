@@ -11,6 +11,10 @@ export default function Contribute() {
     router.push('/contribute/entry-proposal');
   }
 
+  const routeToTestPage = () => {
+    router.push('/contribute/test-list');
+  }
+
   return (
     <div className="flex justify-center">
       <div className="content-wrapper">
@@ -22,6 +26,8 @@ export default function Contribute() {
           <p>You must have a unique id to fill out this entry proposal form</p>
           <p>Feel free to submit as many entry proposals as you would like! </p>
           <button onClick={routeToEntryProp}>Entry Proposal Form</button>
+          <p>This is for testing</p>
+          <button onClick={routeToTestPage}>Testing</button>
         </div>
       </div>
     </div>

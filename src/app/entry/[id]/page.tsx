@@ -1,14 +1,14 @@
 'use client';
 import { useParams } from 'next/navigation';
-import { MankonWordInfo } from "@/types/Datatypes";
+import { BaseEntry } from "@/types/Datatypes";
 import dictionary from '@/data/dictionary.json';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 
 export default function Entry() {
   const { id } = useParams<{ id: string }>();
   const word = decodeURIComponent(id).split("-")[0]; ; 
-  const dict = dictionary as MankonWordInfo[];
-  const value = dict.find((item) => item.mankon === word || item.english.some((engWord) => engWord === word));
+  const dict = dictionary as BaseEntry[];
+  const value = dict.find((item) => item.mankonWord === word || item.englishWord.some((engWord) => engWord === word));
 
   // This is for Typescript's for error checking. 
   // The the SearchBar will not open a page that doesn't exist
@@ -27,8 +27,8 @@ export default function Entry() {
       <div className="content-wrapper">
       <div className="content">
         <div className="entry__word" id="wordEntry">
-          <strong>{value.mankon}</strong>
-          <span className="entry__pos" id="posEntry">{value.posENG}</span>
+          <strong>{value.mankonWord}</strong>
+          <span className="entry__pos" id="posEntry">{value.partOfSpeech}</span>
           {value.pronunciation?.[0] && (
             <VolumeUpIcon 
                 className="pronunciation" 
@@ -38,13 +38,13 @@ export default function Entry() {
           )}
         </div>
         <p id="translationEntry" className="translationEntry">
-          {value.english.map((item, idx) => idx != (value.english.length-1) ? <span>{item}, </span> : <span>{item}</span>)}
+          {value.englishWord.map((item, idx) => idx != (value.englishWord.length-1) ? <span>{item}, </span> : <span>{item}</span>)}
         </p>
         <div className="card pair">
           <div className="card-header">Paired Word</div>
           <div className="card-body">
             <ul className="list-group">
-              <li className="list-group-item" key={value.pair}>
+              <li className="list-group-item" key={value.pair[0]}>
                   <strong className="mankonExample">{value.pair}</strong> 
                   </li>
             </ul>
@@ -54,18 +54,18 @@ export default function Entry() {
           <div className="card-header">Sentence Examples</div>
           <div className="card-body">
             <ul className="list-group">
-              {value.sentencesMANK.map((example, index) => (
+              {value.mankonSentence.map((example, index) => (
                 <li className="list-group-item" key={index}>
                   <strong className="mankonExample">{example}</strong>
-                  {value.sentencesPRON?.[index] && (
+                  {value.sentenceRecording?.[index] && (
                     <VolumeUpIcon 
                       className="pronunciation" 
-                      onClick={() => playAudio(value.sentencesPRON[index])}
+                      onClick={() => playAudio(value.sentenceRecording[index])}
                       style={{ cursor: "pointer" }}
                     />
                   )}
                   <div>
-                    <em className="englishExample">{value.sentencesENG[index]}</em>
+                    <em className="englishExample">{value.englishSentence[index]}</em>
                   </div>
                 </li>
               ))}

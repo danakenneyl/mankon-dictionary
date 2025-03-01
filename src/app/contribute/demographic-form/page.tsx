@@ -4,10 +4,10 @@ import { useRouter } from 'next/navigation';
 
 interface JsonFormData {
   age: number;
-  location: String[];
-  languagesSpoken: String[];
-  currentLanguages: String[];
-  childhoodLanguages: String[];
+  location: string[];
+  languagesSpoken: string[];
+  currentLanguages: string[];
+  childhoodLanguages: string[];
   readingProficiency: number;
   writingProficiency: number;
   id: number;
@@ -63,7 +63,7 @@ export default function DemographicQuestions(){
     }
 
     // Handle form submission
-    const handleSubmit = (e : any) => {
+    const handleSubmit = (e : React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         
         const formReadyData = convertToFormData(formData);
@@ -98,7 +98,7 @@ export default function DemographicQuestions(){
               </div>
               
               <div>
-                <p>Where do you currently live? (Ex: Bamenda, Cameroon) </p>
+                <p>Where do you currently live? (Ex: Minnesota, USA) </p>
                 <input 
                   type="text" 
                   name="location" 
@@ -108,7 +108,7 @@ export default function DemographicQuestions(){
               </div>
               
               <div>
-                <p>What language(s) do you speak? (Ex: English,Mankon) </p>
+                <p>What language(s) do you speak? (Ex: English, Mankon) </p>
                 <input 
                   type="text" 
                   name="languagesSpoken" 
@@ -130,7 +130,7 @@ export default function DemographicQuestions(){
               </div>
               
               <div>
-                <p>What language(s) did/do you speak with your parents growing up? </p>
+                <p>What language(s) do/did you speak with your parents growing up? </p>
                 <input 
                   type="text" 
                   name="childhoodLanguages" 

@@ -20,7 +20,7 @@
         "sentenceRecording": [],
         "pair" : ["ɨ̀tsɛʔɛ"],
         "contributor": [0],
-        "classSING": 7,
-        "classPLUR": 8
+        "singleClass": 7,
+        "pluralClass": 8
     }
 ]

@@ -27,6 +27,6 @@
       "@/propose-entry/*": ["./src/components/propose-entry/*"],
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/contribute/test-list"],
   "exclude": ["node_modules"]
 }

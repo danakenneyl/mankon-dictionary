@@ -10,15 +10,15 @@ export interface BaseEntry {
   contributor: number[];
 }
 export interface NounEntry extends BaseEntry {
-  classSING: number;
-  classPLUR: number;
+  singleClass: number;
+  pluralClass: number;
 }
 
-export interface VerbEntry extends BaseEntry{}
+// export interface VerbEntry extends BaseEntry{}
 
-export interface AdjectiveEntry extends BaseEntry{}
+// export interface AdjectiveEntry extends BaseEntry{}
 
-export type DictionaryEntry = NounEntry | VerbEntry | AdjectiveEntry;
+// export type DictionaryEntry = NounEntry | VerbEntry | AdjectiveEntry;
 
 export interface DemographicInfo {
   age: number;

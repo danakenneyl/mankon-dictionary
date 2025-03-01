@@ -71,7 +71,7 @@ export default function DemographicQuestions(){
         </div>
         
         <div>
-          <p>Where do you currently live? (Ex: Bamenda, Cameroon) </p>
+          <p>Where do you currently live? (Ex: Minnesota, USA) </p>
           <input 
             type="text" 
             name="location" 

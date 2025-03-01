@@ -15,8 +15,8 @@ export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const folderId = searchParams.get('folderId');
     const fileType = searchParams.get('fileType'); // Optional: 'json', 'wav', etc.
-    const pageSize = parseInt(searchParams.get('pageSize') || '100');
-    const pageToken = searchParams.get('pageToken');
+
+
     
     if (!folderId) {
       return new Response('No folder ID provided', { status: 400 });
@@ -40,9 +40,7 @@ export async function GET(request) {
     // List files in the specified folder
     const response = await drive.files.list({
       q: query,
-      pageSize: pageSize,
-      pageToken: pageToken,
-      fields: 'nextPageToken, files(id, name, mimeType, webViewLink, createdTime, size)',
+      fields: 'files(id, name)',
     });
     
     return new Response(JSON.stringify(response.data), {
