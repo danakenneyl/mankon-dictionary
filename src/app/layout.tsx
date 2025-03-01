@@ -4,7 +4,6 @@ import './styles/globals.css'
 import { SearchProvider } from '../context/SearchContext'
 import Header from '../components/header/Header';
 import dictionary from '@/data/dictionary.json';
-import { BaseEntry } from "@/types/Datatypes";
 
 
 export const metadata = {
