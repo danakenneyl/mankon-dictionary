@@ -4,7 +4,7 @@ import './styles/globals.css'
 import { SearchProvider } from '../context/SearchContext'
 import Header from '../components/header/Header';
 import dictionary from '@/data/dictionary.json';
-
+import { BaseEntry } from "@/types/Datatypes";
 
 
 export const metadata = {
@@ -12,16 +12,13 @@ export const metadata = {
   description: 'Your description here'
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({children }: {children: React.ReactNode}) {
+  const dictionaryData: BaseEntry[] = dictionary as BaseEntry[];
   return (
     <html lang="en">
       <body>
         <SearchProvider>
-          <Header data={dictionary} />
+          <Header data = {dictionaryData} />
           {children}
         </SearchProvider>
       </body>

@@ -12,7 +12,12 @@ import BrowseMenu from './BrowseMenu';
 import { BaseEntry } from '@/components/types/Datatypes';
 import styles from './header.module.css';
 
-export default function Header(data: BaseEntry[]) {
+
+interface HeaderProps {
+  data: BaseEntry[];
+}
+
+export default function Header({ data }: HeaderProps) {
   const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false);
   const handleToggle = () => setIsOffcanvasOpen(!isOffcanvasOpen);
   const closeOffcanvas = () => setIsOffcanvasOpen(false);
