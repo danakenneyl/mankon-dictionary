@@ -16,9 +16,9 @@ interface RawFormData {
 }
 
 export default function DemographicQuestions(){
-  const [data, setData] = useState<DriveFilesResponse | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  // const [data, setData] = useState<DriveFilesResponse | null>(null);
+  // const [loading, setLoading] = useState<boolean>(true);
+  // const [error, setError] = useState<string | null>(null);
   const [uniqueId, setUniqueId] = useState<number | null>(null);
 
   // For navigation after submission
@@ -37,7 +37,7 @@ export default function DemographicQuestions(){
 
   const fetchDriveFile = async (): Promise<number | undefined> => {
     try {
-      setLoading(true);
+      // setLoading(true);
       const fileId = "1FqZL4Ttzc7Y_ENeSyJ0ik7b_aLMZSoRh";
       console.log('File ID lala:', fileId);
       const response = await fetch(`/api/get-file?fileId=${fileId}`, {
@@ -59,11 +59,11 @@ export default function DemographicQuestions(){
       return newId;
       
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred');
+      // setError(err instanceof Error ? err.message : 'An unknown error occurred');
       console.log('Error fetching drive files:', err);
       return undefined;
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
@@ -117,7 +117,7 @@ export default function DemographicQuestions(){
         }
       } catch (error) {
         console.error("Error getting unique ID:", error);
-        setError(error instanceof Error ? error.message : 'Error retrieving unique ID');
+        // setError(error instanceof Error ? error.message : 'Error retrieving unique ID');
       }
     };
     
