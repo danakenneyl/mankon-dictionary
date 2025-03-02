@@ -44,11 +44,19 @@ export async function POST(request: Request) {
       message: 'File updated successfully',
       data: response.data
     });
-  } catch (error: any) {
-    console.error('Error updating file:', error);
-    return NextResponse.json(
-      { message: error.message || 'Failed to update file' },
-      { status: 500 }
-    );
-  }
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+        console.error('Error updating file:', error.message);
+        return NextResponse.json(
+          { message: error.message },
+          { status: 500 }
+        );
+      } else {
+        console.error('Unknown error type:', error);
+        return NextResponse.json(
+          { message: 'An unknown error occurred' },
+          { status: 500 }
+        );
+      }
+    }
 }

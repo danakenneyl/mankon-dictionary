@@ -1,5 +1,5 @@
 'use client';
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useCallback} from 'react';
 import { useRouter } from 'next/navigation';
 import { DemographicData } from '@/components/types/Datatypes';
 
@@ -38,7 +38,7 @@ export default function DemographicQuestions(){
       id: ""
   });
 
-  const fetchDriveFile = async (): Promise<DemographicData[] | undefined> => {
+  const fetchDriveFile = useCallback(async (): Promise<DemographicData[] | undefined> => {
     try {
       const response = await fetch(`/api/get-file?fileId=${FILE_ID}`, {
         method: 'GET',
@@ -60,7 +60,7 @@ export default function DemographicQuestions(){
       console.log('Error fetching drive files:', err);
       return undefined;
     }
-  };
+  }, [FILE_ID]);
 
   // Handle text and number inputs (no need to reformat)
   const handleChange = (e : React.ChangeEvent<HTMLInputElement>) => {
@@ -174,7 +174,7 @@ export default function DemographicQuestions(){
     };
     
     getFileContent();
-  }, []);
+  }, [fetchDriveFile]);
 
   return (
     <div className="flex justify-center">
