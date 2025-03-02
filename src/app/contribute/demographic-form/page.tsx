@@ -20,7 +20,6 @@ export default function DemographicQuestions(){
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  // For navigation after submission
   const router = useRouter();
   
   // File ID constant
