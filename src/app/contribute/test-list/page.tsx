@@ -1,17 +1,7 @@
 // app/drive-explorer/page.tsx
 'use client';
 import { useState, useEffect } from 'react';
-
-type DriveFile = {
-  id: string;
-  name: string;
-};
-
-type DriveFilesResponse = {
-  audioFiles: DriveFile[];
-  jsonFiles: DriveFile[];
-  error?: string;
-};
+import { DriveFilesResponse} from '@/components/types/Datatypes';
 
 export default function DriveExplorer() {
   const [data, setData] = useState<DriveFilesResponse | null>(null);
@@ -28,6 +18,7 @@ export default function DriveExplorer() {
       }
       
       const result = await response.json();
+      console.log('Fetched result:', result);
       setData(result);
       
     } catch (err) {
@@ -60,22 +51,6 @@ export default function DriveExplorer() {
       
       {!loading && data && !error && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="border rounded-lg p-4">
-            <h2 className="text-xl font-semibold mb-3">Audio Files ({data.audioFiles.length})</h2>
-            {data.audioFiles.length === 0 ? (
-              <p className="text-gray-500">No audio files found</p>
-            ) : (
-              <ul className="space-y-2">
-                {data.audioFiles.map((file) => (
-                  <li key={file.id} className="border-b pb-2">
-                    <p className="font-medium">{file.name}</p>
-                    <p className="text-sm text-gray-500 break-all">ID: {file.id}</p>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-          
           <div className="border rounded-lg p-4">
             <h2 className="text-xl font-semibold mb-3">JSON Files ({data.jsonFiles.length})</h2>
             {data.jsonFiles.length === 0 ? (

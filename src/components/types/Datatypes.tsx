@@ -34,3 +34,24 @@ export interface DemographicInfo {
 export interface SearchParams {
   data: BaseEntry[];
 }
+
+export type DriveFilesResponse = {
+  jsonFiles: DriveFile[];
+  error?: string;
+};
+
+export type DriveFile = {
+  id: string;
+  name: string;
+};
+
+export interface DemographicFormData {
+  age: number;
+  location: string[];
+  languagesSpoken: string[];
+  currentLanguages: string[];
+  childhoodLanguages: string[];
+  readingProficiency: number;
+  writingProficiency: number;
+  id: number;
+}
