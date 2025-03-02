@@ -9,7 +9,7 @@ type DriveFile = {
 };
 
 type DriveFilesResponse = {
-  // audioFiles: DriveFile[];
+  audioFiles: DriveFile[];
   jsonFiles: DriveFile[];
   error?: string;
 };
@@ -43,14 +43,14 @@ export async function GET() : Promise<NextResponse<DriveFilesResponse>> {
 
     // Fetch files in parallel
     // Modify your code to handle errors for each folder separately
-    // let audioFiles: DriveFile[] = [];
+    let audioFiles: DriveFile[] = [];
     let jsonFiles: DriveFile[] = [];
 
-    // try {
-    //   audioFiles = await getFilesFromFolder(process.env.GOOGLE_DRIVE_AUDIO_FOLDER_ID || '');
-    // } catch (error) {
-    //   console.log('Error fetching audio files:', error);
-    // }
+    try {
+      audioFiles = await getFilesFromFolder(process.env.GOOGLE_DRIVE_AUDIO_FOLDER_ID || '');
+    } catch (error) {
+      console.log('Error fetching audio files:', error);
+    }
 
     try {
       jsonFiles = await getFilesFromFolder(process.env.GOOGLE_DRIVE_JSON_FOLDER_ID || '');
@@ -59,7 +59,7 @@ export async function GET() : Promise<NextResponse<DriveFilesResponse>> {
     }
 
     // return NextResponse.json({ audioFiles, jsonFiles });
-    return NextResponse.json({jsonFiles });
+    return NextResponse.json({ audioFiles, jsonFiles });
 
   } catch (error) {
     console.log('Error fetching Google Drive files:', error);

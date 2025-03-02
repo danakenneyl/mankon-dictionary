@@ -37,7 +37,7 @@ export default function DemographicQuestions(){
   const fetchDriveFile = useCallback(async (): Promise<DemographicData[] | undefined> => {
     try {
 
-      const response = await fetch(`/api/get-json-file?file=demographic`, {
+      const response = await fetch(`/api/get-env-var-file?file=demographic`, {
         method: 'GET',
       });
       
