@@ -22,9 +22,6 @@ export default function DemographicQuestions(){
 
   const router = useRouter();
   
-  // File ID constant
-  const FILE_ID = process.env.GOOGLE_DRIVE_DEMOGRAPHIC_FILE_ID;
-  
   // Demographic info inputs
   const [formData, setFormData] = useState<RawFormData>({
       age: "",
@@ -39,7 +36,8 @@ export default function DemographicQuestions(){
 
   const fetchDriveFile = useCallback(async (): Promise<DemographicData[] | undefined> => {
     try {
-      const response = await fetch(`/api/get-file?fileId=${FILE_ID}`, {
+
+      const response = await fetch(`/api/get-json-file?file=demographic`, {
         method: 'GET',
       });
       
@@ -59,7 +57,7 @@ export default function DemographicQuestions(){
       console.log('Error fetching drive files:', err);
       return undefined;
     }
-  }, [FILE_ID]);
+  }, []);
 
   // Handle text and number inputs (no need to reformat)
   const handleChange = (e : React.ChangeEvent<HTMLInputElement>) => {
@@ -97,7 +95,7 @@ export default function DemographicQuestions(){
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          fileId: FILE_ID,
+          file: "demographic",
           content: updatedContent
         }),
       });
@@ -182,7 +180,7 @@ export default function DemographicQuestions(){
           <form onSubmit={handleSubmit}>
             <h2>Demographic Information</h2>
             <div>
-              <p>Here is your unique id. Remember it: {uniqueId !== null ? uniqueId : 'Loading...'}</p>
+              <p>Here is your unique id. Remember it: {uniqueId !== -1 ? uniqueId : 'Loading...'}</p>
             </div>
             <div>
               <p>How old are you? </p>

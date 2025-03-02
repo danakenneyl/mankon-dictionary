@@ -1,25 +1,47 @@
+// app/api/update-file/route.tsx
 import { google } from 'googleapis';
 import { NextResponse } from 'next/server';
 
+
+
 // If you're using the App Router (Next.js 13+)
 export async function POST(request: Request) {
+
   try {
-    const { fileId, content } = await request.json();
+
+    const { file, content } = await request.json();
     
-    if (!fileId || !content) {
+    if (!file || !content) {
       return NextResponse.json(
         { message: 'fileId and content are required' },
         { status: 400 }
       );
     }
+    // Get file ID from the request URL
+    if (!file) {
+      return new NextResponse('No file ID provided', { status: 400 });
+    }
+    let fileId: string | undefined;
 
-    // Set up authentication
+    if (file === 'demographic') {
+        fileId = process.env.GOOGLE_DRIVE_DEMOGRAPHIC_FILE_ID;
+    } else if (file === 'proposal') {
+        fileId = process.env.GOOGLE_DRIVE_PROPOSAL_FILE_ID;
+    } else if (file === 'dictionary') {
+        fileId = process.env.GOOGLE_DRIVE_DICTIONARY_FILE_ID;
+    } else {
+        return new NextResponse('Invalid file ID provided', { status: 400 });
+    }
+
+    // Setup authentication
+    const credentials = process.env.GOOGLE_SERVICE_ACCOUNT_KEY;
+    if (!credentials) {
+      return new NextResponse('Missing Google service account key', { status: 500 });
+    }
+    
     const auth = new google.auth.GoogleAuth({
-      credentials: {
-        client_email: process.env.GOOGLE_CLIENT_EMAIL,
-        private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-      },
-      scopes: ['https://www.googleapis.com/auth/drive.file'],
+      credentials: JSON.parse(credentials),
+      scopes: ['https://www.googleapis.com/auth/drive'],
     });
 
     const drive = google.drive({
@@ -30,6 +52,13 @@ export async function POST(request: Request) {
     // Convert content to a Buffer
     const contentBuffer = Buffer.from(content);
 
+    // Prove the file exists
+    const caller = await drive.files.get({
+      fileId: "1xKQS2NXf99t9pWr96b9kFPAD0arv7GFx",  // Replace with the actual file ID
+      // fields: 'id, name, mimeType, modifiedTime'
+    });
+
+    console.log('Caller:', caller.data);
     // Update the file
     const response = await drive.files.update({
       fileId: fileId,
@@ -46,10 +75,10 @@ export async function POST(request: Request) {
     });
   } catch (error: unknown) {
     if (error instanceof Error) {
-        console.error('Error updating file:', error.message);
+        console.error('Error updating file:', error);
         return NextResponse.json(
           { message: error.message },
-          { status: 500 }
+          { status: 404 }
         );
       } else {
         console.error('Unknown error type:', error);
