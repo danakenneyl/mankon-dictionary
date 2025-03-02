@@ -20,12 +20,12 @@ export interface NounEntry extends BaseEntry {
 
 // export type DictionaryEntry = NounEntry | VerbEntry | AdjectiveEntry;
 
-export interface DemographicInfo {
+export interface DemographicData {
   age: number;
-  location: [];
-  languagesSpoken: [];
-  currentLanguages: [];
-  childhoodLanguages: [];
+  location: string[];
+  languagesSpoken: string[];
+  currentLanguages: string[];
+  childhoodLanguages: string[];
   readingProficiency: number,
   writingProficiency: number,
   contributor: number
@@ -44,14 +44,3 @@ export type DriveFile = {
   id: string;
   name: string;
 };
-
-export interface DemographicFormData {
-  age: number;
-  location: string[];
-  languagesSpoken: string[];
-  currentLanguages: string[];
-  childhoodLanguages: string[];
-  readingProficiency: number;
-  writingProficiency: number;
-  id: number;
-}
