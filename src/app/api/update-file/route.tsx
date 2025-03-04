@@ -52,13 +52,6 @@ export async function POST(request: Request) {
     // Convert content to a Buffer
     const contentBuffer = Buffer.from(content);
 
-    // Prove the file exists
-    const caller = await drive.files.get({
-      fileId: "1xKQS2NXf99t9pWr96b9kFPAD0arv7GFx",  // Replace with the actual file ID
-      // fields: 'id, name, mimeType, modifiedTime'
-    });
-
-    console.log('Caller:', caller.data);
     // Update the file
     const response = await drive.files.update({
       fileId: fileId,

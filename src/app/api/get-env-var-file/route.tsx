@@ -8,7 +8,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const file = searchParams.get('file');
 
     if (!file) {
-      return new NextResponse('No file ID provided', { status: 400 });
+      return new NextResponse('No file provided', { status: 400 });
     }
     let fileId: string | undefined;
 
@@ -69,7 +69,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     });
   } catch (error: unknown) {
     const err = error as Error;
-    console.error('Download error details:', err.message);
+    // You can also log the entire error object to see all available properties
+    console.error('Raw error object:', JSON.stringify(error, null, 2));
     
     return new NextResponse(
       JSON.stringify({

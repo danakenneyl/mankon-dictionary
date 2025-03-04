@@ -1,22 +1,50 @@
-// src/components/ProposeEntryRecord.tsx
 'use client';
 import { useReactMediaRecorder } from "react-media-recorder";
 import React, { useEffect, useState } from "react";
 
 interface ProposeEntryRecordProps {
   onRecordingComplete: (audioBlobUrl: string) => void;
+  instanceId: string;
 }
 
-const ProposeEntryRecord: React.FC<ProposeEntryRecordProps> = ({ onRecordingComplete }) => {
+const ProposeEntryRecord: React.FC<ProposeEntryRecordProps> = ({ 
+  onRecordingComplete,
+  instanceId 
+}) => {
   const [second, setSecond] = useState<string>("00");
   const [minute, setMinute] = useState<string>("00");
-  const [isActive, setIsActive] = useState<boolean>(false);
+  const [isRecording, setIsRecording] = useState<boolean>(false);
   const [counter, setCounter] = useState<number>(0);
+  const [localBlobUrl, setLocalBlobUrl] = useState<string | null>(null);
+
+  const { status, startRecording, stopRecording, mediaBlobUrl, clearBlobUrl } = useReactMediaRecorder({
+    video: false,
+    audio: true,
+    mediaRecorderOptions: {
+      mimeType: 'audio/webm',
+    },
+    onStop: (blobUrl) => {
+      console.log(`${instanceId} recording stopped, blob URL:`, blobUrl);
+      // Directly call onRecordingComplete when recording stops
+      if (blobUrl) {
+        setLocalBlobUrl(blobUrl);
+        onRecordingComplete(blobUrl);
+      }
+    }
+  });
+
+  // Also update when mediaBlobUrl changes as a backup
+  useEffect(() => {
+    if (mediaBlobUrl && !isRecording && mediaBlobUrl !== localBlobUrl) {
+      console.log(`${instanceId} mediaBlobUrl updated:`, mediaBlobUrl);
+      setLocalBlobUrl(mediaBlobUrl);
+      onRecordingComplete(mediaBlobUrl);
+    }
+  }, [mediaBlobUrl, instanceId, isRecording, onRecordingComplete, localBlobUrl]);
 
   useEffect(() => {
-    let intervalId: NodeJS.Timeout | null = null; // Initialize intervalId to null
-
-    if (isActive) {
+    let intervalId: NodeJS.Timeout | null = null;
+    if (isRecording) {
       intervalId = setInterval(() => {
         const secondCounter = counter % 60;
         const minuteCounter = Math.floor(counter / 60);
@@ -27,46 +55,37 @@ const ProposeEntryRecord: React.FC<ProposeEntryRecordProps> = ({ onRecordingComp
         setCounter((prevCounter) => prevCounter + 1);
       }, 1000);
     } else if (counter !== 0) {
-      if (intervalId) clearInterval(intervalId); // Safely clear the interval if intervalId is not null
+      if (intervalId) clearInterval(intervalId);
     }
-
     return () => {
-      if (intervalId) clearInterval(intervalId); // Cleanup interval on component unmount
+      if (intervalId) clearInterval(intervalId);
     };
-  }, [isActive, counter]);
+  }, [isRecording, counter]);
 
-  const stopTimer = (e: React.MouseEvent) => {
+  const resetTimer = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsActive(false);
     setCounter(0);
     setSecond("00");
     setMinute("00");
-  };
-
-  const { status, startRecording, stopRecording, pauseRecording, mediaBlobUrl } = useReactMediaRecorder({
-    video: false,
-    audio: true,
-  });
-
-  const handleRecordAction = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!isActive) {
-      startRecording();
-    } else {
-      pauseRecording();
+    setLocalBlobUrl(null);
+    if (clearBlobUrl) {
+      clearBlobUrl();
     }
-    setIsActive(!isActive);
+    // Also clear the parent component's recording data
+    onRecordingComplete("");
   };
 
-  const handleStopRecording = (e: React.MouseEvent) => {
+  const handleToggleRecording = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    stopRecording();
-    stopTimer(e);  // Stop timer when recording is stopped
-    if (mediaBlobUrl) {
-      onRecordingComplete(mediaBlobUrl); // Send audio URL to parent component
+    if (!isRecording) {
+      startRecording();
+      setIsRecording(true);
+    } else {
+      stopRecording();
+      setIsRecording(false);
+      // The onStop callback will handle setting the recording
     }
   };
 
@@ -81,42 +100,33 @@ const ProposeEntryRecord: React.FC<ProposeEntryRecordProps> = ({ onRecordingComp
             </span>
             <button
               type="button"
-              onClick={stopTimer}
+              onClick={resetTimer}
               className="px-3 py-1 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
             >
               Clear
             </button>
           </div>
         </div>
-
-        {mediaBlobUrl && (
+        {localBlobUrl && (
           <div className="w-full">
-            <audio src={mediaBlobUrl} controls className="w-full" />
+            <audio src={localBlobUrl} controls className="w-full" />
           </div>
         )}
-
         <div className="flex flex-col space-y-2">
           <p className="text-sm text-gray-600">
-            {isActive ? "Recording in progress..." : "Press Start to begin recording"}
+            {isRecording ? "Recording in progress..." : "Press Start to begin recording"}
           </p>
           <div className="flex space-x-2">
             <button
               type="button"
-              onClick={handleRecordAction}
+              onClick={handleToggleRecording}
               className={`px-4 py-2 rounded-md transition-colors ${
-                isActive
-                  ? "bg-yellow-500 hover:bg-yellow-600 text-white"
+                isRecording
+                  ? "bg-red-500 hover:bg-red-600 text-white"
                   : "bg-green-500 hover:bg-green-600 text-white"
               }`}
             >
-              {isActive ? "Pause" : "Start"}
-            </button>
-            <button
-              type="button"
-              onClick={handleStopRecording}
-              className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md transition-colors"
-            >
-              Stop
+              {isRecording ? "Stop" : "Start"}
             </button>
           </div>
         </div>

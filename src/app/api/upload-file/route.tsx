@@ -44,7 +44,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       folderId = process.env.GOOGLE_DRIVE_AUDIO_FOLDER_ID || ''; // Using audio folder as default
       console.log(`Uploading ${file.type} file to default folder`);
     }
-    
+    console.log("gobbledygook: ", file.name);
+    console.log("gabagabaga", file.type);
     const response = await drive.files.create({
       requestBody: {
         name: file.name,

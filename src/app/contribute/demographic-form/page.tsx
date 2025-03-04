@@ -144,7 +144,6 @@ export default function DemographicQuestions(){
       
       if (success) {
         console.log('File successfully updated on Google Drive');
-        // Navigate back to contribute page on success
         router.push('/contribute');
       } else {
         throw new Error("Failed to update the file");
