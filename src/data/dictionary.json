@@ -1,0 +1,26 @@
+[
+    {
+        "mankonWord": "bɨŋə",
+        "pronunciation": ["audio/bɨŋə_dance.wav"],
+        "englishWord": ["dance"],
+        "partOfSpeech": "verb",
+        "mankonSentence": ["a bɨ̂ŋ ʃìʔínɛ́", "à bɨ́ŋɛ́"],
+        "englishSentence": ["S/he dances well", "S/he dances"],
+        "sentenceRecording": ["bɨŋə_dance_sentence_1.wav", "bɨŋə_dance_sentence_2.wav"],
+        "pair" : ["bɨŋ"],
+        "contributor": [0]
+    },
+    {
+        "mankonWord":"àtsɛʔɛ",
+        "pronunciation": ["audio/atsɛʔɛ_cloth.wav"],
+        "englishWord":["cloth", "clothing"], 
+        "partOfSpeech": "noun",
+        "mankonSentence": [],
+        "englishSentence": [],
+        "sentenceRecording": [],
+        "pair" : ["ɨ̀tsɛʔɛ"],
+        "contributor": [0],
+        "singleClass": 7,
+        "pluralClass": 8
+    }
+]
