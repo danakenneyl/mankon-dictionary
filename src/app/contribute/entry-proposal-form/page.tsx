@@ -1,9 +1,14 @@
 'use client';
-
 import React, { useState, useEffect } from 'react';
 import {useRouter} from "next/navigation"
-import AudioRecorder from '@/components/propose-entry/ProposeEntryRecord';
+import dynamic from 'next/dynamic';
 import {UpdateJson, FetchJson, UploadAudio} from '@/components/utils/ClientSideAPICalls';
+
+// Dynamic import with SSR disabled
+const AudioRecorder = dynamic(
+  () => import('@/components/propose-entry/ProposeEntryRecord'),
+  { ssr: false }
+);
 
 type PartOfSpeech = 1 | 2 | 3 | null; // 1: Verb, 2: Noun, 3: Adjective
 
@@ -157,7 +162,7 @@ export default function MankonWordFormPage() {
       partOfSpeech: mapPartOfSpeech(formData.partOfSpeech),
       mankonSentence: [formData.mankonSentence1, formData.mankonSentence2],
       englishSentence: [formData.englishSentence1, formData.englishSentence2],
-      sentenceRecording: [formData.sentenceRecording1, formData.englishSentence2],
+      sentenceRecording: [formData.sentenceRecording1, formData.sentenceRecording2],
       contributor: formData.uniqueId
     };
   };
