@@ -3,6 +3,7 @@ import { useParams } from 'next/navigation';
 import { BaseEntry } from "@/types/Datatypes";
 import dictionary from '@/data/dictionary.json';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import "@/styles/entry.css";
 
 export default function Entry() {
   const { id } = useParams<{ id: string }>();

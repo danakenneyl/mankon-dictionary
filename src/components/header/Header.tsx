@@ -10,7 +10,7 @@ import SearchBar from './SearchBar';
 import NavButton from './NavButton';
 import BrowseMenu from './BrowseMenu';
 import { SearchParams } from '@/components/types/Datatypes';
-import styles from './header.module.css';
+import '@/styles/header.css'
 
 export default function Header(data: SearchParams) {
   const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false);
@@ -18,20 +18,20 @@ export default function Header(data: SearchParams) {
   const closeOffcanvas = () => setIsOffcanvasOpen(false);
 
   return (
-    <Navbar expand="xxl" className={styles.navbar} data-bs-theme="dark">
-      <Navbar.Brand className={styles.brandContainer}>
-        <Link className={styles.toHome} href="/">
+    <Navbar expand="xxl" className="navbar" data-bs-theme="dark">
+      <Navbar.Brand className="brand-container">
+        <Link className="toHome" href="/">
         <Image
           src="/images/MACUDA.jpg"
           alt=""
-          className={styles.logo}
+          className="logo"
           width={500}  // Replace with your actual desired width
           height={300} // Replace with your actual desired height
         />
         </Link>
-        <div className={styles.title}>
-          <div className={styles.titleLine1}>The Mankon</div>
-          <div className={styles.titleLine2}>Dictionary</div>
+        <div className="title">
+          <div className="title-line1">The Mankon</div>
+          <div className="title-line2">Dictionary</div>
         </div>
       </Navbar.Brand>
       <SearchBar data={data.data}/>
@@ -40,13 +40,13 @@ export default function Header(data: SearchParams) {
         id="offcanvasNavbar-expand-md"
         aria-labelledby="offcanvasNavbarLabel-expand-xxl"
         placement="end"
-        className={styles.navbarNav}
+        className="navbarNav"
         show={isOffcanvasOpen}
         onHide={() => setIsOffcanvasOpen(false)}
       >
         <Offcanvas.Header closeButton />
         <Offcanvas.Body>
-          <Nav className={styles.nav}>
+          <Nav className="nav">
             <NavButton onClick={closeOffcanvas} pageName="About" href="/about" />
             <BrowseMenu onItemClick={closeOffcanvas}/>
             <NavButton onClick={closeOffcanvas} pageName="Language Help" href="/language-help" />
