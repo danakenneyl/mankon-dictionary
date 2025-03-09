@@ -1,7 +1,7 @@
 'use client';
 import {useState, useEffect, useCallback} from 'react';
 import { useRouter } from 'next/navigation';
-import { DemographicData } from '@/components/types/Datatypes';
+import { DemographicData } from '@/types/Datatypes';
 
 interface RawFormData {
   age: string;

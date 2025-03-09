@@ -9,7 +9,7 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import SearchBar from './SearchBar';
 import NavButton from './NavButton';
 import BrowseMenu from './BrowseMenu';
-import { SearchParams } from '@/components/types/Datatypes';
+import { SearchParams } from '@/types/Datatypes';
 import '@/styles/header.css'
 
 export default function Header(data: SearchParams) {

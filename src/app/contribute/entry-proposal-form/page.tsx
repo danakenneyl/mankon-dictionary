@@ -2,11 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import {useRouter} from "next/navigation"
 import dynamic from 'next/dynamic';
-import {UpdateJson, FetchJson, UploadAudio} from '@/components/utils/ClientSideAPICalls';
+import {UpdateJson, FetchJson, UploadAudio} from '@/utils/ClientSideAPICalls';
 
 // Dynamic import with SSR disabled
 const AudioRecorder = dynamic(
-  () => import('@/components/propose-entry/ProposeEntryRecord'),
+  () => import('@/app/contribute/propose-entry/ProposeEntryRecord'),
   { ssr: false }
 );
 

@@ -20,11 +20,11 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@/types/*": ["./src/components/types/*"],
+      "@/types/*": ["./src/types/*"],
       "@/context/*": ["./src/context/*"], 
-      "@/utils/*": ["./src/components/utils/"],
+      "@/utils/*": ["./src/utils/*"],
       "@/data/*": ["./src/data/*"],
-      "@/propose-entry/*": ["./src/components/propose-entry/*"],
+      "@/propose-entry/*": ["./src/app/contribute/propose-entry/*"],
       "@/styles/*": ["./src/app/styles/*"],
     }
   },
