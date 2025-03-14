@@ -5,10 +5,11 @@ import dynamic from 'next/dynamic';
 import { db } from "@/utils/firebase";
 import { UploadAudio } from '@/utils/ClientSideAPICalls';
 import { ref, get, set, update, push } from "firebase/database";
+import "@/styles/contribute.css";
 
 // Dynamic import with SSR disabled
 const AudioRecorder = dynamic(
-  () => import('@/app/contribute/propose-entry/ProposeEntryRecord'),
+  () => import('@/app/contribute/entry-proposal-form/[id]/ProposeEntryRecord'),
   { ssr: false }
 );
 
@@ -388,7 +389,7 @@ export default function MankonWordFormPage() {
             <button
               type="submit"
               disabled={authenticating}
-              className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+              className="button w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
             >
               {authenticating ? "Authenticating..." : "Login"}
             </button>
@@ -406,6 +407,7 @@ export default function MankonWordFormPage() {
             <h1 className="text-2xl font-bold">
               Entry Proposal
             </h1>
+            <p>Required answers are marked with an asterisk *</p>
             <div className="text-sm text-gray-600">
               Logged in as: <span className="font-semibold">{username}</span>
             </div>
@@ -552,9 +554,9 @@ export default function MankonWordFormPage() {
               <div className="pt-6">
                 <button
                   type="submit"
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
+                  className="button px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
                 >
-                  {isEmptyForm ? "Submit Word Entry" : "Update Word Entry"}
+                  Submit Word Entry
                 </button>
               </div>
             </form>

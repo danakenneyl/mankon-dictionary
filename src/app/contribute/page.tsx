@@ -32,7 +32,7 @@ export default function Contribute() {
             answers.
           </p>
           <button onClick={() => routeTo("/contribute/demographic-form")}>Demographic Form</button>
-          
+          <p></p>
           <h3>Dictionary Entry Proposal Form</h3>
           <h4>The Entry</h4>
           <p>
@@ -40,7 +40,8 @@ export default function Contribute() {
             like to see represented in this dictionary, its English translation, a recording of its pronunciation,
             and two sentences that caputure the word in context. It is prefered that proposals are written using 
             the Mankon Alphabet. However, if you do not have a Mankon compatible keyboard at your disposal, feel 
-            free to type in any writing system known to you.
+            free to type in any writing system known to you. Writing sentences is optional. Additionally, selecting
+            one of the requested words below will allow you to avoid typing entirely.
           </p> 
           <h4>Sentence Examples</h4>
           <p>
@@ -73,9 +74,10 @@ export default function Contribute() {
             to obtain additional consent.
           </p>
 
-          <p>You will need your username to complete your proposal.</p>
+          <p>You will need the username you chose while filling out the demographic form to complete your proposal.</p>
           <div>
             <button onClick={() => routeTo("/contribute/entry-proposal-form/0")}>Entry Proposal Form</button>
+          <p></p>
           </div>
           <InitialProposals/>
          </div>
