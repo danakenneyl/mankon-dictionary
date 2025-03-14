@@ -8,7 +8,7 @@ const englishAlphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", 
 const mankonAlphabet = ["A", "B", "Bv", "Tʃ", "D", "Dv", "Dz", "Dʒ", "E", "G", "Ɣ", "Ɨ", "K", "Kf", "L", "Lv", "M", "N", "Ɲ", "Ŋ", "O", "Ɔ", "S", "Ʃ", "T", "Tf", "Ts", "V",  "W", "Y", "Z", "Ʒ"];
 
 export default function Browse() {
-const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();
   const isEnglish = id === "browse-english";
 
   // Select correct alphabet

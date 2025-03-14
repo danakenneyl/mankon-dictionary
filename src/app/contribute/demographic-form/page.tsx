@@ -1,116 +1,93 @@
 'use client';
-import {useState, useEffect, useCallback} from 'react';
+import {useState, useEffect} from 'react';
 import { useRouter } from 'next/navigation';
-import { DemographicData } from '@/types/Datatypes';
+import { db } from "@/utils/firebase";
+import { ref, get, set, push } from "firebase/database";
+import { v4 as uuidv4 } from 'uuid';
 
-interface RawFormData {
+interface DemographicAnswers {
+  UUID: string;
   age: string;
   location: string;
-  languagesSpoken: string;
+  diaspora: boolean;
+  spokenLanguage: string;
+  currentLanguage: string;
+  childhoodLanguage: string;
+  yearsSpeaking: number;
+  learnSpeechModality: string;
+  speechProficiency: string;
+  writeProficiency: string;
+  readProficiency: string;
+  createdAt: string;
+  lastModifiedAt: string;
+}
+
+interface Contributor {
+  contribution: string[];
+  createdAt: string;
+  lastModifiedAt: string;
+  password: string;
+  username: string;
+}
+
+interface formData {
+  username: string;
+  age: string;
+  location: string;
+  diaspora: boolean;
+  spokenLanguages: string;
   currentLanguages: string;
   childhoodLanguages: string;
-  readingProficiency: string;
+  yearsSpeaking: number;
+  learnSpeechModality: string;
+  speakingProficiency: string;
   writingProficiency: string;
-  id: string;
+  readingProficiency: string;
 }
 
 export default function DemographicQuestions(){
-  const [uniqueId, setUniqueId] = useState<number>(-1);
-  const [fileContent, setFileContent] = useState<DemographicData[] | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const router = useRouter();
-  
+
   // Demographic info inputs
-  const [formData, setFormData] = useState<RawFormData>({
-      age: "",
-      location: "",
-      languagesSpoken: "",
-      currentLanguages: "",
-      childhoodLanguages: "",
-      readingProficiency: "",
-      writingProficiency: "",
-      id: ""
+  const [formData, setFormData] = useState<formData>({
+    username: "",
+    age: "",
+    location: "",
+    diaspora: false,
+    spokenLanguages: "",
+    currentLanguages: "",
+    childhoodLanguages: "",
+    yearsSpeaking: 0,
+    learnSpeechModality: "",
+    speakingProficiency: "",
+    writingProficiency: "",
+    readingProficiency: "",
   });
-
-  const fetchDriveFile = useCallback(async (): Promise<DemographicData[] | undefined> => {
-    try {
-
-      const response = await fetch(`/api/get-env-var-file?file=demographic`, {
-        method: 'GET',
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      
-      const fileData = await response.json();
-      // Assuming the last entry in the JSON contains the "contributor" key
-      const lastEntry = fileData[fileData.length - 1]; // Get the last item
-      const newId = lastEntry.contributor + 1;
-      setUniqueId(newId);
-
-      return fileData;
-      
-    } catch (err) {
-      console.log('Error fetching drive files:', err);
-      return undefined;
-    }
-  }, []);
 
   // Handle text and number inputs (no need to reformat)
   const handleChange = (e : React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.target;
-      setFormData(prevData => ({
+    const { name, value, type, checked } = e.target;
+    setFormData(prevData => ({
       ...prevData,
-      [name]: value
-      }));
+      [name]: type === 'checkbox' ? checked : value
+    }));
   };
 
-  const convertToFormData = (formData: RawFormData) => {
-      const data : DemographicData = {
-        age: parseInt(formData.age),
-        location: formData.location.split(',').map(lang => lang.trim()).filter(lang => lang !== ''),
-        languagesSpoken: formData.languagesSpoken.split(',').map(lang => lang.trim()).filter(lang => lang !== ''),
-        currentLanguages: formData.currentLanguages.split(',').map(lang => lang.trim()).filter(lang => lang !== ''),
-        childhoodLanguages: formData.childhoodLanguages.split(',').map(lang => lang.trim()).filter(lang => lang !== ''),
-        readingProficiency: parseInt(formData.readingProficiency),
-        writingProficiency: parseInt(formData.writingProficiency),
-        contributor: uniqueId  // Use the uniqueId as contributor
-      };
-      return data;
-  }
-
-  const appendToExistingJson = (existingJson: DemographicData[], newEntry: DemographicData): DemographicData[] => {
-    return [...existingJson, newEntry];
-  };
-
-  // Function to update the file on Google Drive
-  const updateDriveFile = async (updatedContent: string): Promise<boolean> => {
-    try {
-      const response = await fetch('/api/update-file', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          file: "demographic",
-          content: updatedContent
-        }),
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
-      }
-      
-      return true;
-    } catch (err) {
-      console.error('Error updating file:', err);
-      setSubmitError(err instanceof Error ? err.message : 'An unknown error occurred while updating the file');
-      return false;
+  // Verify Username
+  const checkUsernameExists = async (username: string) => {
+    const contributorsRef = ref(db, 'contributors');
+    const snapshot = await get(contributorsRef);
+    
+    if (snapshot.exists()) {
+      const contributors = snapshot.val() as { [key: string]: Contributor }; 
+      return Object.values(contributors).some(
+        (contributor) => contributor.username === username
+      );
     }
+    return false;
   };
 
   // Handle form submission
@@ -120,57 +97,67 @@ export default function DemographicQuestions(){
     setSubmitError(null);
     
     try {
-      // Validate form data
-      if (!formData.age || !formData.location || !formData.readingProficiency || !formData.writingProficiency) {
-        throw new Error("Please fill out all required fields");
+      // Validate username
+      const usernameExists = await checkUsernameExists(formData.username);
+      if (usernameExists) {
+        throw new Error("Username already exists. Please choose a different username.");
       }
+
+      // Generate UUID for contributor
+      const contributorUUID = uuidv4();
+      const timestamp = new Date().toISOString();
       
-      // Make sure we have the file content
-      if (!fileContent) {
-        throw new Error("Could not load existing data");
-      }
+      // Create contributor object
+      const contributor: Contributor = {
+        contribution: [],
+        createdAt: timestamp,
+        lastModifiedAt: timestamp,
+        password: "treesarepretty811481", // Using default password as in example
+        username: formData.username
+      };
       
-      // Convert and prepare the form data
-      const formReadyData = convertToFormData(formData);
+      // Create demographic object
+      const demographic: DemographicAnswers = {
+        UUID: contributorUUID,
+        age: formData.age,
+        location: formData.location,
+        diaspora: formData.diaspora,
+        spokenLanguage: formData.spokenLanguages,
+        currentLanguage: formData.currentLanguages,
+        childhoodLanguage: formData.childhoodLanguages,
+        yearsSpeaking: formData.yearsSpeaking,
+        learnSpeechModality: formData.learnSpeechModality || "second-language",
+        speechProficiency: formData.speakingProficiency,
+        writeProficiency: formData.writingProficiency,
+        readProficiency: formData.readingProficiency,
+        createdAt: timestamp,
+        lastModifiedAt: timestamp
+      };
       
-      // Append the new data to the existing content
-      const updatedContent = appendToExistingJson(fileContent, formReadyData);
+      // Store in Firebase
+      // 1. Store contributor with UUID
+      const contributorRef = ref(db, `contributors/${contributorUUID}`);
+      await set(contributorRef, contributor);
       
-      // Convert the updated content to a JSON string
-      const jsonString = JSON.stringify(updatedContent, null, 2);
+      // 2. Store demographic data
+      const demographicListRef = ref(db, 'demographics');
+      const newDemographicRef = push(demographicListRef); // This generates a unique key by Firebase
+      await set(newDemographicRef, demographic);
       
-      // Update the file on Google Drive
-      const success = await updateDriveFile(jsonString);
+      // Redirect to success page or next step
+      router.push('/contribute');
       
-      if (success) {
-        console.log('File successfully updated on Google Drive');
-        router.push('/contribute');
-      } else {
-        throw new Error("Failed to update the file");
-      }
-    } catch (err) {
-      console.error('Error during submission:', err);
-      setSubmitError(err instanceof Error ? err.message : 'An unknown error occurred');
+    } catch (error: unknown) {
+      setSubmitError("An error occurred during submission.");
+      console.error("Submission error:", error);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   useEffect(() => {
-    const getFileContent = async () => {
-      try {
-        const file = await fetchDriveFile();
-        console.log("Something should have happened");
-        if (file) {
-          setFileContent(file);
-        }
-      } catch (error) {
-        console.error("Error getting file content:", error);
-      }
-    };
-    
-    getFileContent();
-  }, [fetchDriveFile]);
+    // Any initialization logic can go here
+  }, []);
 
   return (
     <div className="flex justify-center">
@@ -179,7 +166,15 @@ export default function DemographicQuestions(){
           <form onSubmit={handleSubmit}>
             <h2>Demographic Information</h2>
             <div>
-              <p>Here is your unique id. Remember it: {uniqueId !== -1 ? uniqueId : 'Loading...'}</p>
+              <p>Choose a username </p>
+              <input 
+                type="text" 
+                name="username" 
+                value={formData.username}
+                onChange={handleChange}
+                placeholder="Username"
+                required
+              />
             </div>
             <div>
               <p>How old are you? </p>
@@ -194,7 +189,9 @@ export default function DemographicQuestions(){
             </div>
             
             <div>
-              <p>Where do you currently live? (Ex: Minnesota, USA) </p>
+              <p>Where do you currently live?</p> 
+              <p>Include State/Province/Region and Country seperated by a comma</p>
+              <p>Ex: Minnesota, USA</p>
               <input 
                 type="text" 
                 name="location" 
@@ -203,13 +200,25 @@ export default function DemographicQuestions(){
                 required
               />
             </div>
+
+            <div>
+              <p>Do you identify as a part of the Mankon diaspora? yes/no</p> 
+              <input 
+                type="checkbox" 
+                name="diaspora" 
+                checked={formData.diaspora} 
+                onChange={handleChange}
+              />
+            </div>
             
             <div>
-              <p>What language(s) do you speak? (Ex: English, Mankon) </p>
+              <p>What language(s) do you speak?</p>
+              <p>If you speak multiple languages, seperate them with commas but no spaces</p>
+              <p>Ex: English,Mankon</p>
               <input 
                 type="text" 
-                name="languagesSpoken" 
-                value={formData.languagesSpoken} 
+                name="spokenLanguages" 
+                value={formData.spokenLanguages} 
                 onChange={handleChange}
                 placeholder="Enter languages separated by commas"
                 required
@@ -217,7 +226,9 @@ export default function DemographicQuestions(){
             </div>
             
             <div>
-              <p>What language(s) do you currently speak most often? </p>
+              <p>What language(s) do you currently speak most often?</p>
+              <p>If you speak multiple languages, seperate them with commas but no spaces</p>
+              <p>Ex: English,Mankon</p>
               <input 
                 type="text" 
                 name="currentLanguages" 
@@ -229,13 +240,79 @@ export default function DemographicQuestions(){
             </div>
             
             <div>
-              <p>What language(s) do/did you speak with your parents growing up? </p>
+              <p>What language(s) did you speak with your parents growing up? </p>
+              <p>If you spoke multiple languages, seperate them with commas but no spaces</p>
+              <p>Ex: Pidgin,Mankon</p>
               <input 
                 type="text" 
                 name="childhoodLanguages" 
                 value={formData.childhoodLanguages} 
                 onChange={handleChange}
                 placeholder="Enter languages separated by commas"
+                required
+              />
+            </div>
+
+            <div>
+              <p>How long have you spoken Mankon? </p>
+              <input 
+                type="number" 
+                name="yearsSpeaking" 
+                value={formData.yearsSpeaking} 
+                onChange={handleChange}
+                placeholder="Years"
+                required
+              />
+            </div>
+
+            <div>
+              <p>How did you learn Mankon? </p>
+              <input 
+                type="text" 
+                name="learnSpeechModality" 
+                value={formData.learnSpeechModality} 
+                onChange={handleChange}
+                placeholder="Enter languages separated by commas"
+                required
+              />
+            </div>
+
+            <div>
+              <p>How proficient are you at speaking Mankon?</p>
+              <ul>
+                <li><strong>1</strong> - No experience speaking Mankon</li>
+                <li><strong>2</strong> - Able to speak basic words and simple phrases</li>
+                <li><strong>3</strong> - Able to speak with some assistance on comprehension</li>
+                <li><strong>4</strong> - Second-Language Fluent Speaker</li>
+                <li><strong>5</strong> - Native Speaker</li>
+              </ul>
+              <input 
+                type="number" 
+                name="speakingProficiency" 
+                min="1" 
+                max="5"
+                value={formData.speakingProficiency}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div>
+              <p>How proficient are you at writing Mankon?</p>
+              <ul>
+                <li><strong>1</strong> - No experience writing Mankon</li>
+                <li><strong>2</strong> - Able to write with assistance</li>
+                <li><strong>3</strong> - Able to write with occasional support</li>
+                <li><strong>4</strong> - Able to write with minimal support</li>
+                <li><strong>5</strong> - Able to write independently</li>
+              </ul>
+              <input 
+                type="number" 
+                name="writingProficiency"
+                min="1" 
+                max="5"
+                value={formData.writingProficiency}
+                onChange={handleChange}
                 required
               />
             </div>
@@ -255,26 +332,6 @@ export default function DemographicQuestions(){
                 min="1" 
                 max="5"
                 value={formData.readingProficiency}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            
-            <div>
-              <p>How proficient are you at writing Mankon?</p>
-              <ul>
-                <li><strong>1</strong> - No experience writing Mankon</li>
-                <li><strong>2</strong> - Able to write with assistance</li>
-                <li><strong>3</strong> - Able to write with occasional support</li>
-                <li><strong>4</strong> - Able to write with minimal support</li>
-                <li><strong>5</strong> - Able to write independently</li>
-              </ul>
-              <input 
-                type="number" 
-                name="writingProficiency"
-                min="1" 
-                max="5"
-                value={formData.writingProficiency}
                 onChange={handleChange}
                 required
               />
