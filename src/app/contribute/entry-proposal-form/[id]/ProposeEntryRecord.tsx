@@ -1,6 +1,8 @@
 'use client';
 import { useReactMediaRecorder } from "react-media-recorder";
 import React, { useEffect, useState } from "react";
+import "@/styles/contribute.css";
+
 
 interface ProposeEntryRecordProps {
   onRecordingComplete: (audioBlobUrl: string) => void;
@@ -101,7 +103,7 @@ const ProposeEntryRecord: React.FC<ProposeEntryRecordProps> = ({
             <button
               type="button"
               onClick={resetTimer}
-              className="px-3 py-1 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
+              className="button px-3 py-1 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
             >
               Clear
             </button>
@@ -120,7 +122,7 @@ const ProposeEntryRecord: React.FC<ProposeEntryRecordProps> = ({
             <button
               type="button"
               onClick={handleToggleRecording}
-              className={`px-4 py-2 rounded-md transition-colors ${
+              className={`button px-4 py-2 rounded-md transition-colors ${
                 isRecording
                   ? "bg-red-500 hover:bg-red-600 text-white"
                   : "bg-green-500 hover:bg-green-600 text-white"
