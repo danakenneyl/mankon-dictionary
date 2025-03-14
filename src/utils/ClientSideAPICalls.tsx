@@ -28,7 +28,6 @@ function appendToExistingJson( existingJson: unknown[], newEntry: unknown): unkn
     return [...existingJson, newEntry];
 }
 
-
 export async function UpdateJson(fileName: string, existingJson: unknown[], newEntry: unknown) : Promise<boolean>{
     try {
     const updatedContent = appendToExistingJson(existingJson, newEntry);
@@ -70,7 +69,6 @@ export async function UploadAudio(file : File): Promise<boolean> {
     return false;
   }
 }
-
 
 export async function FetchJson(fileName: string)  {
   try {

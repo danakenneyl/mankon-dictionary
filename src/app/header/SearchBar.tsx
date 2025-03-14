@@ -1,7 +1,7 @@
 'use client'; // Need this since we're using state and browser APIs
 
-import { BaseEntry } from "@/components/types/Datatypes";
-import { SearchParams } from "@/components/types/Datatypes";
+import { BaseEntry } from "@/types/Datatypes";
+import { SearchParams } from "@/types/Datatypes";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import ToggleLang from "./ToggleLang";

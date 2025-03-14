@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { DriveFilesResponse} from '@/components/types/Datatypes';
+import { DriveFilesResponse} from '@/types/Datatypes';
 
 export default function DriveExplorer() {
   const [data, setData] = useState<DriveFilesResponse | null>(null);

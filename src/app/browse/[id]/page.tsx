@@ -2,13 +2,13 @@
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import dictionary from '@/data/dictionary.json';
-import alphabetize from '@/components/utils/Alphabetize';
+import alphabetize from '@/utils/Alphabetize';
 
 const englishAlphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
 const mankonAlphabet = ["A", "B", "Bv", "Tʃ", "D", "Dv", "Dz", "Dʒ", "E", "G", "Ɣ", "Ɨ", "K", "Kf", "L", "Lv", "M", "N", "Ɲ", "Ŋ", "O", "Ɔ", "S", "Ʃ", "T", "Tf", "Ts", "V",  "W", "Y", "Z", "Ʒ"];
 
 export default function Browse() {
-const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();
   const isEnglish = id === "browse-english";
 
   // Select correct alphabet
