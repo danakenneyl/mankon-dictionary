@@ -83,6 +83,7 @@ export default function MankonWordFormPage() {
       // Get reference to users in database
       const usersRef = ref(db, 'contributors');
       const snapshot = await get(usersRef);
+      let UUID: string | null = null;
       
       if (snapshot.exists()) {
         const users = snapshot.val();
@@ -93,6 +94,7 @@ export default function MankonWordFormPage() {
             foundUser = {
               ...users[key],
             };
+            UUID = key;
           }
         });
         
@@ -103,6 +105,7 @@ export default function MankonWordFormPage() {
           // Set contributor UUID in form data
           setFormData(prev => ({
             ...prev,
+            contributorUUID: UUID as string,
           }));
         } else {
           setAuthError("Username not found. Please try again.");

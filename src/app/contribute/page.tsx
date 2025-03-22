@@ -49,8 +49,8 @@ export default function Contribute() {
             Please take some time before beginning your proposal to compose two sentences that capture your Mankon 
             word in context. The Mankon Dictionary is interested in capturing a diversity of sentence examples to 
             ensure that we can represent Mankon as it lives and breathes. Consider including the word in the middle
-            of a sentencein and at the end. When choosing a context, consider including the word in a direct 
-            statement, in a question, in an an order, or in a hypothetical situation. Consider representing the word in 
+            or at the end of a sentence. When choosing a context, consider including the word in a direct 
+            statement, in a question, in a direct order, or in a hypothetical situation. Consider representing the word in 
             several forms. For example, if you wish to propose a verb, consider including the word in a different tense 
             (past, present, future, etc). Most importantly, please ensure that your sentences reflect common contexts
             in which the word appears in Mankon conversations. 
@@ -78,10 +78,12 @@ export default function Contribute() {
           <p>You will need the username you chose while filling out the demographic form to complete your proposal.</p>
           <div>
             <button onClick={() => routeTo("/contribute/entry-proposal-form/0")}>Entry Proposal Form</button>
-          <p></p>
+            <p></p>
           </div>
-          <InitialProposals/>
+            <InitialProposals/>
+            <button onClick={() => routeTo("/contribute/review-proposal")}>Review Proposal</button>
          </div>
+         
       </div>
     </div>
   )
