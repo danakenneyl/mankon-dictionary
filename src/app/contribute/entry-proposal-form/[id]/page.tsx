@@ -281,6 +281,7 @@ export default function MankonWordFormPage() {
 
   // Function to handle form submission
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    if (attemptedSubmit) return;
     event.preventDefault();
     setAttemptedSubmit(true);
     
@@ -349,6 +350,8 @@ export default function MankonWordFormPage() {
     } catch (error) {
       console.error('Error saving proposal:', error);
       alert("Error saving your submission. Please try again.");
+    } finally {
+      setAttemptedSubmit(false); // Reset submission state regardless of outcome
     }
   };
 
@@ -557,9 +560,10 @@ export default function MankonWordFormPage() {
               <div className="pt-6">
                 <button
                   type="submit"
+                  disabled={attemptedSubmit}
                   className="button px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
                 >
-                  Submit Word Entry
+                  {attemptedSubmit ? "Submitting..." : "Submit Word Entry"}
                 </button>
               </div>
             </form>
