@@ -117,6 +117,13 @@ export default function DemographicQuestions() {
 
     // Verify username is unique
     const uniqueUser= async (username: string) => {
+        if (username === "") {
+          setUsernameStatus({
+            valid: false,
+            message: "Invalid username"
+          });
+          return false;
+        }
         const contributorsRef = ref(db, 'contributors');
         const data = await get(contributorsRef);
 
@@ -278,11 +285,11 @@ export default function DemographicQuestions() {
                             <p>Please choose your username.</p>
                             <p>Please do not include identifying information in your username</p>
                             <input 
-                                type="number" 
-                                name="age" 
-                                value={formData.age}
+                                type="text" 
+                                name="username" 
+                                value={formData.username}
                                 onChange={handleUserInput}
-                                placeholder="age"
+                                placeholder="username"
                                 required
                             />
                             <p>{usernameStatus.message}</p>

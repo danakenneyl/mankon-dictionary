@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from "react";
 import { db } from "@/utils/firebase";
-import { ref, query, orderByChild, equalTo, get } from "firebase/database";
+import { ref, query, orderByChild, equalTo, get, limitToFirst } from "firebase/database";
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import { DemographicData } from "@/types/Datatypes";
 
@@ -85,7 +85,7 @@ export default function ReviewProposal() {
     useEffect(() => {
         const fetchProposals = async () => {
             const proposalsRef = ref(db, "proposals");
-            const pendingProposalsQuery = query(proposalsRef, orderByChild("status"), equalTo("pending"));
+            const pendingProposalsQuery = query(proposalsRef, orderByChild("status"), equalTo("pending"), limitToFirst(5));
             try {
                 const snapshot = await get(pendingProposalsQuery);
                 if (snapshot.exists()) {
@@ -128,7 +128,7 @@ export default function ReviewProposal() {
         <div className="flex justify-center">
             <div className="content-wrapper">
                 <div className="content">
-                    {Object.entries(proposal).slice(0, 5).map(([key, proposal]) => (
+                    {Object.entries(proposal).map(([key, proposal]) => (
                         <div key={key} className="border p-4 mb-4 rounded-md">
                             <div><strong> Contributor ID: {proposal.contributorUUID}</strong></div>
                             <div><strong> Contributor Speech Proficiency: {demographics[proposal.contributorUUID] || "Loading..."}</strong></div>
