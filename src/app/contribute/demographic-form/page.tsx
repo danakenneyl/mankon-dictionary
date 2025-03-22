@@ -276,6 +276,7 @@ export default function DemographicQuestions() {
                         <div>
                             <p></p>
                             <p>Please choose your username.</p>
+                            <p>Please do not include identifying information in your username</p>
                             <input
                                 type="text"
                                 name="username"

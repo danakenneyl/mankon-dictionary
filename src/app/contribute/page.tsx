@@ -31,6 +31,7 @@ export default function Contribute() {
             By participating, you acknowledge and consent to the collection and public sharing of your anonymized 
             answers.
           </p>
+          <p>WAIT: If you already have a username, then you DO NOT need to fill out this form again.</p>
           <button onClick={() => routeTo("/contribute/demographic-form")}>Demographic Form</button>
           <p></p>
           <h3>Dictionary Entry Proposal Form</h3>
