@@ -84,7 +84,7 @@ export default function LanguageCheckBoxes({
           id={`${category}-other`}
           value={formData[`${category}LanguageOther`]}
           onChange={(e) => handleOtherLanguageChange(e, setFormData)}
-          placeholder="Type other languages separated by commas"
+          placeholder="lang1,lang2"
         />
       </div>
     </div>

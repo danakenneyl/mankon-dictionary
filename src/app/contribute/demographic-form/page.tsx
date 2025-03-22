@@ -311,6 +311,7 @@ export default function DemographicQuestions() {
                                 name="location" 
                                 value={formData.location} 
                                 onChange={handleUserInput}
+                                placeholder="Bamenda, Cameroon"
                                 required
                             />
                         </div>
@@ -371,7 +372,6 @@ export default function DemographicQuestions() {
                                 name="yearsSpeaking" 
                                 value={formData.yearsSpeaking} 
                                 onChange={handleUserInput}
-                                placeholder="Years"
                                 required
                             />
                         </div>
@@ -385,7 +385,7 @@ export default function DemographicQuestions() {
                                 name="learnSpeechModality" 
                                 value={formData.learnSpeechModality} 
                                 onChange={handleUserInput}
-                                placeholder="Enter languages separated by commas"
+                                placeholder=""
                                 required
                             />
                         </div>
