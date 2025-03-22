@@ -1,358 +1,477 @@
 'use client';
-import {useState, useEffect} from 'react';
+
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { db } from "@/utils/firebase";
-import { ref, get, set, push } from "firebase/database";
+import { db } from '@/utils/firebase';
+import { ref, get, set, push } from 'firebase/database';
 import { v4 as uuidv4 } from 'uuid';
+import LanguageCheckBoxes from "./languageCheckbox";
 
 interface DemographicAnswers {
-  UUID: string;
-  age: string;
-  location: string;
-  diaspora: boolean;
-  spokenLanguage: string;
-  currentLanguage: string;
-  childhoodLanguage: string;
-  yearsSpeaking: number;
-  learnSpeechModality: string;
-  speechProficiency: string;
-  writeProficiency: string;
-  readProficiency: string;
-  createdAt: string;
-  lastModifiedAt: string;
+    UUID: string;
+    age: string;
+    location: string;
+    diaspora: boolean;
+    spokenLanguage: string;
+    currentLanguage: string;
+    childhoodLanguage: string;
+    yearsSpeaking: number;
+    learnSpeechModality: string;
+    speechProficiency: string;
+    writeProficiency: string;
+    readProficiency: string;
+    createdAt: string;
+    lastModifiedAt: string;
 }
 
 interface Contributor {
-  contribution: string[];
-  createdAt: string;
-  lastModifiedAt: string;
-  password: string;
-  username: string;
+    contribution: string[];
+    createdAt: string;
+    lastModifiedAt: string;
+    password: string;
+    username: string;
 }
 
-interface formData {
-  username: string;
-  age: string;
-  location: string;
-  diaspora: boolean;
-  spokenLanguages: string;
-  currentLanguages: string;
-  childhoodLanguages: string;
-  yearsSpeaking: number;
-  learnSpeechModality: string;
-  speakingProficiency: string;
-  writingProficiency: string;
-  readingProficiency: string;
+interface languageCheckboxes {
+    mankon: boolean;
+    english: boolean;
+    french: boolean;
+    pidgin: boolean;
 }
 
-export default function DemographicQuestions(){
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
+export interface formData {
+    username: string;
+    age: string;
+    location: string;
+    diaspora: boolean;
+    spokenLanguageCheck: languageCheckboxes;
+    spokenLanguageOther: string;
+    currentLanguageCheck: languageCheckboxes;
+    currentLanguageOther: string;
+    childhoodLanguageCheck: languageCheckboxes;
+    childhoodLanguageOther: string;
+    yearsSpeaking: number;
+    learnSpeechModality: string;
+    speechProficiency: string;
+    writeProficiency: string;
+    readProficiency: string;
+}
 
-  const router = useRouter();
 
-  // Demographic info inputs
-  const [formData, setFormData] = useState<formData>({
-    username: "",
-    age: "",
-    location: "",
-    diaspora: false,
-    spokenLanguages: "",
-    currentLanguages: "",
-    childhoodLanguages: "",
-    yearsSpeaking: 0,
-    learnSpeechModality: "",
-    speakingProficiency: "",
-    writingProficiency: "",
-    readingProficiency: "",
-  });
 
-  // Handle text and number inputs (no need to reformat)
-  const handleChange = (e : React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    setFormData(prevData => ({
-      ...prevData,
-      [name]: type === 'checkbox' ? checked : value
-    }));
-  };
+export default function DemographicQuestions() {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
+    const [usernameStatus, setUsernameStatus] = useState<{valid: boolean; message: string | null}>({
+        valid: false, 
+        message: null
+    });
+    const router = useRouter();
 
-  // Verify Username
-  const checkUsernameExists = async (username: string) => {
-    const contributorsRef = ref(db, 'contributors');
-    const snapshot = await get(contributorsRef);
-    
-    if (snapshot.exists()) {
-      const contributors = snapshot.val() as { [key: string]: Contributor }; 
-      return Object.values(contributors).some(
-        (contributor) => contributor.username === username
-      );
+    // Init user input 
+    const [formData, setFormData] = useState<formData>({
+        username: "",
+        age: "",
+        location: "",
+        diaspora: false,
+        spokenLanguageCheck: {
+            mankon: false,
+            english: false,
+            french: false,
+            pidgin: false
+        },
+        spokenLanguageOther: "",
+        currentLanguageCheck: {
+            mankon: false,
+            english: false,
+            french: false,
+            pidgin: false
+        },
+        currentLanguageOther: "",
+        childhoodLanguageCheck: {
+            mankon: false,
+            english: false,     
+            french: false,
+            pidgin: false
+        },
+        childhoodLanguageOther: "",
+        yearsSpeaking: 0,
+        learnSpeechModality: "",
+        speechProficiency: "",
+        writeProficiency: "",
+        readProficiency: "",
+        });
+
+    // Required fields for fast reference
+    const requiredFields: (keyof formData)[] = [
+        "username",
+        "age", 
+        "location",
+        "diaspora",
+        "yearsSpeaking",
+        "learnSpeechModality",
+        "speechProficiency",
+        "writeProficiency",
+        "readProficiency",
+    ];
+
+    // Verify username is unique
+    const uniqueUser= async (username: string) => {
+        const contributorsRef = ref(db, 'contributors');
+        const data = await get(contributorsRef);
+
+        if (data.exists()) {
+            const contributors = data.val() as { [key : string] : Contributor};
+            const user = Object.values(contributors).some(
+                (contributor) => contributor.username === username);
+            
+            // If username already exists
+            if (user) {
+                setUsernameStatus({
+                    valid: false,
+                    message: "Username already exists. Please choose another."
+                });
+                return user;
+            } else {
+                setUsernameStatus({
+                    valid: true,
+                    message: "Valid username!"
+                });
+            }
+            
+            
+        }
+        return false;
+    };
+
+    // Update user input as user types (less processing at submission time)
+    const handleUserInput = (e : React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value, type, checked } = e.target;
+        setFormData(prevData => ({
+            ...prevData,
+            [name]: type === 'checkbox' ? checked : value
+        }))
+        
+        // Validate username when it changes
+        if (name === 'username') {
+            uniqueUser(value);
+        }
+    };
+
+    const handleDiasporaChange = (diaspora: boolean) => () => {
+        setFormData(prevData => ({
+            ...prevData,
+            diaspora: diaspora,
+        }));
     }
-    return false;
-  };
 
-  // Handle form submission
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitError(null);
-    
-    try {
-      // Validate username
-      const usernameExists = await checkUsernameExists(formData.username);
-      if (usernameExists) {
-        throw new Error("Username already exists. Please choose a different username.");
-      }
+    // Validate Language Checkbox 
+    const validLanguageInput = (boxes: languageCheckboxes, other: string ) => {
+        const boxChecked = Object.values(boxes).some(value => value);
+        const otherFilled = other !== '';
+        return boxChecked || otherFilled;
 
-      // Generate UUID for contributor
-      const contributorUUID = uuidv4();
-      const timestamp = new Date().toISOString();
-      
-      // Create contributor object
-      const contributor: Contributor = {
-        contribution: [],
-        createdAt: timestamp,
-        lastModifiedAt: timestamp,
-        password: "treesarepretty811481", // Using default password as in example
-        username: formData.username
-      };
-      
-      // Create demographic object
-      const demographic: DemographicAnswers = {
-        UUID: contributorUUID,
-        age: formData.age,
-        location: formData.location,
-        diaspora: formData.diaspora,
-        spokenLanguage: formData.spokenLanguages,
-        currentLanguage: formData.currentLanguages,
-        childhoodLanguage: formData.childhoodLanguages,
-        yearsSpeaking: formData.yearsSpeaking,
-        learnSpeechModality: formData.learnSpeechModality || "second-language",
-        speechProficiency: formData.speakingProficiency,
-        writeProficiency: formData.writingProficiency,
-        readProficiency: formData.readingProficiency,
-        createdAt: timestamp,
-        lastModifiedAt: timestamp
-      };
-      
-      // Store in Firebase
-      // 1. Store contributor with UUID
-      const contributorRef = ref(db, `contributors/${contributorUUID}`);
-      await set(contributorRef, contributor);
-      
-      // 2. Store demographic data
-      const demographicListRef = ref(db, 'demographics');
-      const newDemographicRef = push(demographicListRef); // This generates a unique key by Firebase
-      await set(newDemographicRef, demographic);
-      
-      // Redirect to success page or next step
-      router.push('/contribute');
-      
-    } catch (error: unknown) {
-      setSubmitError("An error occurred during submission.");
-      console.error("Submission error:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+    };
 
-  useEffect(() => {
-    // Any initialization logic can go here
-  }, []);
-
-  return (
-    <div className="flex justify-center">
-      <div className="content-wrapper">
-        <div className="content">
-          <form onSubmit={handleSubmit}>
-            <h2>Demographic Information</h2>
-            <div>
-              <p>Choose a username </p>
-              <input 
-                type="text" 
-                name="username" 
-                value={formData.username}
-                onChange={handleChange}
-                placeholder="Username"
-                required
-              />
-            </div>
-            <div>
-              <p>How old are you? </p>
-              <input 
-                type="text" 
-                name="age" 
-                value={formData.age}
-                onChange={handleChange}
-                placeholder="age"
-                required
-              />
-            </div>
+    // Verify all required fields are filled and username is unique
+    const validSubmission = async () => {
+        if (requiredFields.every(field => !!formData[field])) {;
+            // Valid inputs
+            const newUser = usernameStatus.valid;
+            const currentLanguage = validLanguageInput(formData.currentLanguageCheck, formData.currentLanguageOther);
+            const spokenLanguage = validLanguageInput(formData.spokenLanguageCheck, formData.spokenLanguageOther);
+            const childhoodLanguage = validLanguageInput(formData.childhoodLanguageCheck, formData.childhoodLanguageOther);
             
-            <div>
-              <p>Where do you currently live?</p> 
-              <p>Include State/Province/Region and Country seperated by a comma</p>
-              <p>Ex: Minnesota, USA</p>
-              <input 
-                type="text" 
-                name="location" 
-                value={formData.location} 
-                onChange={handleChange}
-                required
-              />
-            </div>
+            // Return true if all fields are filled and username is unique
+            return newUser && currentLanguage && spokenLanguage && childhoodLanguage;
+        }
+        return false;
+    };
 
-            <div>
-              <p>Do you identify as a part of the Mankon diaspora? yes/no</p> 
-              <input 
-                type="checkbox" 
-                name="diaspora" 
-                checked={formData.diaspora} 
-                onChange={handleChange}
-              />
-            </div>
-            
-            <div>
-              <p>What language(s) do you speak?</p>
-              <p>If you speak multiple languages, seperate them with commas but no spaces</p>
-              <p>Ex: English,Mankon</p>
-              <input 
-                type="text" 
-                name="spokenLanguages" 
-                value={formData.spokenLanguages} 
-                onChange={handleChange}
-                placeholder="Enter languages separated by commas"
-                required
-              />
-            </div>
-            
-            <div>
-              <p>What language(s) do you currently speak most often?</p>
-              <p>If you speak multiple languages, seperate them with commas but no spaces</p>
-              <p>Ex: English,Mankon</p>
-              <input 
-                type="text" 
-                name="currentLanguages" 
-                value={formData.currentLanguages} 
-                onChange={handleChange}
-                placeholder="Enter languages separated by commas"
-                required
-              />
-            </div>
-            
-            <div>
-              <p>What language(s) did you speak with your parents growing up? </p>
-              <p>If you spoke multiple languages, seperate them with commas but no spaces</p>
-              <p>Ex: Pidgin,Mankon</p>
-              <input 
-                type="text" 
-                name="childhoodLanguages" 
-                value={formData.childhoodLanguages} 
-                onChange={handleChange}
-                placeholder="Enter languages separated by commas"
-                required
-              />
-            </div>
+    // Combine checkbox and other language input
+    const buildLanguageInputString = (checkboxes: languageCheckboxes, other: string) => {
+        const languages = Object.entries(checkboxes)
+            .filter(([, value]) => value)
+            .map(([key]) => key);
+        if (other.trim() !== '') {
+            const otherLanguages = other.split(',').map(lang => lang.trim());
+            languages.push(...otherLanguages);
+        }
+        
+        return languages.join(",");
+    };
 
-            <div>
-              <p>How long have you spoken Mankon? </p>
-              <input 
-                type="number" 
-                name="yearsSpeaking" 
-                value={formData.yearsSpeaking} 
-                onChange={handleChange}
-                placeholder="Years"
-                required
-              />
-            </div>
+    // Submit form
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setSubmitError(null);
 
-            <div>
-              <p>How did you learn Mankon? </p>
-              <input 
-                type="text" 
-                name="learnSpeechModality" 
-                value={formData.learnSpeechModality} 
-                onChange={handleChange}
-                placeholder="Enter languages separated by commas"
-                required
-              />
-            </div>
+        try {
+            // Validate username and all fields
+            const validate = await validSubmission();
+            if (!validate) {
+                setIsSubmitting(false);
+                return;
+            }
 
-            <div>
-              <p>How proficient are you at speaking Mankon?</p>
-              <ul>
-                <li><strong>1</strong> - No experience speaking Mankon</li>
-                <li><strong>2</strong> - Able to speak basic words and simple phrases</li>
-                <li><strong>3</strong> - Able to speak with some assistance on comprehension</li>
-                <li><strong>4</strong> - Second-Language Fluent Speaker</li>
-                <li><strong>5</strong> - Native Speaker</li>
-              </ul>
-              <input 
-                type="number" 
-                name="speakingProficiency" 
-                min="1" 
-                max="5"
-                value={formData.speakingProficiency}
-                onChange={handleChange}
-                required
-              />
-            </div>
+            // User input not needed for these fields 
+            const contributorUUID = uuidv4();
+            const timestamp = new Date().toISOString();
 
-            <div>
-              <p>How proficient are you at writing Mankon?</p>
-              <ul>
-                <li><strong>1</strong> - No experience writing Mankon</li>
-                <li><strong>2</strong> - Able to write with assistance</li>
-                <li><strong>3</strong> - Able to write with occasional support</li>
-                <li><strong>4</strong> - Able to write with minimal support</li>
-                <li><strong>5</strong> - Able to write independently</li>
-              </ul>
-              <input 
-                type="number" 
-                name="writingProficiency"
-                min="1" 
-                max="5"
-                value={formData.writingProficiency}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            
-            <div>
-              <p>How proficient are you at reading Mankon?</p>
-              <ul>
-                <li><strong>1</strong> - No experience reading Mankon</li>
-                <li><strong>2</strong> - Able to read basic words and simple phrases</li>
-                <li><strong>3</strong> - Able to read with some assistance on comprehension</li>
-                <li><strong>4</strong> - Able to read independently, slowly, with minimal difficulty</li>
-                <li><strong>5</strong> - Able to read independently with ease</li>
-              </ul>
-              <input 
-                type="number" 
-                name="readingProficiency" 
-                min="1" 
-                max="5"
-                value={formData.readingProficiency}
-                onChange={handleChange}
-                required
-              />
-            </div>
+            // New user
+            const contributor: Contributor = {
+                contribution: [],
+                createdAt: timestamp,
+                lastModifiedAt: timestamp,
+                password: "",
+                username: formData.username
+            };
+            const demographic: DemographicAnswers = {
+                UUID: contributorUUID,
+                age: formData.age,
+                location: formData.location,
+                diaspora: formData.diaspora,
+                spokenLanguage: buildLanguageInputString(formData.spokenLanguageCheck, formData.spokenLanguageOther),
+                currentLanguage: buildLanguageInputString(formData.currentLanguageCheck, formData.currentLanguageOther),
+                childhoodLanguage: buildLanguageInputString(formData.childhoodLanguageCheck, formData.childhoodLanguageOther),
+                yearsSpeaking: formData.yearsSpeaking,
+                learnSpeechModality: formData.learnSpeechModality,
+                speechProficiency: formData.speechProficiency,
+                writeProficiency: formData.writeProficiency,
+                readProficiency: formData.readProficiency,
+                createdAt: timestamp,
+                lastModifiedAt: timestamp
+            };
 
-            {submitError && (
-              <div className="error-message text-red-500 mt-2">
-                {submitError}
-              </div>
-            )}
-          
-            <button 
-              type="submit" 
-              disabled={isSubmitting}
-              className={isSubmitting ? "opacity-50 cursor-not-allowed" : ""}
-            >
-              {isSubmitting ? "Submitting..." : "Submit"}
-            </button>
-          </form>
+            // Update database
+            // 1. new Contributor entry
+            const contributorRef = ref(db, `contributors/${contributorUUID}`);
+            await set(contributorRef, contributor);
+            // 2. new Demographic entry
+            const demographicListRef = ref(db, 'demographics');
+            const newDemographicRef = push(demographicListRef); // Generate a unique Firebase key
+            await set(newDemographicRef, demographic);
+
+            // Return to contribute page
+            router.push('/contribute');
+
+        } catch (error: unknown) {
+            const errorMessage =  error instanceof Error ? error.message : "unspecified error occurred";
+            const message = "Submission error:" + errorMessage;
+            setSubmitError(message);
+        }
+        finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    return (
+        <div className="flex justify-center">
+            <div className="content-wrapper">
+                <div className="content">
+                    <form onSubmit={handleSubmit}>
+                        <h2>Demographic Questionnaire</h2>
+                        {/* Question 1: Unique username */}
+                        <div>
+                            <p></p>
+                            <p>Please choose your username.</p>
+                            <input
+                                type="text"
+                                name="username"
+                                value={formData.username}
+                                onChange={handleUserInput}
+                                placeholder="username"
+                                required
+                            />
+                            <p>{usernameStatus.message}</p>
+                        </div>
+                        {/* Question 2: Age */}
+                        <div>
+                            <p></p>
+                            <p>How old are you? </p>
+                            <input 
+                                type="number" 
+                                name="age" 
+                                value={formData.age}
+                                onChange={handleUserInput}
+                                placeholder="age"
+                                required
+                            />
+                        </div>
+
+                        {/* Question 3: Location */}
+                        <div>
+                            <p></p>
+                            <p>Where do you currently live?</p> 
+                            <p>Include State/Province/Region and Country seperated by a comma</p>
+                            <p>Ex: Minnesota, USA</p>
+                            <input 
+                                type="text" 
+                                name="location" 
+                                value={formData.location} 
+                                onChange={handleUserInput}
+                                required
+                            />
+                        </div>
+
+                        {/* Question 4: Diaspora */}
+                        <div>
+                            <p></p>
+                            <p>Do you identify as a part of the Mankon diaspora?</p> 
+                            <div className="diaspora-options">
+                                <div>
+                                    <input 
+                                        type="checkbox" 
+                                        id="diaspora-yes" 
+                                        checked={formData.diaspora} 
+                                        onChange={handleDiasporaChange(true)}
+                                    />
+                                    <label htmlFor="diaspora-yes">Yes</label>
+                                </div>
+                                <div>
+                                    <input 
+                                        type="checkbox" 
+                                        id="diaspora-no" 
+                                        checked={formData.diaspora} 
+                                        onChange={handleDiasporaChange(false)}
+                                    />
+                                    <label htmlFor="diaspora-no">No</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Question 5: All Languages Spoken*/}
+                        <div>
+                            <p></p>
+                            <p>What language(s) do you speak?</p> 
+                            <LanguageCheckBoxes category="spoken" formData={formData} setFormData={setFormData} />
+                        </div>
+
+                        {/* Question 6: Current Languages */}
+                        <div>
+                            <p></p>
+                            <p>What language(s) do you currently speak most often?</p> 
+                            <LanguageCheckBoxes category="current" formData={formData} setFormData={setFormData} />
+                        </div>
+
+                        {/* Question 7: Childhood Languages */}
+                        <div>
+                            <p></p>
+                            <p>What language(s) do/did you speak with your parents growing up?</p> 
+                            <LanguageCheckBoxes category="childhood" formData={formData} setFormData={setFormData} />
+                        </div>
+
+                        {/* Question 8: Years Speaking */}
+                        <div>
+                            <p></p>
+                            <p>How long have you spoken Mankon? </p>
+                            <input 
+                                type="number" 
+                                name="yearsSpeaking" 
+                                value={formData.yearsSpeaking} 
+                                onChange={handleUserInput}
+                                placeholder="Years"
+                                required
+                            />
+                        </div>
+
+                        {/* Question 9: Speech Modality */}
+                        <div>
+                            <p></p>
+                            <p>How did you learn Mankon? </p>
+                            <input 
+                                type="text" 
+                                name="learnSpeechModality" 
+                                value={formData.learnSpeechModality} 
+                                onChange={handleUserInput}
+                                placeholder="Enter languages separated by commas"
+                                required
+                            />
+                        </div>
+
+                        {/* Question 10: Speech Proficiency */}
+                        <div>
+                            <p></p>
+                            <p>How proficient are you at speaking Mankon?</p>
+                            <ul>
+                                <li><strong>1</strong> - No experience speaking Mankon</li>
+                                <li><strong>2</strong> - Able to speak basic words and simple phrases</li>
+                                <li><strong>3</strong> - Able to speak with some assistance on comprehension</li>
+                                <li><strong>4</strong> - Second-Language Fluent Speaker</li>
+                                <li><strong>5</strong> - Native Speaker</li>
+                            </ul>
+                            <input 
+                                type="number" 
+                                name="speakingProficiency" 
+                                min="1" 
+                                max="5"
+                                value={formData.speechProficiency}
+                                onChange={handleUserInput}
+                                required
+                            />
+                        </div>
+
+                        {/* Question 11: Writing Proficiency */}
+                        <div>
+                            <p></p>
+                            <p>How proficient are you at writing Mankon?</p>
+                            <ul>
+                                <li><strong>1</strong> - No experience writing Mankon</li>
+                                <li><strong>2</strong> - Able to write with assistance</li>
+                                <li><strong>3</strong> - Able to write with occasional support</li>
+                                <li><strong>4</strong> - Able to write with minimal support</li>
+                                <li><strong>5</strong> - Able to write independently</li>
+                            </ul>
+                            <input 
+                                type="number" 
+                                name="writingProficiency"
+                                min="1" 
+                                max="5"
+                                value={formData.writeProficiency}
+                                onChange={handleUserInput}
+                                required
+                            />
+                        </div>
+
+                        {/* Question 12: Reading Proficiency */}
+                        <div>
+                            <p></p>
+                            <p>How proficient are you at reading Mankon?</p>
+                            <ul>
+                                <li><strong>1</strong> - No experience reading Mankon</li>
+                                <li><strong>2</strong> - Able to read basic words and simple phrases</li>
+                                <li><strong>3</strong> - Able to read with some assistance on comprehension</li>
+                                <li><strong>4</strong> - Able to read independently, slowly, with minimal difficulty</li>
+                                <li><strong>5</strong> - Able to read independently with ease</li>
+                            </ul>
+                            <input 
+                                type="number" 
+                                name="readingProficiency" 
+                                min="1" 
+                                max="5"
+                                value={formData.readProficiency}
+                                onChange={handleUserInput}
+                                required
+                            />
+                        </div>
+
+                        {submitError && (
+                            <div className="error-message text-red-500 mt-2">
+                                {submitError}
+                            </div>
+                        )}
+
+                        <button 
+                            type="submit" 
+                            disabled={isSubmitting}
+                            className={isSubmitting ? "opacity-50 cursor-not-allowed" : ""}
+                            >
+                            {isSubmitting ? "Submitting..." : "Submit"}
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 }
