@@ -277,12 +277,12 @@ export default function DemographicQuestions() {
                             <p></p>
                             <p>Please choose your username.</p>
                             <p>Please do not include identifying information in your username</p>
-                            <input
-                                type="text"
-                                name="username"
-                                value={formData.username}
+                            <input 
+                                type="number" 
+                                name="age" 
+                                value={formData.age}
                                 onChange={handleUserInput}
-                                placeholder="username"
+                                placeholder="age"
                                 required
                             />
                             <p>{usernameStatus.message}</p>

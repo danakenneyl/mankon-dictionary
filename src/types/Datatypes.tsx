@@ -21,14 +21,20 @@ export interface NounEntry extends BaseEntry {
 // export type DictionaryEntry = NounEntry | VerbEntry | AdjectiveEntry;
 
 export interface DemographicData {
-  age: number;
-  location: string[];
-  languagesSpoken: string[];
-  currentLanguages: string[];
-  childhoodLanguages: string[];
-  readingProficiency: number,
-  writingProficiency: number,
-  contributor: number
+  UUID: string;
+  age: string;
+  location: string;
+  diaspora: boolean;
+  spokenLanguage: string;
+  currentLanguage: string;
+  childhoodLanguage: string;
+  yearsSpeaking: number;
+  learnSpeechModality: string;
+  speechProficiency: string;
+  writeProficiency: string;
+  readProficiency: string;
+  createdAt: string;
+  lastModifiedAt: string;
 }
 
 export interface SearchParams {
