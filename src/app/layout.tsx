@@ -1,7 +1,7 @@
 // app/layout.tsx
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './styles/globals.css'
-import { SearchProvider } from '../context/SearchContext'
+import { SearchProvider } from '../utils/SearchContext'
 import Header from './header/Header';
 import dictionary from '@/data/dictionary.json';
 

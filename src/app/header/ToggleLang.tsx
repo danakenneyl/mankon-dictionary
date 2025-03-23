@@ -1,5 +1,5 @@
 'use client'; // Need this since we're using state and interactivity
-import { useSearch } from '@/context/SearchContext';
+import { useSearch } from '@/utils/SearchContext';
 
 export default function ToggleLang() {
 
