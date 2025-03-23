@@ -1,7 +1,3 @@
-
-
-
-
 'use client';
 import { useState, useEffect } from 'react';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';

@@ -182,7 +182,7 @@ export default function DemographicQuestions() {
 
     // Verify all required fields are filled and username is unique
     const validSubmission = async () => {
-        if (requiredFields.every(field => !!formData[field])) {;
+        if (requiredFields.every(field => !!formData[field])) {
             // Valid inputs
             const newUser = usernameStatus.valid;
             const currentLanguage = validLanguageInput(formData.currentLanguageCheck, formData.currentLanguageOther);
