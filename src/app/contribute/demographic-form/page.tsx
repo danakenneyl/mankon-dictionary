@@ -28,6 +28,7 @@ interface Contributor {
     contribution: string[];
     createdAt: string;
     lastModifiedAt: string;
+    role: string;
     password: string;
     username: string;
 }
@@ -240,6 +241,7 @@ export default function DemographicQuestions() {
                 contribution: [],
                 createdAt: timestamp,
                 lastModifiedAt: timestamp,
+                role: "contributor",
                 password: "",
                 username: formData.username
             };
