@@ -7,17 +7,19 @@ import "@/styles/contribute.css";
 interface ProposeEntryRecordProps {
   onRecordingComplete: (audioBlobUrl: string) => void;
   instanceId: string;
+  initialAudio?: string; // New optional prop for initial audio (blob URL)
 }
 
 const ProposeEntryRecord: React.FC<ProposeEntryRecordProps> = ({ 
   onRecordingComplete,
-  instanceId 
+  instanceId,
+  initialAudio
 }) => {
   const [second, setSecond] = useState<string>("00");
   const [minute, setMinute] = useState<string>("00");
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [counter, setCounter] = useState<number>(0);
-  const [localBlobUrl, setLocalBlobUrl] = useState<string | null>(null);
+  const [localBlobUrl, setLocalBlobUrl] = useState<string | null>(initialAudio || null);
 
   const { status, startRecording, stopRecording, mediaBlobUrl, clearBlobUrl } = useReactMediaRecorder({
     video: false,
@@ -34,6 +36,14 @@ const ProposeEntryRecord: React.FC<ProposeEntryRecordProps> = ({
       }
     }
   });
+
+  // Initialize with the initial audio if provided
+  useEffect(() => {
+    if (initialAudio && !localBlobUrl) {
+      setLocalBlobUrl(initialAudio);
+      onRecordingComplete(initialAudio);
+    }
+  }, [initialAudio, localBlobUrl, onRecordingComplete]);
 
   // Also update when mediaBlobUrl changes as a backup
   useEffect(() => {
