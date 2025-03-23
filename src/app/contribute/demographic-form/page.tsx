@@ -31,7 +31,10 @@ interface Contributor {
     password: string;
     username: string;
 }
-
+interface diaspora {
+    yes: boolean;
+    no: boolean;
+}
 interface languageCheckboxes {
     mankon: boolean;
     english: boolean;
@@ -43,7 +46,7 @@ export interface formData {
     username: string;
     age: string;
     location: string;
-    diaspora: boolean;
+    diaspora: diaspora;
     spokenLanguageCheck: languageCheckboxes;
     spokenLanguageOther: string;
     currentLanguageCheck: languageCheckboxes;
@@ -73,7 +76,10 @@ export default function DemographicQuestions() {
         username: "",
         age: "",
         location: "",
-        diaspora: false,
+        diaspora: {
+            yes: false,
+            no: false,
+        },
         spokenLanguageCheck: {
             mankon: false,
             english: false,
@@ -153,24 +159,27 @@ export default function DemographicQuestions() {
 
     // Update user input as user types (less processing at submission time)
     const handleUserInput = (e : React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value, type, checked } = e.target;
+        const { name, value } = e.target;
         setFormData(prevData => ({
             ...prevData,
-            [name]: type === 'checkbox' ? checked : value
+            [name]: value
         }))
-        
+        console.log(formData);
         // Validate username when it changes
         if (name === 'username') {
             uniqueUser(value);
         }
     };
 
-    const handleDiasporaChange = (diaspora: boolean) => () => {
-        setFormData(prevData => ({
-            ...prevData,
-            diaspora: diaspora,
+    const handleDiasporaChange = (option: "yes" | "no") => {
+        setFormData((prevData) => ({
+          ...prevData,
+          diaspora: {
+            yes: option === "yes",
+            no: option === "no",
+          },
         }));
-    }
+      };
 
     // Validate Language Checkbox 
     const validLanguageInput = (boxes: languageCheckboxes, other: string ) => {
@@ -238,7 +247,7 @@ export default function DemographicQuestions() {
                 UUID: contributorUUID,
                 age: formData.age,
                 location: formData.location,
-                diaspora: formData.diaspora,
+                diaspora: formData.diaspora.yes,
                 spokenLanguage: buildLanguageInputString(formData.spokenLanguageCheck, formData.spokenLanguageOther),
                 currentLanguage: buildLanguageInputString(formData.currentLanguageCheck, formData.currentLanguageOther),
                 childhoodLanguage: buildLanguageInputString(formData.childhoodLanguageCheck, formData.childhoodLanguageOther),
@@ -312,7 +321,7 @@ export default function DemographicQuestions() {
                         <div>
                             <p></p>
                             <p>Where do you currently live?</p> 
-                            <p>Include State/Province/Region and Country seperated by a comma</p>
+                            <p>Include State/Province/Region and Country separated by a comma</p>
                             <p>Ex: Minnesota, USA</p>
                             <input 
                                 type="text" 
@@ -333,8 +342,8 @@ export default function DemographicQuestions() {
                                     <input 
                                         type="checkbox" 
                                         id="diaspora-yes" 
-                                        checked={formData.diaspora} 
-                                        onChange={handleDiasporaChange(true)}
+                                        checked={formData.diaspora.yes} 
+                                        onChange={() => handleDiasporaChange("yes")}
                                     />
                                     <label htmlFor="diaspora-yes">Yes</label>
                                 </div>
@@ -342,8 +351,8 @@ export default function DemographicQuestions() {
                                     <input 
                                         type="checkbox" 
                                         id="diaspora-no" 
-                                        checked={formData.diaspora} 
-                                        onChange={handleDiasporaChange(false)}
+                                        checked={formData.diaspora.no} 
+                                        onChange={() => handleDiasporaChange("no")}
                                     />
                                     <label htmlFor="diaspora-no">No</label>
                                 </div>
@@ -411,7 +420,7 @@ export default function DemographicQuestions() {
                             </ul>
                             <input 
                                 type="number" 
-                                name="speakingProficiency" 
+                                name="speechProficiency" 
                                 min="1" 
                                 max="5"
                                 value={formData.speechProficiency}
@@ -433,7 +442,7 @@ export default function DemographicQuestions() {
                             </ul>
                             <input 
                                 type="number" 
-                                name="writingProficiency"
+                                name="writeProficiency"
                                 min="1" 
                                 max="5"
                                 value={formData.writeProficiency}
@@ -455,7 +464,7 @@ export default function DemographicQuestions() {
                             </ul>
                             <input 
                                 type="number" 
-                                name="readingProficiency" 
+                                name="readProficiency" 
                                 min="1" 
                                 max="5"
                                 value={formData.readProficiency}
