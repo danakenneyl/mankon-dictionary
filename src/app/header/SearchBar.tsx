@@ -5,7 +5,7 @@ import { SearchParams } from "@/types/Datatypes";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import ToggleLang from "./ToggleLang";
-import { useSearch } from '@/context/SearchContext';
+import { useSearch } from '@/utils/SearchContext';
 
 export default function SearchBar( data: SearchParams) {
   const dictionary = data.data;
