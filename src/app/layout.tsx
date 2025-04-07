@@ -5,11 +5,13 @@ import { SearchProvider } from '../utils/SearchContext'
 import Header from './header/Header';
 import dictionary from '@/data/dictionary.json';
 
-
 export const metadata = {
-  title: 'Mankon People\'s Dictionary',
-  description: 'Your description here'
-}
+  title: 'Mankon Dictionary',
+  description: 'Searchable dictionary for the Mankon language, a Western Grassfields Bantu language.',
+  verification: {
+    google: '4Hx86Sk3InB7XpuulN8vdTt60jZa3fqW2m9IP1CIJNM',
+  },
+};
 
 export default function RootLayout({children }: {children: React.ReactNode}) {
   return (
