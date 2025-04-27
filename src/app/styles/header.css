@@ -1,29 +1,34 @@
 /* Ensure brand container stays together on the left */
-.brand-container {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Space between logo and title */
-  }
-  .toHome:hover {
-    background-color: black;
-  }
+.toHome:hover {
+  background-color: black;
+}
   /* Fix logo scaling and ensure text is visible */
-  .logo {
-    max-height: 100px;
-    max-width: 100px;
-    border-radius: 50%;
-  }
-  
-  /* Ensure title is visible next to the logo */
-  .title {
-    display: flex;
-    flex-direction: column;
-    color: #E87200;
-    line-height: 1.2;
-    font-family: "Charis SIL", serif;
-    white-space: nowrap;
-    text-align: center;
-  }
+/* Ensure brand container stays together on the left */
+.brand-container {
+  display: flex;
+  align-items: center;
+  position: relative; /* Add this to help with positioning */
+}
+
+/* Fix logo scaling and ensure text is visible */
+.logo {
+  max-height: 100px;
+  max-width: 100px;
+  /* border-radius: 50%; */
+  margin-right: 0;
+}
+
+/* Ensure title is visible next to the logo */
+.title {
+  display: flex;
+  flex-direction: column;
+  color: #E87200;
+  line-height: 1.2;
+  font-family: "Charis SIL", serif;
+  white-space: nowrap;
+  text-align: center;
+ /* Negative margin to create overlap with the logo */
+}
   .title-line1, .title-line2 {
     font-size: 1.6rem; /* Ensure both lines inherit the intended size */
   }
@@ -165,35 +170,6 @@
   .navbar .navbar-toggler-icon:focus {
     outline: none !important;
     box-shadow: none !important;
-  }
-  /* Navigation Buttons */
-  .nav {
-    display: flex;
-    gap: 10px; /* Adds space between items in the navbar */
-    align-items: right; /* Align items vertically */
-    justify-content: flex-end; /* Aligns buttons to the right */
-    flex-shrink: 0; /* Prevent nav from shrinking */
-  }
-  
-  .nav-buttons {
-    display: flex;
-    flex-wrap: wrap;
-  }
-  
-  .nav-button {
-    padding: 0.5rem .5rem;
-    background-color: #E87200;
-    color: white;
-    border: 2px solid white;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
-    width: 100%;
-  }
-  
-  .nav-button:hover {
-    background-color: black !important;
   }
   
   /* Dropdown Navigation */

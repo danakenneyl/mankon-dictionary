@@ -1,9 +1,53 @@
-.forms {
+.contribution-content {
+    text-align: left;
+    margin-top: 30px;
+  }
+  
+  .contribution-content h2 {
+    color: #083e88;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 40px;
+    margin-bottom: 20px;
+  }
+  
+  .contribution-content h3 {
+    color: #083e88;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 25px;
+    margin-bottom: 15px;
+  }
+  
+  .contribution-content p {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .alert-text {
+    font-weight: bold;
+    color: #d32f2f !important;
+    background-color: #ffebee;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border-left: 4px solid #d32f2f;
+  }
+  
+  .button-container {
+    text-align: center;
+    margin: 30px 0;
+  }
+  
+  /* Ensure the overall layout is consistent with homepage */
+  .flex.justify-center {
     display: flex;
-    gap: 20px;
-    align-items: center;
-}
+    justify-content: center;
+    width: 100%;
+  }
 
-.button {
-    color: black !important;
-}
+  .request-wait {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }

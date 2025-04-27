@@ -17,6 +17,9 @@ export default function RootLayout({children }: {children: React.ReactNode}) {
   return (
     <html lang="en">
       <body>
+
+      <div className="left-stripe"></div>
+      <div className="right-stripe"></div>
         <SearchProvider>
           <Header data = {dictionary} />
           {children}
