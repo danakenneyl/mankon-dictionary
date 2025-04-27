@@ -28,12 +28,12 @@ export default function BrowseMenu({ onItemClick }: BrowseMenuProps) {
         Browse Dictionary
       </Dropdown.Toggle>
       <Dropdown.Menu>
-        <Dropdown.Item onClick={() => handleNavigate("browse-english")}>
-          Browse in English
-        </Dropdown.Item>
-        <Dropdown.Divider />
         <Dropdown.Item onClick={() => handleNavigate("browse-mankon")}>
           Browse in Mankon
+        </Dropdown.Item>
+        <Dropdown.Divider />
+        <Dropdown.Item onClick={() => handleNavigate("browse-english")}>
+          Browse in English
         </Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>

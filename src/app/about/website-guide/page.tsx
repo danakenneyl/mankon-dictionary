@@ -43,10 +43,10 @@ export default function Guide() {
 
             <h2 className="text-2xl font-semibold mb-3">Browsing the Dictionary</h2>
             <ul className="list-disc list-inside mb-6">
-                <li><strong>Browse in English:</strong> View the full dictionary organized according to English alphabetical order.</li>
-                <NavButton pageName="Browse in English" href="/browse/browse-english" ></NavButton>
                 <li><strong>Browse in Mankon:</strong> View the full dictionary organized according to Mankon alphabetical order.</li>
                 <NavButton pageName="Browse in Mankon" href="/browse/browse-mankon" ></NavButton>
+                <li><strong>Browse in English:</strong> View the full dictionary organized according to English alphabetical order.</li>
+                <NavButton pageName="Browse in English" href="/browse/browse-english" ></NavButton>
             </ul>
 
             <h2 className="text-2xl font-semibold mb-3">Language Help</h2>
