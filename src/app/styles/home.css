@@ -75,6 +75,7 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
+    min-height: 55px;
   }
   
   .primary-button:hover {
@@ -92,6 +93,7 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
+    min-height: 55px;
   }
   
   .secondary-button:hover {
