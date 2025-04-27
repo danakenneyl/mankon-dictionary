@@ -9,7 +9,7 @@ const SearchContext = createContext({
 });
 
 export function SearchProvider({ children }: { children: React.ReactNode }) {
-  const [searchEng, setSearchEng] = useState(true);
+  const [searchEng, setSearchEng] = useState(false);
 
   return (
     <SearchContext.Provider value={{ searchEng, setSearchEng }}>

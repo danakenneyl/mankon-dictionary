@@ -1,0 +1,34 @@
+.bio-container {
+    position: relative;
+    overflow: hidden; /* Contains floated elements */
+    margin-bottom: 20px;
+  }
+  
+  .bio-image {
+    float: right; /* Float the image to the right */
+    margin-left: 20px; /* Add space between image and text */
+    margin-bottom: 10px; /* Add space below the image */
+    width: 275px; /* Set width for the image container */
+  }
+  
+  .bio-img {
+    width: 100%; /* Make image responsive within its container */
+    height: auto; /* Maintain aspect ratio */
+    display: block; /* Removes any extra space beneath the image */
+  }
+  
+  .bio-text {
+    margin: 0; /* Remove any default margins */
+    line-height: 1.6; /* Improve readability */
+  }
+  
+  .bio-text p {
+    margin-bottom: 15px; /* Add space between paragraphs */
+  }
+  
+  /* Clear the float after the container */
+  .bio-container::after {
+    content: "";
+    display: table;
+    clear: both;
+  }

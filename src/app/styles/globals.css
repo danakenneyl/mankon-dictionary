@@ -1,10 +1,28 @@
-/* Base styles */
 html, body {
-  background-color: black;
   margin: 0;
   padding: 0;
   font-family: "Charis SIL", serif;
   min-height: 100%;
+  background-color: black;
+}
+
+.left-stripe, .right-stripe {
+  position: fixed;
+  top: 0;
+  height: 100%;
+  width: 200px;
+  background-image: url('/images/background2.jpg');
+  background-size: 400%; /* This will make the image appear at 50% of its original size */
+  /* background-repeat: repeat-y; */
+  z-index: 0;
+}
+
+.left-stripe {
+  left: 70;
+}
+
+.right-stripe {
+  right: 149;
 }
 
 .navbar {
@@ -12,7 +30,7 @@ html, body {
   background-color: black;
   width: 100%;
   height: auto;
-  min-height: 130px;
+  min-height: 10px;
   top: 0;
   left: 0;
   z-index: 1000;
@@ -49,6 +67,7 @@ html, body {
   display: flex;
   justify-content: center;
   box-sizing: border-box;
+  margin-top: 0px;
 }
 
 /* Content section */
@@ -58,10 +77,11 @@ html, body {
   background-color: #ffffff;
   color: #000;
   border-radius: 10px;
-  padding: 20px;
+  padding: 50px;
   margin-bottom: 20px;
   height: fit-content;
   min-height: 1300px;
+  z-index: 2;
 }
 
 /* Large to medium transition */
@@ -76,6 +96,10 @@ html, body {
   .content {
     width: 85%;
   }
+   /* Hide stripes on tablet and smaller */
+ .left-stripe, .right-stripe {
+  display: none;
+ }
 }
 
 /* Mobile breakpoint */
@@ -96,4 +120,9 @@ html, body {
   .search-container {
     width: 100%; /* Full width on very small screens */
   }
+
+   /* Hide stripes on tablet and smaller */
+ .left-stripe, .right-stripe {
+  display: none;
+ }
 }

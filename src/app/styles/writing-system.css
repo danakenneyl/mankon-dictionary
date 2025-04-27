@@ -1,0 +1,122 @@
+.section-divider {
+    margin: 2rem auto;
+    width: 75%;
+    border: none;
+    border-top: 2px solid rgba(212, 8, 42, 0.8); /* Your red color */
+  }
+  .center-text {
+    text-align: center;
+  }
+  
+  section {
+    margin-bottom: 3rem;
+  }
+  
+  h2 {
+    color: #083e88;
+  }
+  
+  h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #083e88; /* Matches your homepage primary color */
+    text-align: center;
+  }
+  
+  /* Add this if you want the decorative element below the title like on other pages */
+  .title-decoration {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0 30px;
+  }
+  
+  .decoration-line {
+    height: 2px;
+    width: 100px;
+    background-color: #083e88;
+    opacity: 0.6;
+  }
+  
+  .decoration-symbol {
+    width: 16px;
+    height: 16px;
+    background-color: #083e88;
+    border-radius: 50%;
+    margin: 0 15px;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    margin-top: 2rem;
+    margin-left: 2rem;
+    color: rgb(182, 28, 36, 0.8);
+  } 
+  
+  p, ul {
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  ul {
+    padding-left: 1.5rem;
+  }
+  
+  li {
+    margin-bottom: 0.5rem;
+  }
+  
+
+.letter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+    gap: 1rem;
+    justify-items: center;
+    align-items: center;
+    max-width: 800px;
+    margin: 1.5rem auto;
+  }
+  
+  .letter-grid span {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: rgb(8, 62, 136); /* your blue color */
+    border: 2px dashed rgba(182, 28, 36, 0.8); /* soft red border like elementary writing guides */
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    width: 100%;
+  }
+  .letter-explanation-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 2rem auto;
+    max-width: 800px;
+  }
+  
+  .letter-row {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+  
+  .letter {
+    font-size: 2.5rem;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border: 2px solid rgba(212, 8, 42, 0.8);
+    border-radius: 8px;
+    min-width: 50px;
+    text-align: center;
+  }
+  
+  .explanation {
+    font-size: 1.2rem;
+    margin: 0;
+  }
+  
+  
+  

@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { db } from "@/utils/firebase";
 import Link from 'next/link';
 import { ref, onValue } from "firebase/database";
+import "@/styles/home.css";
+import "@/styles/contribute.css";
 
 // TypeScript interface for a word proposal
 interface WordProposal {
@@ -110,12 +112,25 @@ export default function InitialProposals() {
 
   return (
           <div>
-            <h3 className="text-3xl font-bold mb-6">Requested Words</h3>
+            <h2 className="text-3xl font-bold mb-6 text-center">Requested Words</h2>
+
+            <div className="intro-decoration">
+            <div className="decoration-line"></div>
+            <div className="decoration-symbol"></div>
+            <div className="decoration-line"></div>
+            </div>
+
             <p>
-              The Mankon Dictionary aims to collect audio and context sentences for the below words. 
-              However, the list below is incomplete. Feel free to submit entry proposals for Mankon words
-              that you cannot find here.
+              While the Mankon Dictionary is interested in collecting any words that pop into your head, thinking of new words can be hard!
+              To help you get started, we have compiled a list of words that still need attention from our community. 
+              Clicking on the words below will take you to the proposal form for that word. All required typing fields will be filled automatically, 
+              so you can focus on recording the word and two sentences if you cannot type.
             </p>
+
+            <p className="alert-text request-wait">WAIT: Do you remember your username? You will need your username to complete your proposal.
+              If you don&#39;t have a username, please head over to the Propose Word page to create one.
+            </p>
+
             {/* Pagination Controls */}
             {sortedProposals.length > 0 && (
               <div className="flex justify-center items-center mt-8">
@@ -181,7 +196,7 @@ export default function InitialProposals() {
               </div>
             )}
             {/* Word count with pagination info */}
-            <p className="mb-4 text-gray-600">
+            <p className="mb-4 text-gray-600 text-center">
               {sortedProposals.length} word{sortedProposals.length !== 1 ? 's' : ''} found
               {sortedProposals.length > 0 && (
                 <span> (showing {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, sortedProposals.length)} of {sortedProposals.length})</span>

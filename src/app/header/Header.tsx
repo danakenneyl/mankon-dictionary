@@ -7,10 +7,13 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import SearchBar from './SearchBar';
-import NavButton from './NavButton';
+import AboutMenu from './AboutMenu';
 import BrowseMenu from './BrowseMenu';
 import { SearchParams } from '@/types/Datatypes';
+import LanguageHelpMenu from './LanguageHelpMenu';
 import '@/styles/header.css'
+import '@/styles/navbutton.css'
+import ContributeMenu from './ContributeMenu';
 
 export default function Header(data: SearchParams) {
   const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false);
@@ -22,7 +25,7 @@ export default function Header(data: SearchParams) {
       <Navbar.Brand className="brand-container">
         <Link className="toHome" href="/">
         <Image
-          src="/images/MACUDA.jpg"
+          src="/images/logo.jpg"
           alt=""
           className="logo"
           width={500}  // Replace with your actual desired width
@@ -47,10 +50,10 @@ export default function Header(data: SearchParams) {
         <Offcanvas.Header closeButton />
         <Offcanvas.Body>
           <Nav className="nav">
-            <NavButton onClick={closeOffcanvas} pageName="About" href="/about" />
+            <AboutMenu onItemClick={closeOffcanvas}/>
             <BrowseMenu onItemClick={closeOffcanvas}/>
-            <NavButton onClick={closeOffcanvas} pageName="Language Help" href="/language-help" />
-            <NavButton onClick={closeOffcanvas} pageName="Contribute" href="/contribute" />
+            <LanguageHelpMenu onItemClick={closeOffcanvas}/>
+            <ContributeMenu onItemClick={closeOffcanvas}/>
           </Nav>
         </Offcanvas.Body>
       </Navbar.Offcanvas>
