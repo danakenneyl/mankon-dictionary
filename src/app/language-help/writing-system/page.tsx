@@ -12,7 +12,7 @@ export default function Writing() {
             <div className="decoration-symbol"></div>
             <div className="decoration-line"></div>
             </div>
-            <p className="center-text">This guide provides a brief introduction to writing in Mankon using the Mankon Alphabet.</p>
+            <p className="center-text">There are currently two writing systems in use for the Mankon language. This guide provides a overview of both systems.</p>
 
           </section>
 
@@ -20,7 +20,7 @@ export default function Writing() {
 
           <section>
             <h2>The Mankon Alphabet</h2>
-            <p>The Mankon Alphabet is the primary writing system used in modern learning materials. It was popularized by Mr. Christopher Che Chi, a major figure in developing written resources for the Mankon language.</p>
+            <p>The Mankon Alphabet is the primary writing system used in modern language learning materials. It was popularized by Mr. Christopher Che Chi, a major figure in developing written resources for the Mankon language.</p>
 
             <h3>Vowels</h3>
             <div className="letter-grid">
@@ -89,7 +89,7 @@ export default function Writing() {
 
             <div className="letter-row">
               <span className="letter">ɨ</span>
-              <p className="explanation">This letter appears in the Mankon word for dance, &quot;àbɨ́ŋ&quot;. There is no English equivalent.</p>
+              <p className="explanation">This letter appears in the Mankon word for dance, &quot;àbɨ́ŋ&quot;. There is no equivalent in American English, however it is pronounced by some British dialects in the word &quot;category&quot;.</p>
             </div>
 
             <div className="letter-row">
@@ -212,7 +212,6 @@ export default function Writing() {
           <section>
             <h2>Notes for Readers</h2>
             <p>This dictionary will primarily be written using the Mankon Alphabet with GACL alternative spellings included where appropriate. Learning the Mankon Alphabet first is recommended for consistency with current and future Mankon learning materials and media.</p>
-            <p>You will encounter GACL spellings when reading the Mankon Bible, but don&apos;t worry — basic pronunciation rules are largely identicle to English with the exception of &apos;gh&apos;!</p>
           </section>
           </div>
         </div>);
