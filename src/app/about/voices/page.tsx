@@ -21,7 +21,7 @@ export default function Voices() {
             {/* Voice 1 */}
             <div className="bio-container">
               <div className="bio-name">
-                <h2 className="text-2xl font-semibold mb-3">Mr. Samuel Fonteh</h2>
+                <h2 className="text-2xl font-semibold mb-3">Samuel Fonteh</h2>
               </div>
               <div className="bio-image">
                 <Image
@@ -49,14 +49,14 @@ export default function Voices() {
               <div className="bio-image">
                 <Image
                   src="/images/photo.jpg"
-                  alt="Dr. Samuel Fonteh"
+                  alt="Dana Kenney-Lillejord"
                   className="bio-img"
                   width={325}
                   height={361}
                 />
               </div>
               <div className="bio-text">
-                <p>  Dana Kenney-Lillejord is currently pursuing an undergraduate degree in Computer Science and Linguistics at the University of Minnesota - Twin Cities. Her research interests are grounded in low-resource language work, and she recently completed her honors thesis exploring the phonology of Mankon. Dana strives to uphold high ethical standards in her research which guides her work always towards achieving the community goals of her language of focus. In return for the help she received with her research, she proposed the creation of an online living-breathing searchable Mankon dictionary that could engage Mankon communities around the world. With this project, she aspires to create a generalizable documentation tool that can benefit any language community interested in documenting their own language. In the future, she hopes to explore the possibility of building AI tools for languages like Mankon with limited online resources.</p>
+                <p>Dana Kenney-Lillejord is currently pursuing an undergraduate degree in Computer Science and Linguistics at the University of Minnesota - Twin Cities. Her research interests are grounded in low-resource language work, and she recently completed her honors thesis exploring the phonology of Mankon. Dana strives to uphold high ethical standards in her research which guides her work always towards achieving the community goals of her language of focus. In return for the help she received with her research, she proposed the creation of an online Mankon dictionary development project that could engage Mankon communities around the world. With this project, she aspires to create a generalizable documentation tool that can benefit any language community interested in documenting their own language. In the future, she hopes to explore the possibility of building AI tools for languages like Mankon with limited online resources.</p>
               </div>
             </div>
             
