@@ -7,7 +7,7 @@ import dictionary from '@/data/dictionary.json';
 
 export const metadata = {
   title: 'Mankon Dictionary',
-  description: 'Searchable dictionary for the Mankon language, a Western Grassfields Bantu language.',
+  description: 'The Mankon Dictionary is a searchable, talking Mankon-English dictionary that documents a Western Grassfields Bantu language.',
   verification: {
     google: '4Hx86Sk3InB7XpuulN8vdTt60jZa3fqW2m9IP1CIJNM',
   },

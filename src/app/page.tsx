@@ -16,7 +16,7 @@ export default function Home() {
           </div>
           
           <div className="homepage-welcome">
-            <p>This dictionary is built through the creativity, wisdom, and dedication of native Mankon speakers. Contributors from the Mankon diaspora have stepped forward to lead and support this work, offering their time and knowledge to help strengthen and share the language across generations.</p>
+            <p>This Mankon-English dictionary is built through the creativity, wisdom, and dedication of native Mankon speakers. Contributors from the Mankon diaspora have stepped forward to lead and support this work, offering their time and knowledge to help strengthen and share the language across generations.</p>
             
             <p>With Mankon speakers connecting from across the globe, technology plays a vital role in bringing our community together. This project aims to leverage this digital space to allow speakers, learners, and supporters to collaborate, celebrate, and build a shared future for the language, wherever they may live.</p>
             
