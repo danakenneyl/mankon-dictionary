@@ -220,7 +220,7 @@ export default function Entry() {
             </div>
           )}
 
-          <p className="alert-text">This entry looks a little empty. That is because it hasn&apos;t been officially added to our dictionary yet! If you would like to see a complete entry for this word, head over to the Word Requests page, find this word, and submit a proposal!</p>
+          <p className="alert-text">This entry looks a little empty. That is because it hasn&apos;t been officially added to our dictionary yet! If you would like to see a complete entry for this word, head over to the Word Requests page to find this word and submit a proposal!</p>
         </div>
       </div>
 
