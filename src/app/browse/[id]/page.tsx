@@ -7,6 +7,7 @@ import { ref, onValue } from "firebase/database";
 import { useParams } from 'next/navigation';
 import "@/styles/home.css";
 import "@/styles/contribute.css";
+import "@/styles/browse.css";
 
 // Updated interface to match the new requirements
 interface WordEntry {
