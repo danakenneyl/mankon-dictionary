@@ -16,12 +16,14 @@ export default function Home() {
           </div>
           
           <div className="homepage-welcome">
-            <p>This Mankon-English dictionary is built through the creativity, wisdom, and dedication of native Mankon speakers. Contributors from the Mankon diaspora have stepped forward to lead and support this work, offering their time and knowledge to help strengthen and share the language across generations.</p>
+            <p>This Mankon-English dictionary is built through the creativity, wisdom, and dedication of native speakers. 
+               With Mankon people connecting from across the globe, technology plays a vital role in bringing our community together. 
+               This project aims to leverage the digital world to enable members of global Mankon communitites to step forward 
+               to lead and support the use of our beautiful language.</p>
             
-            <p>With Mankon speakers connecting from across the globe, technology plays a vital role in bringing our community together. This project aims to leverage this digital space to allow speakers, learners, and supporters to collaborate, celebrate, and build a shared future for the language, wherever they may live.</p>
-            
-            <p>Our mission is to document and preserve the Mankon language to support its study, use, and celebration within the community and beyond.
-             By using this dictionary, contributing your knowledge, or simply learning a new word, you are helping to carry Mankon forward. <strong>We are honored to welcome you here.</strong></p>
+            <p>Our mission is to document and preserve the Mankon language to support its study, use, and celebration within our community and beyond.
+             By using this dictionary, contributing your knowledge, or simply learning a new word, you are helping to carry Mankon forward. </p>
+             <strong>We are honored to welcome you here.</strong>
           </div>
           
           <div className="action-buttons">

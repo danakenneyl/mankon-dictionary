@@ -9,13 +9,13 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import SearchBar from './SearchBar';
 import AboutMenu from './AboutMenu';
 import BrowseMenu from './BrowseMenu';
-import { SearchParams } from '@/types/Datatypes';
 import LanguageHelpMenu from './LanguageHelpMenu';
+import { db } from '@/utils/firebase';
 import '@/styles/header.css'
 import '@/styles/navbutton.css'
 import ContributeMenu from './ContributeMenu';
 
-export default function Header(data: SearchParams) {
+export default function Header() {
   const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false);
   const handleToggle = () => setIsOffcanvasOpen(!isOffcanvasOpen);
   const closeOffcanvas = () => setIsOffcanvasOpen(false);
@@ -37,7 +37,7 @@ export default function Header(data: SearchParams) {
           <div className="title-line2">Dictionary</div>
         </div>
       </Navbar.Brand>
-      <SearchBar data={data.data}/>
+      <SearchBar db={db}/>
       <Navbar.Toggle aria-controls="navbarScroll" onClick={handleToggle} />
       <Navbar.Offcanvas
         id="offcanvasNavbar-expand-md"

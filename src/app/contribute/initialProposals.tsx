@@ -19,7 +19,7 @@ interface WordProposal {
   sentenceAudioFileIds: string[];
   sentenceAudioFilenames: string[];
   translatedSentences?: string[];
-  translatedWord: string;
+  translatedWords: string[];
   type?: string;
   wordAudioFileIds: string[];
   wordAudioFilenames: string[];
@@ -332,7 +332,7 @@ export default function InitialProposals() {
                     >
                       <div>
                         <h5 className="mb-1">{proposal.mankonWord}</h5>
-                        <p className="mb-1">{proposal.translatedWord}</p>
+                        <p className="mb-1">{proposal.translatedWords.join(", ")}</p>
                       </div>
                     </Link>
                   ))}

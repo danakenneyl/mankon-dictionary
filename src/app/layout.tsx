@@ -4,7 +4,6 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import './styles/globals.css'
 import { SearchProvider } from '../utils/SearchContext'
 import Header from './header/Header';
-import dictionary from '@/data/dictionary.json';
 
 export const metadata = {
   title: 'Mankon Dictionary',
@@ -29,7 +28,7 @@ export default function RootLayout({children }: {children: React.ReactNode}) {
       <div className="left-stripe"></div>
       <div className="right-stripe"></div>
         <SearchProvider>
-          <Header data = {dictionary} />
+          <Header/>
           {children}
         </SearchProvider>
       </body>
