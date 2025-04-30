@@ -113,7 +113,7 @@ export default function Browse() {
     });
     
     // Also create an "Other" group for characters not in the alphabet
-    grouped["Other"] = [];
+    grouped["#"] = [];
 
     // Group each entry by its first letter/character
     entries.forEach(entry => {
@@ -136,7 +136,7 @@ export default function Browse() {
         
         // If no match was found, add to "Other" group
         if (!assigned) {
-          grouped["Other"].push(entry);
+          grouped["#"].push(entry);
         }
       }
     });
@@ -152,7 +152,7 @@ export default function Browse() {
     ...alphabet.filter(letter => 
       groupedEntries[letter] && groupedEntries[letter].length > 0
     ),
-    ...(groupedEntries["Other"] && groupedEntries["Other"].length > 0 ? ["Other"] : [])
+    ...(groupedEntries["#"] && groupedEntries["#"].length > 0 ? ["#"] : [])
   ];
 
   // Set default selected letter when entries load
@@ -172,7 +172,7 @@ export default function Browse() {
         });
         
         const groupedByLetter = groupEntriesByLetter(sortedEntries);
-        const firstLetterWithEntries = [...alphabet, "Other"].find(
+        const firstLetterWithEntries = [...alphabet, "#"].find(
           letter => groupedByLetter[letter] && groupedByLetter[letter].length > 0
         );
         
@@ -274,14 +274,15 @@ export default function Browse() {
 
         {/* Alphabet Navigation */}
         {lettersWithEntries.length > 0 && (
-          <div className="alpha-nav-container flex flex-wrap justify-center mt-6 mb-8">
+          <div className="custom-alpha-nav flex flex-wrap justify-center mt-6 mb-8">
             {lettersWithEntries.map(letter => (
               <button
                 key={letter}
-                className={`alpha-nav-btn m-1 px-3 py-1 rounded ${
+                data-nav-type="alpha"
+                className={`custom-nav-btn m-1 px-3 py-1 rounded ${
                   selectedLetter === letter
-                    ? 'alpha-nav-btn-selected'
-                    : 'alpha-nav-btn-default'
+                    ? 'custom-nav-selected'
+                    : ''
                 }`}
                 onClick={() => selectLetter(letter)}
               >
@@ -310,48 +311,40 @@ export default function Browse() {
 
             {/* Pagination for words within the selected letter */}
             {totalWords > itemsPerPage && (
-              <div className="flex justify-center items-center mt-8">
-                <button 
-                  onClick={() => setCurrentPage(1)} 
+              <div className="custom-pagination flex justify-center items-center mt-8">
+                <button
+                  onClick={() => setCurrentPage(1)}
                   disabled={currentPage === 1}
-                  className={`mx-1 px-3 py-1 rounded ${
-                    currentPage === totalPages 
-                      ? 'bg-gray-200' 
-                      : 'bg-blue-500 hover:bg-blue-600 arrow-btn'
-                  }`}
+                  data-nav-type="pagination"
+                  className="custom-nav-btn mx-1 px-3 py-1 rounded"
                 >
                   &laquo;
                 </button>
-                <button 
-                  onClick={prevPage} 
+                <button
+                  onClick={prevPage}
                   disabled={currentPage === 1}
-                  className={`mx-1 px-3 py-1 rounded ${
-                    currentPage === totalPages 
-                      ? 'bg-gray-200' 
-                      : 'bg-blue-500 hover:bg-blue-600 arrow-btn'
-                  }`}
+                  data-nav-type="pagination"
+                  className="custom-nav-btn mx-1 px-3 py-1 rounded"
                 >
                   &lt;
                 </button>
-                
                 {[...Array(totalPages)].map((_, i) => {
                   const pageNum = i + 1;
                   const showPageNumbers = 5;
                   const halfShow = Math.floor(showPageNumbers / 2);
                   let startPage = Math.max(1, currentPage - halfShow);
                   const endPage = Math.min(totalPages, startPage + showPageNumbers - 1);
-                  
                   if (endPage - startPage + 1 < showPageNumbers) {
                     startPage = Math.max(1, endPage - showPageNumbers + 1);
                   }
-                  
                   if (pageNum >= startPage && pageNum <= endPage) {
                     return (
                       <button
                         key={i}
                         onClick={() => paginate(pageNum)}
-                        className={`pagination-btn mx-1 px-3 py-1 rounded ${
-                          currentPage === pageNum ? 'pagination-btn-selected' : 'pagination-btn-default'
+                        data-nav-type="pagination"
+                        className={`custom-nav-btn mx-1 px-3 py-1 rounded ${
+                          currentPage === pageNum ? 'custom-nav-selected' : ''
                         }`}
                       >
                         {pageNum}
@@ -360,26 +353,19 @@ export default function Browse() {
                   }
                   return null;
                 })}
-                
                 <button
                   onClick={nextPage}
                   disabled={currentPage === totalPages}
-                  className={`pagination-btn mx-1 px-3 py-1 rounded ${
-                    currentPage === totalPages
-                      ? 'pagination-btn-disabled'
-                      : 'pagination-btn-active'
-                  }`}
+                  data-nav-type="pagination"
+                  className="custom-nav-btn mx-1 px-3 py-1 rounded"
                 >
                   &gt;
                 </button>
                 <button
                   onClick={() => setCurrentPage(totalPages)}
                   disabled={currentPage === totalPages}
-                  className={`pagination-btn mx-1 px-3 py-1 rounded ${
-                    currentPage === totalPages
-                      ? 'pagination-btn-disabled'
-                      : 'pagination-btn-active'
-                  }`}
+                  data-nav-type="pagination"
+                  className="custom-nav-btn mx-1 px-3 py-1 rounded"
                 >
                   &raquo;
                 </button>
