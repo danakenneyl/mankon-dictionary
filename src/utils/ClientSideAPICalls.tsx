@@ -120,14 +120,14 @@ export async function FetchAudioFileIDs(filenames: string[]): Promise<Record<str
   }
 }
 
+// Function to fetch audio files from storage
 export async function FetchAudioFile(fileID: string): Promise<string> {
   try {
     const response = await fetch(`/api/get-file?fileId=${fileID}`);
     if (!response.ok) {
       throw new Error(`API request failed with status: ${response.status}`);
     }
-    
-    const blob =  await response.blob();
+    const blob = await response.blob();
     return URL.createObjectURL(blob);
   } catch (error) {
     console.error("Error fetching audio file:", error);

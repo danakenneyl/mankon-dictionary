@@ -4,22 +4,8 @@ import { useState, useEffect } from 'react';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import { ref, onValue } from "firebase/database";
 import { db } from "@/utils/firebase";
+import { FetchAudioFile } from '@/utils/ClientSideAPICalls';
 import "@/styles/entry.css";
-
-// Function to fetch audio files from storage
-export async function FetchAudioFile(fileID: string): Promise<string> {
-  try {
-    const response = await fetch(`/api/get-file?fileId=${fileID}`);
-    if (!response.ok) {
-      throw new Error(`API request failed with status: ${response.status}`);
-    }
-    const blob = await response.blob();
-    return URL.createObjectURL(blob);
-  } catch (error) {
-    console.error("Error fetching audio file:", error);
-    throw error;
-  }
-}
 
 // Updated interface to match the actual database structure
 interface WordEntry {
