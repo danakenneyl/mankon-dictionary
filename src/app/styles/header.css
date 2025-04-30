@@ -14,7 +14,6 @@
 .logo {
   max-height: 100px;
   max-width: 100px;
-  /* border-radius: 50%; */
   margin-right: 0;
 }
 
@@ -24,7 +23,6 @@
   flex-direction: column;
   color: #E87200;
   line-height: 1.2;
-  font-family: "Charis SIL", serif;
   white-space: nowrap;
   text-align: center;
  /* Negative margin to create overlap with the logo */

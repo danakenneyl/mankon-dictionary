@@ -40,7 +40,7 @@ export default function Contribute() {
               </Link>
             </div>
 
-            <h2>Dictionary Entry Proposal Form</h2>
+            <h2>Entry Proposal Form</h2>
             <h3>The Entry</h3>
             <p>
               For each entry proposal the Mankon Dictionary asks that you include the word you would 

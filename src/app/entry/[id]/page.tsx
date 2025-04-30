@@ -20,7 +20,7 @@ interface WordEntry {
   sentenceFileIds?: string[];
   wordAudioFileId?: string;
   translatedSentence?: string[];
-  translatedWord?: string;
+  translatedWords: string[];
   type?: string;
   status?: string;
 }
@@ -32,9 +32,16 @@ export default function Entry() {
     contributorUUIDs: [],
     createdAt: "",
     lastModifiedAt: "",
+    mankonSentences: [],
     mankonWord: "",
-    pairWords: [],    
-    status: "",
+    pairWords: [],
+    sentenceAudioFilenames: [],
+    sentenceFileIds: [],
+    wordAudioFileId: "",
+    translatedSentence: [],
+    translatedWords: [],
+    type: "",
+    status: ""
   });
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -159,7 +166,7 @@ export default function Entry() {
           )}
           
           <p id="translationEntry" className="translationEntry">
-            {entry.translatedWord}
+            {entry.translatedWords.join(", ")}
           </p>
           
           {entry.pairWords && entry.pairWords.length > 0 && (

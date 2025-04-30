@@ -1,0 +1,65 @@
+/* Alphabet Navigation Buttons */
+.flex button {
+    background-color: white;
+    color: #083d88;
+    border: 2px solid #083d88;
+    border-radius: 50%; /* Perfect circle shape */
+    /* width: 40px;
+    height: 40px; */
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    margin: 5px;
+  }
+  
+  /* Selected state */
+  .flex button.bg-blue-600 {
+    background-color: #083d88;
+    color: white;
+    border-color: #083d88;
+  }
+  
+  /* Hover state */
+  .flex button:hover:not(.bg-blue-600):not(:disabled) {
+    background-color: rgba(8, 61, 136, 0.05);
+  }
+  
+  /* Focus state for accessibility */
+  .flex button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(8, 61, 136, 0.25);
+  }
+  
+  /* Disabled state for pagination buttons */
+  .flex button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+
+/* Pagination Buttons */
+.flex.justify-center.items-center button {
+  min-width: 40px; /* Ensure even the arrow buttons maintain circular shape */
+}
+
+/* You may need to adjust the arrow buttons to fit well in the circles */
+.flex.justify-center.items-center button:first-child,
+.flex.justify-center.items-center button:last-child,
+.flex.justify-center.items-center button:nth-child(2),
+.flex.justify-center.items-center button:nth-last-child(2) {
+  font-size: 14px;
+}
+
+/* Make pagination arrows black when they're usable (not disabled) */
+.flex.justify-center.items-center button:not(:disabled) {
+  color: #000;
+}
+
+/* Keep the selected page number with white text */
+.flex.justify-center.items-center button.bg-blue-600 {
+  color: #000;
+}
