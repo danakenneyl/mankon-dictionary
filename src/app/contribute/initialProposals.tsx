@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { ref, onValue } from "firebase/database";
 import "@/styles/home.css";
 import "@/styles/contribute.css";
+import "@/styles/browse.css";
 
 // Updated interface to match the new requirements
 interface WordProposal {
@@ -225,43 +226,42 @@ export default function InitialProposals() {
 
       {/* Pagination Controls */}
       {lettersWithProposals.length > 0 && (
-        <div className="flex justify-center items-center mt-8">
-          <button 
-            onClick={() => setCurrentPage(1)} 
+        <div className="custom-pagination flex justify-center items-center mt-8">
+          <button
+            onClick={() => setCurrentPage(1)}
             disabled={currentPage === 1}
-            className={`mx-1 px-3 py-1 rounded ${currentPage === 1 ? 'bg-gray-200' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+            data-nav-type="pagination"
+            className="custom-nav-btn mx-1 px-3 py-1 rounded"
           >
             &laquo;
           </button>
-          <button 
-            onClick={prevPage} 
+          <button
+            onClick={prevPage}
             disabled={currentPage === 1}
-            className={`mx-1 px-3 py-1 rounded ${currentPage === 1 ? 'bg-gray-200' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+            data-nav-type="pagination"
+            className="custom-nav-btn mx-1 px-3 py-1 rounded"
           >
             &lt;
           </button>
-          
           {/* Page Numbers */}
           {[...Array(totalPages)].map((_, i) => {
             // Show 5 page numbers at a time with current page in the middle when possible
             const pageNum = i + 1;
             const showPageNumbers = 5; // How many page numbers to show at once
             const halfShow = Math.floor(showPageNumbers / 2);
-            
             let startPage = Math.max(1, currentPage - halfShow);
             const endPage = Math.min(totalPages, startPage + showPageNumbers - 1);
-            
             if (endPage - startPage + 1 < showPageNumbers) {
               startPage = Math.max(1, endPage - showPageNumbers + 1);
             }
-            
             if (pageNum >= startPage && pageNum <= endPage) {
               return (
                 <button
                   key={i}
                   onClick={() => paginate(pageNum)}
-                  className={`mx-1 px-3 py-1 rounded ${
-                    currentPage === pageNum ? 'bg-blue-600 text-white' : 'bg-gray-200 hover:bg-gray-300'
+                  data-nav-type="pagination"
+                  className={`custom-nav-btn mx-1 px-3 py-1 rounded ${
+                    currentPage === pageNum ? 'custom-nav-selected' : ''
                   }`}
                 >
                   {pageNum}
@@ -270,27 +270,26 @@ export default function InitialProposals() {
             }
             return null;
           })}
-          
-          <button 
-            onClick={nextPage} 
+          <button
+            onClick={nextPage}
             disabled={currentPage === totalPages}
-            className={`mx-1 px-3 py-1 rounded ${currentPage === totalPages ? 'bg-gray-200' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+            data-nav-type="pagination"
+            className="custom-nav-btn mx-1 px-3 py-1 rounded"
           >
             &gt;
           </button>
-          <button 
-            onClick={() => setCurrentPage(totalPages)} 
+          <button
+            onClick={() => setCurrentPage(totalPages)}
             disabled={currentPage === totalPages}
-            className={`mx-1 px-3 py-1 rounded ${currentPage === totalPages ? 'bg-gray-200' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+            data-nav-type="pagination"
+            className="custom-nav-btn mx-1 px-3 py-1 rounded"
           >
             &raquo;
           </button>
         </div>
       )}
-
       {/* Word count with pagination info */}
       <p className="mb-4 text-gray-600 text-center">
-        {totalWord} word{totalWord !== 1 ? 's' : ''} found
         {totalWord > 0 && (
           <span> (showing {indexOfFirstWord + 1}-{Math.min(indexOfLastWord, totalWords)} of {totalWords})</span>
         )}
