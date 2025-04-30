@@ -5,6 +5,14 @@
     color: #083d88d7;
     margin: 2%;
   }
+  .alert-text {
+    font-weight: bold;
+    color: #d32f2f !important;
+    background-color: #ffebee;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border-left: 4px solid #d32f2f;
+  }
   
   .entry__pos {
     font-size: 200%;
@@ -16,14 +24,49 @@
   .pronunciation {
     margin: 2%;
     padding: 0;
-    vertical-align: middle; /* Align with text */
+    position: relative;
+    top: -10px;
+  }
+
+  .typeButton {
+    background-color: white;
+    color: #083d88d7;
+    border: 2px solid #083d88d7;
+    border-radius: 50px; /* Large value for oval shape */
+    padding: 2px 20px; /* More horizontal padding than vertical for oval shape */
+    font-size: 25px;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    transition: all 0.2s ease;
+    position: relative;
+    top: -5px; 
+  }
+  
+  /* Optional hover effect */
+  .typeButton:hover {
+    background-color: rgba(8, 61, 136, 0.05);
+  }
+  
+  /* Optional focus effect for accessibility */
+  .typeButton:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(8, 61, 136, 0.25);
+  }
+  .altSpelling {
+    line-height: 1;
+    font-size: larger;
+    margin: 5%;
   }
   
   .translationEntry {
     margin: 0.5%;
     line-height: 1;
     font-size: larger;
-    margin: 2%;
+    margin: 2% 5%; /* Horizontal margins remain at 2% */
+    padding-top: 50px; /* Added top padding */
+    padding-bottom: 50px;
   }
   
   .card {
@@ -33,11 +76,11 @@
     border-radius: 8px;
   }
   .card.pair {
-    background-color: rgba(96, 176, 128, 0.4); /* Lighter green */
-  border: 1px solid rgba(96, 176, 128, 0.8); /* Lighter green border */
+    background-color: rgb(232, 114, 0, 0.4); /* Lighter green */
+    border: 1px solid rgb(232, 114, 0, 0.4); /* Lighter green border */
   
     /* background-color: rgba(68, 125, 206, 0.737);
-  border: 1px solid rgba(8, 61, 136, 0.756);  */
+    border: 1px solid rgba(8, 61, 136, 0.756);  */
   
     /* background-color: rgba(245, 188, 0, 0.359);
     border: 1px solid rgb(245, 188, 0); */

@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div className="content-wrapper">
-      <div className="content-home">
+      <div className="content">
         <section className="homepage-intro">
           <h1 className="intro-text">Welcome to the Mankon Dictionary!</h1>
           

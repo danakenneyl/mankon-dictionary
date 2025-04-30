@@ -48,25 +48,25 @@ export async function UpdateJson(fileName: string, existingJson: unknown[], newE
     }
 }
 
-export async function UploadAudio(file : File): Promise<boolean> {
-
+export async function UploadAudio(file: File): Promise<string | null> {
   try {
-      const audioToSubmit = new FormData();
-      audioToSubmit.append('file', file);
+    const audioToSubmit = new FormData();
+    audioToSubmit.append('file', file);
 
-      const response = await fetch('/api/upload-file', {
-        method: 'POST',
-        body: audioToSubmit,
-      });
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Upload failed');
-      }
-
-      return true;
+    const response = await fetch('/api/upload-file', {
+      method: 'POST',
+      body: audioToSubmit,
+    });
+    const responseData = await response.json();
+    if (!response.ok) {
+      
+      throw new Error(responseData.message || 'Upload failed');
+    }
+    
+    return responseData.id;
   } catch (err: unknown) {
-    console.log('Error fetching drive files:', err);
-    return false;
+    console.log('Error uploading audio:', err);
+    return null;
   }
 }
 
