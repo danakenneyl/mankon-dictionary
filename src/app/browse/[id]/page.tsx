@@ -274,14 +274,14 @@ export default function Browse() {
 
         {/* Alphabet Navigation */}
         {lettersWithEntries.length > 0 && (
-          <div className="flex flex-wrap justify-center mt-6 mb-8">
+          <div className="alpha-nav-container flex flex-wrap justify-center mt-6 mb-8">
             {lettersWithEntries.map(letter => (
               <button
                 key={letter}
-                className={`m-1 px-3 py-1 rounded ${
+                className={`alpha-nav-btn m-1 px-3 py-1 rounded ${
                   selectedLetter === letter
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-200 hover:bg-gray-300'
+                    ? 'alpha-nav-btn-selected'
+                    : 'alpha-nav-btn-default'
                 }`}
                 onClick={() => selectLetter(letter)}
               >
@@ -334,13 +334,10 @@ export default function Browse() {
                   &lt;
                 </button>
                 
-                {/* Page Numbers */}
                 {[...Array(totalPages)].map((_, i) => {
-                  // Show 5 page numbers at a time with current page in the middle when possible
                   const pageNum = i + 1;
-                  const showPageNumbers = 5; // How many page numbers to show at once
+                  const showPageNumbers = 5;
                   const halfShow = Math.floor(showPageNumbers / 2);
-                  
                   let startPage = Math.max(1, currentPage - halfShow);
                   const endPage = Math.min(totalPages, startPage + showPageNumbers - 1);
                   
@@ -353,8 +350,8 @@ export default function Browse() {
                       <button
                         key={i}
                         onClick={() => paginate(pageNum)}
-                        className={`mx-1 px-3 py-1 rounded ${
-                          currentPage === pageNum ? 'bg-blue-600 text-white' : 'bg-gray-200 hover:bg-gray-300'
+                        className={`pagination-btn mx-1 px-3 py-1 rounded ${
+                          currentPage === pageNum ? 'pagination-btn-selected' : 'pagination-btn-default'
                         }`}
                       >
                         {pageNum}
@@ -364,24 +361,24 @@ export default function Browse() {
                   return null;
                 })}
                 
-                <button 
-                  onClick={nextPage} 
+                <button
+                  onClick={nextPage}
                   disabled={currentPage === totalPages}
-                  className={`mx-1 px-3 py-1 rounded ${
-                    currentPage === totalPages 
-                      ? 'bg-gray-200' 
-                      : 'bg-blue-500 hover:bg-blue-600 arrow-btn'
+                  className={`pagination-btn mx-1 px-3 py-1 rounded ${
+                    currentPage === totalPages
+                      ? 'pagination-btn-disabled'
+                      : 'pagination-btn-active'
                   }`}
                 >
                   &gt;
                 </button>
-                <button 
-                  onClick={() => setCurrentPage(totalPages)} 
+                <button
+                  onClick={() => setCurrentPage(totalPages)}
                   disabled={currentPage === totalPages}
-                  className={`mx-1 px-3 py-1 rounded ${
-                    currentPage === totalPages 
-                      ? 'bg-gray-200' 
-                      : 'bg-blue-500 hover:bg-blue-600 arrow-btn'
+                  className={`pagination-btn mx-1 px-3 py-1 rounded ${
+                    currentPage === totalPages
+                      ? 'pagination-btn-disabled'
+                      : 'pagination-btn-active'
                   }`}
                 >
                   &raquo;
