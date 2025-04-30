@@ -1,4 +1,5 @@
 // app/layout.tsx
+import Head from 'next/head';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './styles/globals.css'
 import { SearchProvider } from '../utils/SearchContext'
@@ -19,6 +20,10 @@ export const metadata = {
 export default function RootLayout({children }: {children: React.ReactNode}) {
   return (
     <html lang="en">
+      <Head>
+        <link rel="icon" href="/images/logo.svg" type="image/svg+xml" />
+        <link rel="icon" href="/images/logo.ico" sizes="any"/>
+      </Head>
       <body>
 
       <div className="left-stripe"></div>

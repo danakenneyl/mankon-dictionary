@@ -6,11 +6,14 @@ export default function Typing() {
         <div className="content-wrapper">
           <div className="content">
             <h1>Typing in Mankonː A Guide</h1>
+
             <div className="intro-decoration">
             <div className="decoration-line"></div>
             <div className="decoration-symbol"></div>
             <div className="decoration-line"></div>
+            
             </div>
+
             <p className="center-text">Typing in Mankon can be easy, but because Mankon has a few special letters, you&apos;ll need to download a new keyboard! Follow these steps to get started.</p>
             <hr className="section-divider" />
             <section>
