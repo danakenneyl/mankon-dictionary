@@ -314,14 +314,22 @@ export default function Browse() {
                 <button 
                   onClick={() => setCurrentPage(1)} 
                   disabled={currentPage === 1}
-                  className={`mx-1 px-3 py-1 rounded ${currentPage === 1 ? 'bg-gray-200' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+                  className={`mx-1 px-3 py-1 rounded ${
+                    currentPage === totalPages 
+                      ? 'bg-gray-200' 
+                      : 'bg-blue-500 hover:bg-blue-600 arrow-btn'
+                  }`}
                 >
                   &laquo;
                 </button>
                 <button 
                   onClick={prevPage} 
                   disabled={currentPage === 1}
-                  className={`mx-1 px-3 py-1 rounded ${currentPage === 1 ? 'bg-gray-200' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+                  className={`mx-1 px-3 py-1 rounded ${
+                    currentPage === totalPages 
+                      ? 'bg-gray-200' 
+                      : 'bg-blue-500 hover:bg-blue-600 arrow-btn'
+                  }`}
                 >
                   &lt;
                 </button>
@@ -359,14 +367,22 @@ export default function Browse() {
                 <button 
                   onClick={nextPage} 
                   disabled={currentPage === totalPages}
-                  className={`mx-1 px-3 py-1 rounded ${currentPage === totalPages ? 'bg-gray-200' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+                  className={`mx-1 px-3 py-1 rounded ${
+                    currentPage === totalPages 
+                      ? 'bg-gray-200' 
+                      : 'bg-blue-500 hover:bg-blue-600 arrow-btn'
+                  }`}
                 >
                   &gt;
                 </button>
                 <button 
                   onClick={() => setCurrentPage(totalPages)} 
                   disabled={currentPage === totalPages}
-                  className={`mx-1 px-3 py-1 rounded ${currentPage === totalPages ? 'bg-gray-200' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+                  className={`mx-1 px-3 py-1 rounded ${
+                    currentPage === totalPages 
+                      ? 'bg-gray-200' 
+                      : 'bg-blue-500 hover:bg-blue-600 arrow-btn'
+                  }`}
                 >
                   &raquo;
                 </button>
