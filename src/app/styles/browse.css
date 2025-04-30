@@ -1,78 +1,49 @@
-/* Alphabet Navigation Buttons */
-.alpha-nav-container button.alpha-nav-btn {
-  background-color: white;
-  color: #083d88;
-  border: 2px solid #083d88;
-  border-radius: 50%; /* Perfect circle shape */
-  width: 40px;
-  height: 40px;
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-  margin: 5px;
+/* Updated selector to target ALL custom pagination containers */
+div.custom-alpha-nav button.custom-nav-btn[data-nav-type="alpha"],
+div.custom-pagination button.custom-nav-btn[data-nav-type="pagination"] {
+  background-color: white !important;
+  color: #083d88 !important;
+  border: 2px solid #083d88 !important;
+  border-radius: 50% !important; /* Perfect circle shape */
+  width: 40px !important;
+  height: 40px !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.2s ease !important;
+  margin: 5px !important;
+  padding: 0 !important; /* Override any padding */
+  text-align: center !important;
+  line-height: normal !important;
 }
 
-/* Selected state for alphabet buttons */
-.alpha-nav-container button.alpha-nav-btn-selected {
-  background-color: #083d88;
-  color: white;
-  border-color: #083d88;
+/* Selected state - simplified selector */
+div.custom-alpha-nav button.custom-nav-btn[data-nav-type="alpha"].custom-nav-selected,
+div.custom-pagination button.custom-nav-btn.custom-nav-selected {
+  background-color: #083d88 !important;
+  color: white !important;
+  border-color: #083d88 !important;
 }
 
-/* Hover state for alphabet buttons */
-.alpha-nav-container button.alpha-nav-btn:hover:not(.alpha-nav-btn-selected):not(:disabled) {
-  background-color: rgba(8, 61, 136, 0.05);
+/* Hover state - simplified selector */
+div.custom-alpha-nav button.custom-nav-btn[data-nav-type="alpha"]:hover:not(.custom-nav-selected):not(:disabled),
+div.custom-pagination button.custom-nav-btn:hover:not(.custom-nav-selected):not(:disabled) {
+  background-color: rgba(8, 61, 136, 0.05) !important;
 }
 
-/* Pagination Buttons */
-.pagination-container button.pagination-btn {
-  background-color: white;
-  color: #083d88;
-  border: 2px solid #083d88;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-  margin: 5px;
+/* Disabled state - simplified selector */
+div.custom-alpha-nav button.custom-nav-btn[data-nav-type="alpha"]:disabled,
+div.custom-pagination button.custom-nav-btn:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
 }
 
-/* Selected state for pagination */
-.pagination-container button.pagination-btn-selected {
-  background-color: #083d88;
-  color: white;
-  border-color: #083d88;
-}
-
-/* Active state for pagination */
-.pagination-container button.pagination-btn-active {
-  color: #083d88;
-}
-
-/* Default state for pagination */
-.pagination-container button.pagination-btn-default {
-  color: #083d88;
-}
-
-/* Disabled state for pagination buttons */
-.pagination-container button.pagination-btn-disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  color: #083d88;
-}
-
-/* Focus state for accessibility - applies to both nav types */
-.alpha-nav-container button:focus,
-.pagination-container button:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(8, 61, 136, 0.25);
+/* Focus state - simplified selector */
+div.custom-alpha-nav button.custom-nav-btn[data-nav-type="alpha"]:focus,
+div.custom-pagination button.custom-nav-btn:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(8, 61, 136, 0.25) !important;
 }
