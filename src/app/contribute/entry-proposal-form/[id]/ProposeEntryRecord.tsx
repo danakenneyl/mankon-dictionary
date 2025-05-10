@@ -1,8 +1,7 @@
 'use client';
 import { useReactMediaRecorder } from "react-media-recorder";
 import React, { useEffect, useState } from "react";
-import "@/styles/contribute.css";
-
+import '@/styles/entry-proposal.css'; 
 
 interface ProposeEntryRecordProps {
   onRecordingComplete: (audioBlobUrl: string) => void;
@@ -21,7 +20,7 @@ const ProposeEntryRecord: React.FC<ProposeEntryRecordProps> = ({
   const [counter, setCounter] = useState<number>(0);
   const [localBlobUrl, setLocalBlobUrl] = useState<string | null>(initialAudio || null);
 
-  const { status, startRecording, stopRecording, mediaBlobUrl, clearBlobUrl } = useReactMediaRecorder({
+  const {status, startRecording, stopRecording, mediaBlobUrl, clearBlobUrl } = useReactMediaRecorder({
     video: false,
     audio: true,
     mediaRecorderOptions: {
@@ -102,48 +101,40 @@ const ProposeEntryRecord: React.FC<ProposeEntryRecordProps> = ({
   };
 
   return (
-    <div className="mt-4 p-4 border rounded-lg bg-gray-50">
-      <div className="flex flex-col space-y-4">
-        <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-gray-700">Recording Status: {status}</span>
-          <div className="flex items-center space-x-2">
-            <span className="font-mono text-lg">
-              {minute}:{second}
-            </span>
-            <button
-              type="button"
-              onClick={resetTimer}
-              className="button px-3 py-1 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
-            >
-              Clear
-            </button>
-          </div>
+    <div className="record-card">
+      <div>
+        <div>
+          <span >
+            Timer: {minute}:{second}
+          </span>
         </div>
-        {localBlobUrl && (
-          <div className="w-full">
-            <audio src={localBlobUrl} controls className="w-full" />
-          </div>
-        )}
-        <div className="flex flex-col space-y-2">
-          <p className="text-sm text-gray-600">
-            {isRecording ? "Recording in progress..." : "Press Start to begin recording"}
+
+          <p>
+          <span>Recording: {status}</span>
           </p>
-          <div className="flex space-x-2">
+          <div>
             <button
               type="button"
+              className = "record-button"
               onClick={handleToggleRecording}
-              className={`button px-4 py-2 rounded-md transition-colors ${
-                isRecording
-                  ? "bg-red-500 hover:bg-red-600 text-white"
-                  : "bg-green-500 hover:bg-green-600 text-white"
-              }`}
             >
               {isRecording ? "Stop" : "Start"}
             </button>
+            <button
+              type="button"
+              className = "record-button"
+              onClick={resetTimer}
+            >
+              Clear
+            </button>
+            {localBlobUrl && (
+              <div className="recording w-full">
+                <audio controls src={localBlobUrl} className="w-full" />
+              </div>
+            )}
           </div>
         </div>
       </div>
-    </div>
   );
 };
 

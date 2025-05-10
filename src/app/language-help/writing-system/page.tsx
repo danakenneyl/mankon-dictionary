@@ -76,69 +76,69 @@ export default function Writing() {
           <section>
             <h2>Writing Basics</h2>
             <p>Many of the letters in the Mankon Alphabet will appear familiar to English language writers. However, a few characters may be new. Letters that do not appear in the English alphabet are presented below with Mankon word and English word examples to demonstrate the sound the character represents. It is common to struggle at first when writing in a new way, but never fearǃ With consistant practice, writing in Mankon will feel like second nature.</p>
-           
+            <hr className="section-divider-mini" />
             <div className="letter-row">
               <span className="letter">ɛ</span>
               <p className="explanation"> This letter appears in the Mankon word for cloth, &quot;atsɛʔɛ&quot;, and the vowel sound appears in the English word &quot;bed&quot;.  </p>
             </div>
-
+            <hr className="section-divider-mini" />
             <div className="letter-row">
               <span className="letter">ə</span>
               <p className="explanation">This letter appears in the Mankon word for fool, &quot;àbərɨ&quot;, and the vowel sound appears in the second syllable of the English word &quot;sofa&quot;.</p>
             </div>
-
+            <hr className="section-divider-mini" />
             <div className="letter-row">
               <span className="letter">ɨ</span>
               <p className="explanation">This letter appears in the Mankon word for dance, &quot;àbɨ́ŋ&quot;. There is no equivalent in American English, however it is pronounced by some British dialects in the word &quot;category&quot;.</p>
             </div>
-
+            <hr className="section-divider-mini"/>
             <div className="letter-row">
               <span className="letter">ɔ</span>
               <p className="explanation">This letter appears in the Mankon word for clay, &quot;àbɔm &quot;, and the vowel sound appears in the English word &quot;thought&quot;.</p>
             </div>
-
+            <hr className="section-divider-mini" />
             <div className="letter-row">
               <span className="letter">tʃ</span>
               <p className="explanation">This letter appears in the Mankon word for shake, &quot;ʧìʔí &quot;, and the sound appears at the beginning of the English word &quot;chess&quot;.</p>
             </div>
-
+            <hr className="section-divider-mini" />
             <div className="letter-row">
               <span className="letter">ɣ</span>
               <p className="explanation">This letter appears in the Mankon word for gum, &quot;àʧíɣɨ &quot;, There is no English equivalent.</p>
             </div>
-
+            <hr className="section-divider-mini" />
             <div className="letter-row">
               <span className="letter">ʔ</span>
               <p className="explanation">This letter appears in the Mankon word for thigh, &quot;àtuʔu &quot;, and is pronounced in between the English words &quot;uh-oh&quot;</p>
             </div>
-
+            <hr className="section-divider-mini" />
             <div className="letter-row">
               <span className="letter">dʒ</span>
               <p className="explanation">This letter appears in the Mankon word for Germany, &quot;dʒáman&quot;, and sound appears at the beginning of the English word &quot;jump&quot;</p>
             </div>
-
+            <hr className="section-divider-mini" />
             <div className="letter-row">
               <span className="letter">ɲ</span>
               <p className="explanation">This letter appears in the Mankon name Anye, &quot;àɲɛ&quot;, and while English speakers typically use a slightly different pronounciation, the sound is approximated in the word &quot;canyon&quot;</p>
             </div>
-
+            <hr className="section-divider-mini" />
             <div className="letter-row">
               <span className="letter">ŋ</span>
               <p className="explanation">This letter appears in the Mankon word for dance, &quot;àbɨ́ŋ&quot;, and the sound appears at the end of the English word &quot;song&quot;</p>
             </div>
-
+            <hr className="section-divider-mini" />
             <div className="letter-row">
               <span className="letter">ʃ</span>
               <p className="explanation">This letter appears in the Mankon word for hunting, &quot;àʃwaʔa&quot;, and the sound appears at the beginning of the English word &quot;sheep&quot;</p>
             </div>
-
+            <hr className="section-divider-mini" />
             <div className="letter-row">
               <span className="letter">ʒ</span>
               <p className="explanation">This letter appears in the Mankon word for breath, &quot;àʒwi&quot;, and the sound appears in the English word &quot;usual&quot;</p>
             </div>
           </section>
 
-          <hr className="section-divider" />
+          <hr className="section-divider-mini" />
 
           <section>
             <h2>The General Alphabet of Cameroon Languages (GACL)</h2>
@@ -188,7 +188,7 @@ export default function Writing() {
                 <span>sh</span>
                 <span>t</span>
                 <span>tf</span>
-                <span>ts</span>
+                <span>ch</span>
                 <span>v</span>
                 <span>w</span>
                 <span>y</span>
@@ -198,6 +198,7 @@ export default function Writing() {
             <h3>Differences from the Mankon Alphabet</h3>
             <ul>
               <li>Mankon uses <strong>tʃ</strong> while GACL uses <strong>c</strong>.</li>
+              <li>Mankon uses <strong>ts</strong> while GACL uses <strong>ch</strong>.</li>
               <li>Mankon uses <strong>ʃ</strong> while GACL uses <strong>sh</strong>.</li>
               <li>Mankon uses <strong>ʔ</strong> while GACL uses <strong>&apos;</strong> (apostrophe).</li>
               <li>Mankon uses <strong>ɣ</strong> while GACL uses <strong>gh</strong>.</li>

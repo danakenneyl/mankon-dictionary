@@ -87,7 +87,7 @@ export default function Contribute() {
               You will be able to propose a new entry without any typing at all.
             </p>
 
-            <p className="alert-text">WAIT: Do you remember your username? You&#39;ll need your username to complete your proposal.</p>
+            <p className="alert-text">Please read ALL of the instructions above before filling out this form.</p>
             <div className="button-container">
               <Link href="/contribute/entry-proposal-form/0">
                 <button className="primary-button">Entry Proposal Form</button>

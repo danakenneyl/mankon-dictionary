@@ -26,7 +26,7 @@ export default function Typing() {
             <hr className="section-divider" />
             <section>
               <h2>Step 2: Understand the Alphabet You’ll See</h2>
-              <p>The Mankon Dictionary offers a brief lesson on the Mankon writing system linked below.</p>
+              <p>The Mankon Dictionary offers a brief introduction to 2 Mankon writing systems.</p>
               <ul>
               <li><a href="/language-help/writing-system" target="_blank" rel="noopener noreferrer">Mankon Alphabet Guide</a></li>
               </ul>
@@ -51,6 +51,7 @@ export default function Typing() {
                     <tr><td>i</td></tr>
                     <tr><td>k</td></tr>
                     <tr><td>kf</td></tr>
+                    <tr><td>ky</td></tr>
                     <tr><td>l</td></tr>
                     <tr><td>lv</td></tr>
                     <tr><td>m</td></tr>
@@ -67,8 +68,6 @@ export default function Typing() {
                     <tr><td>w</td></tr>
                     <tr><td>y</td></tr>
                     <tr><td>z</td></tr>
-                    <tr><td>ky</td></tr>
-                    <tr><td>ts</td></tr>
                   </tbody>
                 </table>
               </div>
@@ -88,13 +87,13 @@ export default function Typing() {
                     <tr><td>ə</td><td>e=</td></tr>
                     <tr><td>ɣ</td><td>g=</td></tr>
                     <tr><td>ɨ</td><td>I=</td></tr>
-                    <tr><td>ɲ</td><td>ɲ</td></tr>
-                    <tr><td>ŋ</td><td>n&gt;</td></tr>
-                    <tr><td>ɔ</td><td>o&lt;</td></tr>
+                    <tr><td>ɲ</td><td>n=</td></tr>
                     <tr><td>ɣ</td><td>g=</td></tr>
                     <tr><td>ʃ</td><td>s=</td></tr>
                     <tr><td>ʒ</td><td>z=</td></tr>
                     <tr><td>ʔ</td><td>?=</td></tr>
+                    <tr><td>ŋ</td><td>n&gt;</td></tr>
+                    <tr><td>ɔ</td><td>o&lt;</td></tr>
                   </tbody>
                 </table>
                 <p><strong>Tip:</strong> &quot;Shift&quot; + &quot;comma&quot; types &quot;&lt;&quot; on most keyboards, so when you see Letter&lt;, follow these steps: </p>
@@ -108,10 +107,10 @@ export default function Typing() {
               <h2>Step 3: Typing Tone in Mankon</h2>
               <p>Four types of tones are marked in Mankon:</p>
               <ul>
-                <li><strong>Low</strong> (<em>à</em>)</li>
-                <li><strong>High</strong> (<em>á</em>)</li>
-                <li><strong>Rising</strong> (<em>ǎ</em>)</li>
-                <li><strong>Falling</strong> (<em>â</em>)</li>
+                <li><strong>Low</strong> (<em>à</em> )</li>
+                <li><strong>High</strong> (<em>á</em> )</li>
+                <li><strong>Rising</strong> (<em>ǎ</em> )</li>
+                <li><strong>Falling</strong> (<em>â</em> )</li>
               </ul>
 
               <p>To type tones using the IPA SIL Keyboard:</p>

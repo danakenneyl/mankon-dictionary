@@ -4,6 +4,12 @@
     border: none;
     border-top: 2px solid rgba(212, 8, 42, 0.8); /* Your red color */
   }
+  .section-divider-mini {
+    margin: 2rem auto;
+    width: 30%;
+    border: none;
+    border-top: 2px solid rgba(212, 8, 42, 0.8); /* Your red color */
+  }
   .center-text {
     text-align: center;
   }
@@ -109,12 +115,12 @@
     padding: 0.5rem 1rem;
     border: 2px solid rgba(212, 8, 42, 0.8);
     border-radius: 8px;
-    min-width: 50px;
+    min-width: 75px;
     text-align: center;
   }
   
   .explanation {
-    font-size: 1.2rem;
+    font-size: 1rem;
     margin: 0;
   }
   

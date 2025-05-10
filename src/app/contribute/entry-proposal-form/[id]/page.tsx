@@ -6,6 +6,8 @@ import { db } from "@/utils/firebase";
 import { UploadAudio } from '@/utils/ClientSideAPICalls';
 import { ref, get, set, update, push } from "firebase/database";
 import '@/styles/typing-mankon.css'
+import '@/styles/entry-proposal.css';
+
 
 // Dynamic import with SSR disabled
 const AudioRecorder = dynamic(
@@ -13,7 +15,7 @@ const AudioRecorder = dynamic(
   { ssr: false }
 );
 
-// Updated interface to match the new requirements
+// Updated interface to match the requirements
 interface WordProposal {
   altSpelling?: string;
   contributorUUID: string;
@@ -25,7 +27,7 @@ interface WordProposal {
   sentenceAudioFileIds: string[];
   sentenceAudioFilenames: string[];
   translatedSentences?: string[];
-  translatedWord: string;
+  translatedWords: string[];
   type?: string;
   wordAudioFileIds: string[];
   wordAudioFilenames: string[];
@@ -51,6 +53,7 @@ export default function MankonWordFormPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authError, setAuthError] = useState("");
   const [authenticating, setAuthenticating] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const [formData, setFormData] = useState<WordProposal>({
     altSpelling: "",
@@ -63,22 +66,17 @@ export default function MankonWordFormPage() {
     sentenceAudioFileIds: [],
     sentenceAudioFilenames: [],
     translatedSentences: [],
-    translatedWord: "",
+    translatedWords: [],
     type: "",
     wordAudioFileIds: [],
     wordAudioFilenames: [],
-    status:  "pending",
+    status: "pending",
   });
 
-  const [errors, setErrors] = useState<Partial<Record<keyof WordProposal, string>>>({});
+  // Updated errors state to include indexed sentenceAudioFilenames
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
-
-  // List of required fields for easy reference
-  const requiredFields: (keyof WordProposal)[] = [
-    'mankonWord',
-    'translatedWord',
-    // Audio fields will be validated separately
-  ];
+  const [currentSection, setCurrentSection] = useState(1);
 
   // Authenticate user and get UUID
   const authenticateUser = async (e: React.FormEvent) => {
@@ -171,11 +169,17 @@ export default function MankonWordFormPage() {
           [fieldName]: updatedArray,
         };
       });
+    } else if (name === "translatedWords") {
+      // Handle translatedWords as array, trim whitespace from items
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value.split(',').map(word => word.trim()).filter(word => word.length > 0),
+      }));
     } else if (name === "pairWords") {
       // Handle pairWords as array
       setFormData((prev) => ({
         ...prev,
-        [name]: value.split(","), // Store as array with multiple elements
+        [name]: value.split(",").map(word => word.trim()).filter(word => word.length > 0),
       }));
     } else {
       // Handle regular fields
@@ -186,11 +190,12 @@ export default function MankonWordFormPage() {
     }
 
     // Clear error if field is edited after attempted submit
-    if (attemptedSubmit && errors[name as keyof WordProposal]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: undefined,
-      }));
+    if (attemptedSubmit && errors[name]) {
+      setErrors((prev) => {
+        const updated = { ...prev };
+        delete updated[name];
+        return updated;
+      });
     }
   };
 
@@ -234,11 +239,22 @@ export default function MankonWordFormPage() {
       });
       
       // Clear error if recording is added after attempted submit
-      if (attemptedSubmit && errors[targetField]) {
-        setErrors((prev) => ({
-          ...prev,
-          [targetField]: undefined,
-        }));
+      if (attemptedSubmit) {
+        if (targetField === 'sentenceAudioFilenames' && index !== undefined) {
+          // Clear specific indexed sentence audio error
+          setErrors((prev) => {
+            const updated = { ...prev };
+            delete updated[`sentenceAudioFilenames[${index}]`];
+            return updated;
+          });
+        } else if (errors[targetField]) {
+          // Clear general error
+          setErrors((prev) => {
+            const updated = { ...prev };
+            delete updated[targetField];
+            return updated;
+          });
+        }
       }
     } else if (blobUrl === "") {
       // Handle clearing a recording
@@ -264,17 +280,21 @@ export default function MankonWordFormPage() {
   };
 
   const validateForm = (): boolean => {
-    const newErrors: Partial<Record<keyof WordProposal, string>> = {};
+    const newErrors: Record<string, string> = {};
     let isValid = true;
     
-    // Validate required text fields
-    requiredFields.forEach((field) => {
-      if (!formData[field]) {
-        newErrors[field] = `This field is required`;
-        console.log(`Validation error for ${field}: missing value`);
-        isValid = false;
-      }
-    });
+    // Check mankonWord is present
+    if (!formData.mankonWord || formData.mankonWord.trim() === '') {
+      newErrors.mankonWord = `This field is required`;
+      isValid = false;
+    }
+
+    // Check translatedWords is present and has at least one item
+    if (!formData.translatedWords || formData.translatedWords.length === 0 || 
+        (formData.translatedWords.length === 1 && formData.translatedWords[0].trim() === '')) {
+      newErrors.translatedWords = `At least one translation is required`;
+      isValid = false;
+    }
 
     // Validate word audio
     if (!formData.wordAudioFileIds || !formData.wordAudioFileIds.length || !formData.wordAudioFileIds[0]) {
@@ -282,12 +302,18 @@ export default function MankonWordFormPage() {
       isValid = false;
     }
 
-    // Validate at least one sentence audio
-    if (!formData.sentenceAudioFilenames || !formData.sentenceAudioFilenames.length || 
-        !formData.sentenceAudioFilenames.some(url => !!url)) {
-      newErrors['sentenceAudioFilenames'] = 'At least one sentence audio recording is required';
+    // Validate first sentence audio with specific index
+    if (!formData.sentenceAudioFilenames || !formData.sentenceAudioFilenames.length || !formData.sentenceAudioFilenames[0]) {
+      newErrors['sentenceAudioFilenames[0]'] = 'First sentence audio recording is required';
       isValid = false;
     }
+    
+    // Validate second sentence audio with specific index
+    if (!formData.sentenceAudioFilenames || formData.sentenceAudioFilenames.length < 2 || !formData.sentenceAudioFilenames[1]) {
+      newErrors['sentenceAudioFilenames[1]'] = 'Second sentence audio recording is required';
+      isValid = false;
+    }
+
     setErrors(newErrors);
     return isValid;
   };
@@ -309,12 +335,14 @@ export default function MankonWordFormPage() {
 
   // Function to handle form submission
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    setSubmitting(true);
     event.preventDefault();
     setAttemptedSubmit(true);
     
     // Step 1: Validate form before submitting
     if (!validateForm()) {
       console.log('Form validation failed');
+      setSubmitting(false);
       return;
     }
 
@@ -326,11 +354,6 @@ export default function MankonWordFormPage() {
       const proposalData: WordProposal = {
         ...formData,
         lastModifiedAt: now,
-        // // Initialize these as empty arrays if they don't exist yet
-        // wordAudioFileIds: [],
-        // wordAudioFilenames: [],
-        // sentenceAudioFileIds: [],
-        // sentenceAudioFilenames: [],
       };
       
       // If it's a new form, add createdAt timestamp
@@ -339,7 +362,7 @@ export default function MankonWordFormPage() {
       }
 
       // Generate custom filenames for audio files
-      const wordFileName = `${formData.mankonWord}_${formData.translatedWord}_word_${formData.contributorUUID}.wav`;
+      const wordFileName = `${formData.mankonWord}_${formData.translatedWords[0]}_word_${formData.contributorUUID}.wav`;
       
       // Get word audio file from blob URL
       const wordAudioBlob = formData.wordAudioFileIds[0]; // This would be the blob URL in the current state
@@ -368,7 +391,7 @@ export default function MankonWordFormPage() {
       for (let i = 0; i < (formData.sentenceAudioFilenames?.length || 0); i++) {
         const blobUrl = formData.sentenceAudioFilenames[i];
         if (blobUrl) {
-          const sentenceFileName = `${formData.mankonWord}_${formData.translatedWord}_sentence${i+1}_${formData.contributorUUID}.wav`;
+          const sentenceFileName = `${formData.mankonWord}_${formData.translatedWords[0]}_sentence${i+1}_${formData.contributorUUID}.wav`;
           const sentenceFile = await getBlobAsFile(blobUrl, sentenceFileName);
           
           if (sentenceFile) {
@@ -416,223 +439,300 @@ export default function MankonWordFormPage() {
       alert("Error saving your submission. Please try again.");
     } finally {
       setAttemptedSubmit(false); // Reset submission state regardless of outcome
+      setSubmitting(false);
     }
   };
 
-  // Helper to check if a field is required
-  const isRequired = (fieldName: string): boolean => {
-    return requiredFields.includes(fieldName as keyof WordProposal);
+  // Navigate to next section
+  const nextSection = () => {
+    setCurrentSection(currentSection + 1);
   };
 
-  // Function to determine input field class based on validation state
-  const getInputClassName = (fieldName: keyof WordProposal): string => {
-    const baseClass = "w-full p-2 border rounded";
-    return attemptedSubmit && errors[fieldName] 
-      ? `${baseClass} border-red-500 outline-red-500` 
-      : baseClass;
+  // Navigate to previous section
+  const prevSection = () => {
+    setCurrentSection(currentSection - 1);
   };
 
   if (!isAuthenticated) {
     return (
       <div className="content-wrapper">
-      <div className="content">
-          <h1 className="text-2xl font-bold mb-6 text-center">Contributor Login</h1>
-          <form onSubmit={authenticateUser} className="space-y-6">
-            <div>
-              <label htmlFor="username" className="block font-medium mb-1">
-                Username
-              </label>
+        <div className="content">
+      <div className="login-container">
+        <div className="login-card">
+          <h1 className="login-title">Hello! Welcome back.</h1>
+          <p className="login-subtitle">Please enter your username to contribute.</p>
+          <form onSubmit={authenticateUser} className="login-form">
+            <div className="input-group">
               <input
                 type="text"
                 id="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full p-2 border rounded"
+                className="login-input"
+                placeholder="Your username"
                 required
               />
             </div>
+            <div className= "login-group">
             {authError && (
-              <div className="p-3 bg-red-100 text-red-700 rounded-md">
+              <div className="error-message">
                 {authError}
               </div>
             )}
             <button
               type="submit"
               disabled={authenticating}
-              className="button w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+              className="next-button"
             >
-              {authenticating ? "Authenticating..." : "Login"}
+              {authenticating ? "Just a moment..." : "Login"}
             </button>
+            </div>
           </form>
         </div>
       </div>
+    </div>
+    </div>
     );
   }
 
   return (
     <div className="content-wrapper">
-      <div className="content">
-        <h1 className="text-2xl font-bold mb-6 text-center">
-          Entry Proposal Form
-        </h1>
-        <p>Required answers are marked with an asterisk.</p>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Basic Word Information */}
-          <div className="mb-4">
-            <label htmlFor="mankonWord" className="block font-medium mb-1">
-              Mankon Word {isRequired('mankonWord') && <span className="text-red-500">*</span>}
-            </label>
-            <input
-              type="text"
-              id="mankonWord"
-              name="mankonWord"
-              value={formData.mankonWord}
-              onChange={handleInputChange}
-              className={getInputClassName('mankonWord')}
-              placeholder="Enter Mankon word"
-            />
-            {errors.mankonWord && (
-              <p className="text-red-500 text-sm mt-1">{errors.mankonWord}</p>
-            )}
-          </div>
+    <div className="content">
+    <div className="nl-form-container">
+      <div className="progress-bar">
+        <div className="progress-step" style={{ width: `${(currentSection / 3) * 100}%` }}></div>
+      </div>
+      
+      <div className="nl-form-content">
+        <h1 className="nl-form-title">Propose a New Word</h1>
+        <p className="centered-info">Required answers are marked with an asterisk *</p>
+        
+        <form onSubmit={handleSubmit} className="nl-form">
+          {/* Section 1: Word Information */}
+          {currentSection === 1 && (
+            <div className="nl-section word-section">
+              
+              <div className="nl-question-group">
+                <label className="nl-question">
+                  What Mankon word would you like to propose? <span className="required-indicator">*</span>
+                </label>
+                <br />
+                <input
+                  type="text"
+                  name="mankonWord"
+                  value={formData.mankonWord}
+                  onChange={handleInputChange}
+                  className={`nl-input ${errors.mankonWord ? 'error' : 'nl-input'}`}
+                  placeholder="Enter word here"
+                />
+                {errors.mankonWord && (
+                  <p className="error-text">{errors.mankonWord}</p>
+                )}
+              </div>
+              <hr className="section-divider-propose" />
+              <div className="nl-question-group">
+                <label className="nl-question">
+                  What is the English translation?<span className="required-indicator">*</span>
+                </label>
+                <br />
+                <input
+                  type="text"
+                  name="translatedWords"
+                  value={formData.translatedWords ? formData.translatedWords.join(", ") : ""}
+                  onChange={handleInputChange}
+                  className={`nl-input ${errors.translatedWords ? 'error' : 'nl-input'}`}
+                  placeholder="Enter translation here (separate multiple words with commas)"
+                />
+                {errors.translatedWords && (
+                  <p className="error-text">{errors.translatedWords}</p>
+                )}
+              </div>
+              <hr className="section-divider-propose" />
+              <div className="nl-question-group">
+                <label className="nl-question">
+                  Now, record how to pronounce this word <span className="required-indicator">*</span>
+                  <br />
+                  Follow these steps:
+                </label>
+                <ol className="nl-instruction-list">
+                  <li>Click the <strong>&apos;Start&apos;</strong> button <br />(you may need to give permission to use your microphone. Click &apos;Allow&apos;).</li>
+                  <li>Wait 3 seconds until the timer begins counting.</li>
+                  <li>Pronounce the word naturally.</li>
+                  <li>Press the <strong>&apos;Stop&apos;</strong> button. <br />(the <strong>&apos;Start&apos;</strong> button becomes the <strong>&apos;Stop&apos;</strong> button when you record)</li>
+                  <li>
+                    Listen to your recording. If you like it, you can hit the &apos;Continue to Example Sentences&apos; button. 
+                  </li>
+                  <li>
+                    If you don&apos;t like your recording, click the <strong>&apos;Clear&apos;</strong> button and try again.
+                  </li>
+                </ol>
+                <AudioRecorder
+                  instanceId="audio-word"
+                  onRecordingComplete={(blob: string) => handleRecordingComplete('wordAudio', blob)}
+                  initialAudio={formData.wordAudioFileIds?.[0] || ""}
+                />
+                {errors.wordAudioFileIds && (
+                  <p className="error-text">{errors.wordAudioFileIds}</p>
+                )}
+              </div>
 
-          <div className="mb-4">
-            <label htmlFor="translatedWord" className="block font-medium mb-1">
-              English Translation {isRequired('translatedWord') && <span className="text-red-500">*</span>}
-            </label>
-            <input
-              type="text"
-              id="translatedWord"
-              name="translatedWord"
-              value={formData.translatedWord}
-              onChange={handleInputChange}
-              className={getInputClassName('translatedWord')}
-              placeholder="Enter English translation"
-            />
-            {errors.translatedWord && (
-              <p className="text-red-500 text-sm mt-1">{errors.translatedWord}</p>
-            )}
-          </div>
-
-          {/* Word Audio Recording */}
-          <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-            <h3 className="text-lg font-semibold mb-2">Word Audio Recording</h3>
-            <p className="text-sm text-gray-600 mb-4">
-                Record your pronunciation of this Mankon word. Press the start button to begin recording. Press it again to stop recording. After you end your recording, you will have an oportunity to listen to your audio. If you are not satisfied with your recording, feel free to hit the clear button and start over.
-            </p>
-            
-            <AudioRecorder
-              instanceId="audio-word"
-              onRecordingComplete={(blob: string) => handleRecordingComplete('wordAudio', blob)}
-              initialAudio={formData.wordAudioFileIds?.[0] || ""}
-            />
-            
-            {errors.wordAudioFileIds && (
-              <p className="text-red-500 text-sm mt-1">{errors.wordAudioFileIds}</p>
-            )}
-          </div>
-
-          {/* Example Sentences Section */}
-          <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-            <h3 className="text-lg font-semibold mb-2">Example Sentences</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              Add example sentences that capture the word in context.
-            </p>
-
-            {/* Example Sentence 1 */}
-            <div className="mb-4">
-              <label htmlFor="mankonSentences[0]" className="block font-medium mb-1">
-                Mankon Sentence 1
-              </label>
-              <input
-                type="text"
-                id="mankonSentences[0]"
-                name="mankonSentences[0]"
-                value={formData.mankonSentences?.[0] || ""}
-                onChange={handleInputChange}
-                className="w-full p-2 border rounded"
-                placeholder="Enter an example sentence"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label htmlFor="translatedSentences[0]" className="block font-medium mb-1">
-                English Translation 1
-              </label>
-              <input
-                type="text"
-                id="translatedSentences[0]"
-                name="translatedSentences[0]"
-                value={formData.translatedSentences?.[0] || ""}
-                onChange={handleInputChange}
-                className="w-full p-2 border rounded"
-                placeholder="Enter English translation"
-              />
-            </div>
-
-            <div className="mb-6">
-              <label className="block font-medium mb-1">
-                Sentence 1 Audio {<span className="text-red-500">*</span>}
-              </label>
-              <AudioRecorder
-                instanceId="audio-sentence-1"
-                onRecordingComplete={(blob: string) => handleRecordingComplete('sentenceAudio', blob, 0)}
-                initialAudio={formData.sentenceAudioFileIds?.[0] || ""}
-              />
-            </div>
-          </div>
-          {/* Example Sentence 2 */}
-          <div className="mb-4">
-              <label htmlFor="mankonSentences[1]" className="block font-medium mb-1">
-                Mankon Sentence 2
-              </label>
-              <input
-                type="text"
-                id="mankonSentences[1]"
-                name="mankonSentences[1]"
-                value={formData.mankonSentences?.[1] || ""}
-                onChange={handleInputChange}
-                className="w-full p-2 border rounded"
-                placeholder="Enter an example sentence"
-              />
-          </div>
-
-            <div className="mb-4">
-              <label htmlFor="translatedSentences[1]" className="block font-medium mb-1">
-                English Translation 2
-              </label>
-              <input
-                type="text"
-                id="translatedSentences[1]"
-                name="translatedSentences[1]"
-                value={formData.translatedSentences?.[1] || ""}
-                onChange={handleInputChange}
-                className="w-full p-2 border rounded"
-                placeholder="Enter English translation"
-              />
-            </div>
-
-            <div className="mb-6">
-              <label className="block font-medium mb-1">
-                Sentence 2 Audio {<span className="text-red-500">*</span>}
-              </label>
-              <AudioRecorder
-                instanceId="audio-sentence-2"
-                onRecordingComplete={(blob: string) => handleRecordingComplete('sentenceAudio', blob, 1)}
-                initialAudio={formData.sentenceAudioFileIds?.[1] || ""}
-              />
-            </div>
-            {/* Submit Button */}   
-            <div className="mb-6">
-                <button
-                    type="submit"
-                    className="button w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              <div className="navigation-buttons">
+                <button 
+                  type="button" 
+                  className="next-button" 
+                  onClick={nextSection}
                 >
-                    {isEmptyForm ? "Submit Proposal" : "Update Proposal"}
+                  Continue to Example Sentences
                 </button>
+              </div>
             </div>
+          )}
+
+          {/* Section 2: First Example Sentence */}
+          {currentSection === 2 && (
+            <div className="nl-section sentence-section">
+              
+              <div className="nl-question-group">
+                <label className="nl-question">
+                  Type a Mankon sentence using &quot;{formData.mankonWord}&quot;.
+                </label>
+                <textarea
+                  name="mankonSentences[0]"
+                  value={formData.mankonSentences?.[0] || ""}
+                  onChange={handleInputChange}
+                  className="nl-textarea"
+                  placeholder="Enter a Mankon sentence here"
+                />
+              </div>
+              <hr className="section-divider-propose" />
+              <div className="nl-question-group">
+                <label className="nl-question">
+                  Type the Engligh translation of your sentence.
+                </label>
+                <textarea
+                  name="translatedSentences[0]"
+                  value={formData.translatedSentences?.[0] || ""}
+                  onChange={handleInputChange}
+                  className="nl-textarea"
+                  placeholder="Translate the sentence to English"
+                />
+              </div>
+              <hr className="section-divider-propose" />
+              <div className="nl-question-group">
+                <label className="nl-question">
+                  Record your sentence. <span className="required-indicator">*</span>
+                </label>
+                <ol className="nl-instruction-list">
+                  <li>Click the <strong>&apos;Start&apos;</strong> button.</li>
+                  <li>Wait 3 seconds until the timer begins counting.</li>
+                  <li>Pronounce the sentence naturally.</li>
+                  <li>Press the <strong>&apos;Stop&apos;</strong> button.</li>
+                  <li>
+                    If you like it, you can hit the &apos;Add Another Example&apos; button.
+                  </li>
+                  <li>
+                    If you don&apos;t like your recording, click the <strong>&apos;Clear&apos;</strong> button and try again.
+                  </li>
+                </ol>
+                <AudioRecorder
+                  instanceId="audio-sentence-1"
+                  onRecordingComplete={(blob: string) => handleRecordingComplete('sentenceAudio', blob, 0)}
+                  initialAudio={formData.sentenceAudioFileIds?.[0] || ""}
+                />
+                {errors['sentenceAudioFilenames[0]'] && (
+                  <p className="error-text">{errors['sentenceAudioFilenames[0]']}</p>
+                )}
+              </div>
+
+              <div className="navigation-buttons">
+                <button type="button" className="next-button" onClick={prevSection}>
+                  Back
+                </button>
+                <button type="button" className="next-button" onClick={nextSection}>
+                  Add Another Example
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Section 3: Second Example Sentence */}
+          {currentSection === 3 && (
+            <div className="nl-section sentence-section">
+  
+              <div className="nl-question-group">
+                <label className="nl-question">
+                Type another Mankon sentence using &quot;{formData.mankonWord}&quot;.
+                </label>
+                <textarea
+                  name="mankonSentences[1]"
+                  value={formData.mankonSentences?.[1] || ""}
+                  onChange={handleInputChange}
+                  className="nl-textarea"
+                  placeholder="Write another sentence using this word in Mankon"
+                />
+              </div>
+              <hr className="section-divider-propose" />
+              <div className="nl-question-group">
+                <label className="nl-question">
+                Type the Engligh translation of your sentence.
+                </label>
+                <textarea
+                  name="translatedSentences[1]"
+                  value={formData.translatedSentences?.[1] || ""}
+                  onChange={handleInputChange}
+                  className="nl-textarea"
+                  placeholder="Translate the sentence to English"
+                />
+              </div>
+              <hr className="section-divider-propose" />
+              <div className="nl-question-group">
+                <label className="nl-question">
+                  Record your sentence. <span className="required-indicator">*</span>
+                </label>
+                <ol className="nl-instruction-list">
+                  <li>Click the <strong>&apos;Start&apos;</strong> button.</li>
+                  <li>Wait 3 seconds until the timer begins counting.</li>
+                  <li>Pronounce the sentence naturally.</li>
+                  <li>Press the <strong>&apos;Stop&apos;</strong> button.</li>
+                  <li>
+                    If you like it, you can hit the <strong>&apos;{isEmptyForm ? "Submit My Contribution" : "Update This Proposal"}&apos;</strong> button.
+                  </li>
+                  <li>
+                    If you don&apos;t like your recording, click the <strong>&apos;Clear&apos;</strong> button and try again.
+                  </li>
+                </ol>
+                <AudioRecorder
+                  instanceId="audio-sentence-2"
+                  onRecordingComplete={(blob: string) => handleRecordingComplete('sentenceAudio', blob, 1)}
+                  initialAudio={formData.sentenceAudioFileIds?.[1] || ""}
+                />
+                {errors['sentenceAudioFilenames[1]'] && (
+                  <p className="error-text">{errors['sentenceAudioFilenames[1]']}</p>
+                )}
+              </div>
+
+              <div className="navigation-buttons">
+                <button type="button" className="next-button" onClick={prevSection}>
+                  Back
+                </button>
+                <button type="submit" className="next-button">
+                  {submitting ? "Submitting..." : isEmptyForm ? "Submit My Contribution" : "Update This Proposal"}
+                </button>
+              </div>
+              
+              {/* Error message for missing answers */}
+              {attemptedSubmit && Object.keys(errors).length > 0 && (
+                <p className="error-text" style={{ marginTop: '10px' }}>
+                  You missed some answers! <br/>Go back carefully through the entire form to find what you missed.
+                </p>
+              )}
+            </div>
+          )}
         </form>
+      </div>
     </div>
   </div>
+   </div>
+  
   );
 }
