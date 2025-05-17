@@ -21,6 +21,29 @@ export default function Voices() {
             {/* Voice 1 */}
             <div className="bio-container">
               <div className="bio-name">
+                <h2 className="text-2xl font-semibold mb-3">Samuel Fonteh</h2>
+              </div>
+              <div className="bio-image">
+                <Image
+                  src="/images/SamuelFonteh.jpeg"
+                  alt="Mr. Samuel Fonteh"
+                  className="bio-img"
+                  width={325}
+                  height={361}
+                />
+              </div>
+              <div className="bio-text">
+                <p>Samuel Fonteh is a proud son of Mankon, recognized for his outstanding contributions to education, community development, and cultural preservation. As a student leader, he was with the team that initiated the idea of a community library to promote literacy and lifelong learning among Mankon youth, setting the stage for his future leadership. Trained as a Civil Engineer, Project Manager, and Data Scientist, Mr. Fonteh has skillfully combined his professional expertise with a strong commitment to community service.</p>
+            
+                <p>He played a key role in the design and construction of the MACUDA Hall in Yaoundé, Cameroon, and contributed significantly to the improvement of public health infrastructure by conceiving plans for a modern public toilet block and VIP toilets in the Mankon palace. His love for documenting the Mankon culture is seen when he coauthored the publication of two books on the Mankon dialect that were made available globally through Amazon, strengthening the visibility of Mankon heritage.</p>
+                
+                <p>Currently, Mr. Fonteh is supporting MACUDA Minnesota&apos;s efforts to acquire a community center in the Twin Cities, in MN, USA. As an active and passionate member of the Online Mankon Dictionary Committee, he remains deeply committed to assisting in documenting and promoting the Mankon language for generations to come.</p>
+              </div>
+            </div>
+
+            {/* Voice 2 */}
+            <div className="bio-container">
+              <div className="bio-name">
                 <h2 className="text-2xl font-semibold mb-3">Christopher Che Chi</h2>
               </div>
               <div className="bio-image">
@@ -53,20 +76,18 @@ export default function Voices() {
                 he has written several books prominent among which are: Mankon Language Literacy (Ŋgyɛ̀ʔɛ Nɨɣam nɨ Maŋkuŋǝ́): (Mankon Alphabet-Ɨ̀kuɣɨ nɨɣam nɨ Maŋkuŋǝ́), Mankon Lexicon: A Bilingual (Mankon-English) Dictionary. (Tse Bo Bi: Ntsu Nigham (A Pedagogic and Self-help Learning Approach to Mankon Language), A Concise 
                 and an Analytical History of Mankon Kingdom (about 1197-2012): History; Social life, traditions and customs; Anthropology, Kingdom of Mankon: Aspects of History, Language, Culture, Flora and Fauna, Tse Bo Bi: Ntsu Nigham. (A Pedagogic and Self-help Learning Approach to Mankon Language): African linguistics; 
                 Social life; African traditions and customs (Volume 2). His Bilingual (Mankon-English) Dictionary was used as a baseline resource to creating the Mankon Bilingual Dictionary.
-                </p>
-
-                
+                </p> 
               </div>
             </div>
-              
-            {/* Voice 2 */}
+
+            {/* Voice 3 */}
             <div className="bio-container">
               <div className="bio-name">
-                <h2 className="text-2xl font-semibold mb-3">Samuel Fonteh</h2>
+                <h2 className="text-2xl font-semibold mb-3">Dr. Judith Shu Tse</h2>
               </div>
               <div className="bio-image">
                 <Image
-                  src="/images/SamuelFonteh.jpeg"
+                  src="/images/JudithShuTse.jpeg"
                   alt="Mr. Samuel Fonteh"
                   className="bio-img"
                   width={325}
@@ -74,13 +95,25 @@ export default function Voices() {
                 />
               </div>
               <div className="bio-text">
-                <p>Samuel Fonteh is a proud son of Mankon, recognized for his outstanding contributions to education, community development, and cultural preservation. As a student leader, he was with the team that initiated the idea of a community library to promote literacy and lifelong learning among Mankon youth, setting the stage for his future leadership. Trained as a Civil Engineer, Project Manager, and Data Scientist, Mr. Fonteh has skillfully combined his professional expertise with a strong commitment to community service.</p>
-            
-                <p>He played a key role in the design and construction of the MACUDA Hall in Yaoundé, Cameroon, and contributed significantly to the improvement of public health infrastructure by conceiving plans for a modern public toilet block and VIP toilets in the Mankon palace. His love for documenting the Mankon culture is seen when he coauthored the publication of two books on the Mankon dialect that were made available globally through Amazon, strengthening the visibility of Mankon heritage.</p>
+                <p>
+                  Judith Shu Tse, originally from Mankon in Bamenda, Cameroon, spent the first 25 years of her life immersed in the rich traditions, values, and beliefs of the Mankon culture. 
+                  Her upbringing deeply shaped her identity, and she actively participated in community events and social activities as a young woman to further connect with and define her cultural roots.
+                </p>
+
+                <p>
+                  Even after traveling abroad and being exposed to diverse cultures during her education, Judith found a renewed appreciation for her heritage. She realized that she felt most at ease and 
+                  grounded when surrounded by individuals who shared her cultural values and beliefs. This deep connection to her roots played a significant role in her personal and professional success in multicultural environments.
+                </p>
+
+                <p>
+                Now a Doctor of Nursing Practice, Judith uses her expertise not only to promote health and wellness but also to champion cultural awareness, particularly among children and young adults in her 
+                community. Her passion for preserving the Mankon culture remains strong, and she was thrilled to support a research project dedicated to promoting the Mankon language and traditions. For Judith, 
+                her culture is her identity, and she is committed to ensuring that future generations, including her own children, have the opportunity to know and benefit from it.
+                </p>
                 
-                <p>Currently, Mr. Fonteh is supporting MACUDA Minnesota&apos;s efforts to acquire a community center in the Twin Cities, in MN, USA. As an active and passionate member of the Online Mankon Dictionary Committee, he remains deeply committed to assisting in documenting and promoting the Mankon language for generations to come.</p>
               </div>
             </div>
+              
 
             {/* Voice n */}
             <div className="bio-container">
