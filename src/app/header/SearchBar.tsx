@@ -94,11 +94,25 @@ export default function SearchBar({ db }: SearchBarProps) {
       // Filter the entries based on search term and language selection
       const newFilter = Object.entries(entries)
         .filter(([, entry]) => {
+          // Skip entries that don't have the required fields
           if (searchEng) {
-            // For English, match as before
-            return entry.translatedWords.some(engWord => 
-              engWord.toLowerCase().startsWith(searchWord));
+            // For English, check if translatedWords exists first
+            if (!entry.translatedWords || !Array.isArray(entry.translatedWords)) {
+              return false;
+            }
+            
+            // For English, now also apply diacritic normalization
+            return entry.translatedWords.some(engWord => {
+              if (typeof engWord !== 'string') return false;
+              const normalizedEngWord = getWordWithoutDiacritics(engWord);
+              return normalizedEngWord.startsWith(normalizedSearchWord);
+            });
           } else {
+            // For Mankon, check if mankonWord exists first
+            if (!entry.mankonWord || typeof entry.mankonWord !== 'string') {
+              return false;
+            }
+            
             // For Mankon, ignore diacritics when matching
             const normalizedMankonWord = getWordWithoutDiacritics(entry.mankonWord);
             return normalizedMankonWord.startsWith(normalizedSearchWord);
@@ -121,10 +135,12 @@ export default function SearchBar({ db }: SearchBarProps) {
       let match;
       
       if (searchEng) {
-        // For English, match exactly as before
+        // For English, match ignoring diacritics now
+        const normalizedInput = getWordWithoutDiacritics(inputValue);
         match = filteredData.find(({entry}) => 
           entry.translatedWords.some(engWord => 
-            engWord.toLowerCase() === inputValue.toLowerCase())
+            getWordWithoutDiacritics(engWord) === normalizedInput
+          )
         );
       } else {
         // For Mankon, match ignoring diacritics

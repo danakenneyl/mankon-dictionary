@@ -1,6 +1,6 @@
 'use client';
 // pages/dictionary.tsx
-import { useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 import { db } from "@/utils/firebase";
 import Link from 'next/link';
 import { ref, onValue } from "firebase/database";
@@ -76,7 +76,7 @@ export default function Browse() {
     return () => unsubscribe();
   }, []);
 
-  // Get all entries as an array, filtered to exclude those with status other than "initial"
+  // Get all entries as an array, filtered to exclude those with status other than "approved"
   const entriesArray = Object.entries(entries).filter(
     ([, entry]) => entry.status === "initial"
   );
@@ -92,15 +92,9 @@ export default function Browse() {
     }
   });
 
-  // Function to normalize characters (remove tones and convert to uppercase)
-  const normalizeChar = useCallback((char: string): string => {
-    // Convert to uppercase first
-    const upperChar = char.toUpperCase();
-    
-    // Handle all four tone marks in Mankon: acute (á), grave (à), caron/háček (ǎ), and circumflex (â)
-    // NFD normalization decomposes characters with diacritical marks
-    // Then we remove the combining marks in the Unicode range U+0300 to U+036F
-    return upperChar.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  // Function to normalize a string (remove tones and convert to uppercase)
+  const normalizeString = useCallback((str: string): string => {
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
   }, []);
 
   // Group entries by their first letter according to selected alphabet
@@ -115,19 +109,25 @@ export default function Browse() {
     // Also create an "Other" group for characters not in the alphabet
     grouped["#"] = [];
 
-    // Group each entry by its first letter/character
+    // Group each entry by matching it to the appropriate alphabet letter
     entries.forEach(entry => {
       const word = isEnglish ? entry[1].translatedWords[0] : entry[1].mankonWord;
       if (word && word.length > 0) {
-        // Get the first character of the word and normalize it
-        const firstChar = normalizeChar(word.charAt(0));
+        // Normalize the word for comparison (uppercase and remove diacritics)
+        const normalizedWord = normalizeString(word);
         
-        // Find the matching letter in the selected alphabet (case insensitive)
+        // Find the matching letter in the selected alphabet
         let assigned = false;
         
-        for (const letter of alphabet) {
-          // Compare the normalized first character with the normalized first character of each letter
-          if (normalizeChar(letter.charAt(0)) === firstChar) {
+        // Sort the alphabet by length in descending order to check longer prefixes first
+        // This ensures "Dʒ" is checked before "D" for correct matching
+        const sortedAlphabet = [...alphabet].sort((a, b) => b.length - a.length);
+        
+        for (const letter of sortedAlphabet) {
+          const normalizedLetter = normalizeString(letter);
+          
+          // Check if the word starts with this letter
+          if (normalizedWord.startsWith(normalizedLetter)) {
             grouped[letter].push(entry);
             assigned = true;
             break;
@@ -142,46 +142,29 @@ export default function Browse() {
     });
     
     return grouped;
-  }, [alphabet, isEnglish, normalizeChar]);
+  }, [alphabet, isEnglish, normalizeString]);
 
   // Group entries by letter
   const groupedEntries = groupEntriesByLetter(sortedEntries);
   
   // Get only the letters that have entries (including "Other" if it has entries)
-  const lettersWithEntries = [
+  const lettersWithEntries = useMemo(() => [
     ...alphabet.filter(letter => 
       groupedEntries[letter] && groupedEntries[letter].length > 0
     ),
     ...(groupedEntries["#"] && groupedEntries["#"].length > 0 ? ["#"] : [])
-  ];
+  ], [alphabet, groupedEntries]);
 
   // Set default selected letter when entries load
   useEffect(() => {
     if (!loading && Object.keys(entries).length > 0 && !selectedLetter) {
-      const filteredEntries = Object.entries(entries).filter(
-        ([, entry]) => entry.status === "initial"
-      );
-      
-      if (filteredEntries.length > 0) {
-        const sortedEntries = filteredEntries.sort(([, a], [, b]) => {
-          if (isEnglish) {
-            return a.translatedWords[0].localeCompare(b.translatedWords[0]);
-          } else {
-            return a.mankonWord.localeCompare(b.mankonWord);
-          }
-        });
-        
-        const groupedByLetter = groupEntriesByLetter(sortedEntries);
-        const firstLetterWithEntries = [...alphabet, "#"].find(
-          letter => groupedByLetter[letter] && groupedByLetter[letter].length > 0
-        );
-        
-        if (firstLetterWithEntries) {
-          setSelectedLetter(firstLetterWithEntries);
-        }
+      // Auto-select the first letter with entries when the component loads
+      const firstLetterWithEntries = lettersWithEntries[0];
+      if (firstLetterWithEntries) {
+        setSelectedLetter(firstLetterWithEntries);
       }
     }
-  }, [loading, entries, alphabet, isEnglish, selectedLetter, groupEntriesByLetter]);
+  }, [loading, entries, lettersWithEntries, selectedLetter]);
   
   // Reset page when letter changes
   useEffect(() => {
