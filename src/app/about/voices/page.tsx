@@ -17,8 +17,49 @@ export default function Voices() {
               <div className="decoration-line"></div>
               </div>
             </section>
-              
+
             {/* Voice 1 */}
+            <div className="bio-container">
+              <div className="bio-name">
+                <h2 className="text-2xl font-semibold mb-3">Christopher Che Chi</h2>
+              </div>
+              <div className="bio-image">
+                <Image
+                  src="/images/ChristopherCheChi.jpg"
+                  alt="<Mr. Che Chi>"
+                  className="bio-img"
+                  width={325}
+                  height={361}
+                />
+              </div>
+              <div className="bio-text">
+                <p>
+                  Mr. Christopher CHE CHI was born on July 14, 1964 in Mankon-Bamenda, Cameroon.
+                  He holds a Master’s degree in secondary education specialized in English linguistics, African linguistics, and literature in English. He taught for many years in Cameroon and rose to a Regional Pedagogic Inspector, National Pedagogic Inspector, and Chief Examiner for Advanced Level English Language.
+                </p>
+
+                <p>
+                  He currently teaches at Bladensburg High School in Maryland, USA. He is an educational virtuoso in the Prince George’s County Public Schools, the State of Maryland, and the US educational landscape as a coursebook evaluator, English Language Development (ELD) curriculum writer, Continuing Professional 
+                  Development (CPD) Instructor, Maryland Comprehensive Assessment Program (MCAP) Content Reviewer, World-Class Instructional Design Assessment (WIDA) Content, Bias, and Sensitivity Reviewer, and Pearson Scorer.
+                </p>
+
+                <p>
+                  Imbued with good leadership, developmental, and managerial skills, Mr. Chi has occupied positions of Social Secretary, Secretary-General, Treasurer, and President within the ranks of many Mankon Cultural and Development Association (MACUDA) groupings, Mankon Students’ Association (MASA), Parents and 
+                  Teachers Associations (PTA), and Staff Associations.
+                </p>
+
+                <p>
+                An avid researcher and publisher, he has written and published a score books and many academic articles in the areas of English language and literature in English teaching, secondary education, and supervision. His academic tentacles expand to history, endangered indigenous languages, and cultures where 
+                he has written several books prominent among which are: Mankon Language Literacy (Ŋgyɛ̀ʔɛ Nɨɣam nɨ Maŋkuŋǝ́): (Mankon Alphabet-Ɨ̀kuɣɨ nɨɣam nɨ Maŋkuŋǝ́), Mankon Lexicon: A Bilingual (Mankon-English) Dictionary. (Tse Bo Bi: Ntsu Nigham (A Pedagogic and Self-help Learning Approach to Mankon Language), A Concise 
+                and an Analytical History of Mankon Kingdom (about 1197-2012): History; Social life, traditions and customs; Anthropology, Kingdom of Mankon: Aspects of History, Language, Culture, Flora and Fauna, Tse Bo Bi: Ntsu Nigham. (A Pedagogic and Self-help Learning Approach to Mankon Language): African linguistics; 
+                Social life; African traditions and customs (Volume 2). His Bilingual (Mankon-English) Dictionary was used as a baseline resource to creating the Mankon Bilingual Dictionary.
+                </p>
+
+                
+              </div>
+            </div>
+              
+            {/* Voice 2 */}
             <div className="bio-container">
               <div className="bio-name">
                 <h2 className="text-2xl font-semibold mb-3">Samuel Fonteh</h2>
@@ -26,7 +67,7 @@ export default function Voices() {
               <div className="bio-image">
                 <Image
                   src="/images/SamuelFonteh.jpeg"
-                  alt="Dr. Samuel Fonteh"
+                  alt="Mr. Samuel Fonteh"
                   className="bio-img"
                   width={325}
                   height={361}

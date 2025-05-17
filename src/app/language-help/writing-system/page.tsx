@@ -165,7 +165,7 @@ export default function Writing() {
               <div className="letter-grid">
                 <span>b</span>
                 <span>bv</span>
-                <span>c</span>
+                <span>ch</span>
                 <span>d</span>
                 <span>dv</span>
                 <span>dz</span>
@@ -197,7 +197,7 @@ export default function Writing() {
               </div>
             <h3>Differences from the Mankon Alphabet</h3>
             <ul>
-              <li>Mankon uses <strong>tʃ</strong> while GACL uses <strong>c</strong>.</li>
+              <li>Mankon uses <strong>tʃ</strong> while GACL uses <strong>ch</strong>.</li>
               <li>Mankon uses <strong>ts</strong> while GACL uses <strong>ch</strong>.</li>
               <li>Mankon uses <strong>ʃ</strong> while GACL uses <strong>sh</strong>.</li>
               <li>Mankon uses <strong>ʔ</strong> while GACL uses <strong>&apos;</strong> (apostrophe).</li>
