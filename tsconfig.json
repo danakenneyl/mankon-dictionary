@@ -26,6 +26,7 @@
       "@/data/*": ["./src/data/*"],
       "@/propose-entry/*": ["./src/app/contribute/propose-entry/*"],
       "@/styles/*": ["./src/app/styles/*"],
+      "@/browse/*": ["./src/app/browse/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/contribute/test-list", "src/app/api/upload-file/route.js"],
