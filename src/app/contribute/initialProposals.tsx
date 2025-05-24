@@ -25,6 +25,9 @@ interface WordProposal {
   wordAudioFileIds: string[];
   wordAudioFilenames: string[];
   status: string;
+  partOfSpeech?: string;
+  nounClass?: string;
+  case?: string;
 }
 
 // TypeScript interface for the proposals collection
@@ -331,7 +334,7 @@ export default function InitialProposals() {
                     >
                       <div>
                         <h5 className="mb-1">{proposal.mankonWord}</h5>
-                        <p className="mb-1">{proposal.translatedWords.join(", ")}</p>
+                        <p className="mb-1">{proposal.translatedWords ? proposal.translatedWords.join(", "): ""}</p>
                       </div>
                     </Link>
                   ))}

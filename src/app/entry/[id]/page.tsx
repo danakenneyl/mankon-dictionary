@@ -10,19 +10,23 @@ import "@/styles/entry.css";
 // Updated interface to match the actual database structure
 interface WordEntry {
   altSpelling?: string;
-  contributorUUIDs?: string[];
+  contributorUUIDs: string[];
   createdAt: string;
   lastModifiedAt: string;
   mankonSentences?: string[];
   mankonWord: string;
   pairWords?: string[];
-  sentenceAudioFilenames?: string[];
-  sentenceFileIds?: string[];
-  wordAudioFileId?: string;
-  translatedSentence?: string[];
+  sentenceAudioFileIds: string[];
+  sentenceAudioFilenames: string[];
+  translatedSentences?: string[];
   translatedWords: string[];
   type?: string;
-  status?: string;
+  wordAudioFileIds: string[];
+  wordAudioFilenames: string[];
+  status: string;
+  partOfSpeech?: string;
+  nounClass?: string;
+  case?: string;
 }
 
 export default function Entry() {
@@ -31,17 +35,21 @@ export default function Entry() {
     altSpelling: "",
     contributorUUIDs: [],
     createdAt: "",
-    lastModifiedAt: "",
+    lastModifiedAt: "string",
     mankonSentences: [],
     mankonWord: "",
     pairWords: [],
+    sentenceAudioFileIds: [],
     sentenceAudioFilenames: [],
-    sentenceFileIds: [],
-    wordAudioFileId: "",
-    translatedSentence: [],
+    translatedSentences: [],
     translatedWords: [],
     type: "",
-    status: ""
+    wordAudioFileIds: [],
+    wordAudioFilenames: [],
+    status: "",
+    partOfSpeech: "",
+    nounClass: "",
+    case: ""
   });
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -76,17 +84,17 @@ export default function Entry() {
       const audioMap: {[key: string]: string} = {};
       
       // Fetch sentence audio files
-      if (data.sentenceFileIds && data.sentenceFileIds.length > 0) {
-        for (let i = 0; i < data.sentenceFileIds.length; i++) {
-          if (data.sentenceFileIds[i]) {
-            const url = await FetchAudioFile(data.sentenceFileIds[i]);
+      if (data.sentenceAudioFileIds && data.sentenceAudioFileIds.length > 0) {
+        for (let i = 0; i < data.sentenceAudioFileIds.length; i++) {
+          if (data.sentenceAudioFileIds[i]) {
+            const url = await FetchAudioFile(data.sentenceAudioFileIds[i]);
             audioMap[`sentence_${i}`] = url;
           }
         }
       }
       // Fetch word audio file
-      if (data.wordAudioFileId != undefined) {
-        const url = await FetchAudioFile(data.wordAudioFileId);
+      if (data.wordAudioFileIds != undefined) {
+        const url = await FetchAudioFile(data.wordAudioFileIds[0]);
         audioMap['word'] = url;
       }
       
@@ -142,15 +150,15 @@ export default function Entry() {
         <div className="content">
           <div className="entry__word" id="wordEntry">
             <strong>{entry.mankonWord}</strong> 
-            {entry.type && (
+            {entry.partOfSpeech && (
               <button
-                key={entry.type}
+                key={entry.partOfSpeech}
                 className="typeButton"
               >
-                {entry.type}
+                {entry.partOfSpeech}
               </button>
             )}
-            {entry.wordAudioFileId && (
+            {entry.wordAudioFileIds && (
               <VolumeUpIcon
                 className="pronunciation"
                 onClick={() => playAudio('word')}
@@ -166,7 +174,7 @@ export default function Entry() {
           )}
           
           <p id="translationEntry" className="translationEntry">
-            {entry.translatedWords.join(", ")}
+            {entry.translatedWords ? entry.translatedWords.join(", ") : ""}
           </p>
           
           {entry.pairWords && entry.pairWords.length > 0 && (
@@ -192,7 +200,7 @@ export default function Entry() {
                   {entry.mankonSentences.map((example, index) => (
                     <li className="list-group-item" key={index}>
                       <strong className="mankonExample">{example}</strong>
-                      {entry.sentenceFileIds && entry.sentenceFileIds[index] && (
+                      {entry.sentenceAudioFileIds && entry.sentenceAudioFileIds[index] && (
                         <VolumeUpIcon 
                           className="pronunciation" 
                           onClick={() => playAudio('sentence', index)}
@@ -201,8 +209,8 @@ export default function Entry() {
                       )}
                       <div>
                         <em className="englishExample">
-                          {entry.translatedSentence && entry.translatedSentence[index] 
-                            ? entry.translatedSentence[index] 
+                          {entry.translatedSentences && entry.translatedSentences[index] 
+                            ? entry.translatedSentences[index] 
                             : ""}
                         </em>
                       </div>

@@ -35,6 +35,10 @@ export default function BrowseMenu({ onItemClick }: BrowseMenuProps) {
         <Dropdown.Item onClick={() => handleNavigate("browse-english")}>
           Browse in English
         </Dropdown.Item>
+        <Dropdown.Divider />
+        <Dropdown.Item onClick={() => handleNavigate("browse-name")}>
+          Browse Names
+        </Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
   );
