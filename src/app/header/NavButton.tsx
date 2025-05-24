@@ -12,7 +12,7 @@ export default function NavButton({ pageName, href, onClick }: NavButtonParams) 
   return (
     <div>
       <Link href={href}>
-        <button className="nav-button" onClick={onClick}>{pageName}</button>
+        <button className="next-button" onClick={onClick}>{pageName}</button>
       </Link>
     </div>
   );

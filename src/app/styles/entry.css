@@ -28,32 +28,6 @@
     top: -10px;
   }
 
-  .typeButton {
-    background-color: white;
-    color: #083d88d7;
-    border: 2px solid #083d88d7;
-    border-radius: 50px; /* Large value for oval shape */
-    padding: 2px 20px; /* More horizontal padding than vertical for oval shape */
-    font-size: 25px;
-    font-weight: 500;
-    cursor: pointer;
-    display: inline-block;
-    text-align: center;
-    transition: all 0.2s ease;
-    position: relative;
-    top: -5px; 
-  }
-  
-  /* Optional hover effect */
-  .typeButton:hover {
-    background-color: rgba(8, 61, 136, 0.05);
-  }
-  
-  /* Optional focus effect for accessibility */
-  .typeButton:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(8, 61, 136, 0.25);
-  }
   .altSpelling {
     line-height: 1;
     font-size: larger;
@@ -79,11 +53,6 @@
     background-color: rgb(232, 114, 0, 0.4); /* Lighter green */
     border: 1px solid rgb(232, 114, 0, 0.4); /* Lighter green border */
   
-    /* background-color: rgba(68, 125, 206, 0.737);
-    border: 1px solid rgba(8, 61, 136, 0.756);  */
-  
-    /* background-color: rgba(245, 188, 0, 0.359);
-    border: 1px solid rgb(245, 188, 0); */
   }
   .card.sentences {
     background-color: rgba(212, 8, 42, 0.4);

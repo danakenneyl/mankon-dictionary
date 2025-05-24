@@ -3,11 +3,12 @@ import { useEffect, useState } from "react";
 import { db } from "@/utils/firebase";
 import { ref, query, orderByChild, equalTo, get, limitToFirst, remove, update, push, set } from "firebase/database";
 import dynamic from 'next/dynamic';
+import Login from "@/app/contribute/Login";
 import { DemographicData } from "@/types/Datatypes";
 import {FetchAudioFileIDs, FetchAudioFile, DeleteAudioFile} from "@/utils/ClientSideAPICalls";
 // Dynamic import with SSR disabled
 const AudioRecorder = dynamic(
-  () => import('@/app/contribute/entry-proposal-form/[id]/ProposeEntryRecord'),
+  () => import('@/app/contribute/entry-proposal-form/ProposeEntryRecord'),
   { ssr: false }
 );
 
@@ -27,14 +28,7 @@ interface Proposal {
     mankonSentence?: string[];
     translatedSentence?: string[];
 }
-interface Contributor {
-    contribution: string[];
-    createdAt: string;
-    lastModifiedAt: string;
-    role: string;
-    password: string;
-    username: string;
-  }
+
 export default function ReviewProposal() {
     // Split state approach
     const [proposal, setProposal] = useState<Record<string, Proposal>>({});
@@ -46,8 +40,6 @@ export default function ReviewProposal() {
     // Authentication states
     const [username, setUsername] = useState("");
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [authError, setAuthError] = useState("");
-    const [authenticating, setAuthenticating] = useState(false);
     
     const requiredFields: (keyof Proposal)[] = [
         "mankonWord",
@@ -63,49 +55,6 @@ export default function ReviewProposal() {
         "mankonSentence",
         "translatedSentence",
     ];
-    
-    // Authenticate user and get UUID
-    const authenticateUser = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setAuthenticating(true);
-        setAuthError("");
-        
-        try {
-          // Get reference to users in database
-          const usersRef = ref(db, 'contributors');
-          const snapshot = await get(usersRef);
-          
-          if (snapshot.exists()) {
-            const users = snapshot.val();
-            let foundUser: Contributor | null = null;
-            let role : string = "";
-            
-            // Find the user by username
-            Object.keys(users).forEach(key => {
-              if (users[key].username === username) {
-                foundUser = {
-                  ...users[key],
-                };
-                role = users[key].role; 
-              }
-            });
-            
-            if (foundUser && role === "administrator") {
-              // Set authentication state
-              setIsAuthenticated(true);
-            } else {
-              setAuthError("We're sorry! Only Admin have access to this page.");
-            }
-          } else {
-            setAuthError("No users found in the database.");
-          }
-        } catch (error) {
-          console.error("Authentication error:", error);
-          setAuthError("Error authenticating user. Please try again.");
-        } finally {
-          setAuthenticating(false);
-        }
-    };
 
     // Update the edited proposal object
     const handleUserInput = (proposalId: string, e: React.ChangeEvent<HTMLInputElement>) => {
@@ -412,40 +361,7 @@ export default function ReviewProposal() {
 
     // If not authenticated, show login form
     if (!isAuthenticated) {
-        return (
-          <div className="content-wrapper">
-            <div className="content">
-              <h1 className="text-2xl font-bold mb-6 text-center">Administration Login</h1>
-              <form onSubmit={authenticateUser} className="space-y-6">
-                <div>
-                  <label htmlFor="username" className="block font-medium mb-1">
-                    Username
-                  </label>
-                  <input
-                    type="text"
-                    id="username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    className="w-full p-2 border rounded"
-                    required
-                  />
-                </div>
-                {authError && (
-                  <div className="p-3 bg-red-100 text-red-700 rounded-md">
-                    {authError}
-                  </div>
-                )}
-                <button
-                  type="submit"
-                  disabled={authenticating}
-                  className="button w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
-                >
-                  {authenticating ? "Authenticating..." : "Login"}
-                </button>
-              </form>
-            </div>
-          </div>
-        );
+       return (<Login type="administrator" username={username} setUsername={setUsername} setIsAuthenticated={setIsAuthenticated} />);
     }
 
     // If authenticated, show the proposals

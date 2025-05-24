@@ -1,5 +1,4 @@
 'use client'; 
-import '@/styles/writing-system.css'
 export default function Writing() {
 
   return (

@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { db } from "@/utils/firebase";
 import Link from 'next/link';
 import { ref, onValue } from "firebase/database";
-import "@/styles/home.css";
 import "@/styles/contribute.css";
 import "@/styles/browse.css";
 

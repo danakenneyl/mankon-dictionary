@@ -1,10 +1,7 @@
 'use client';
 // pages/dictionary.tsx
-import  DisplayAlphabetized  from "@/browse/displayAlphabetized";
+import  DisplayAlphabetized  from "@/app/browse/BrowseAlphabetized";
 import { useParams } from 'next/navigation';
-import "@/styles/home.css";
-import "@/styles/contribute.css";
-import "@/styles/browse.css";
 
 export default function Browse() {
   const { id } = useParams<{ id: string }>();

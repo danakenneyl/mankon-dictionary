@@ -1,5 +1,4 @@
 'use client';
-import "@/styles/home.css";
 import "@/styles/contribute.css";
 import Link from 'next/link';
 

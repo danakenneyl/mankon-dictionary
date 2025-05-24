@@ -23,6 +23,7 @@ export default function BrowseMenu({ onItemClick }: BrowseMenuProps) {
       onMouseEnter={() => setShow(true)}
       onMouseLeave={() => setShow(false)}
       show={show}
+      className="menu"
     >
       <Dropdown.Toggle className="browse arrow" id="dropdown-basic">
         Browse Dictionary

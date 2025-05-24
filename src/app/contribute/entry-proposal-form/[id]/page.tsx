@@ -5,43 +5,14 @@ import dynamic from 'next/dynamic';
 import { db } from "@/utils/firebase";
 import { UploadAudio } from '@/utils/ClientSideAPICalls';
 import { ref, get, set, update, push } from "firebase/database";
-import '@/styles/typing-mankon.css'
-import '@/styles/entry-proposal.css';
-
+import  Login  from "@/app/contribute/Login";
+import { WordProposal } from "@/utils/types";
 
 // Dynamic import with SSR disabled
 const AudioRecorder = dynamic(
-  () => import('@/app/contribute/entry-proposal-form/[id]/ProposeEntryRecord'),
+  () => import('@/app/contribute/entry-proposal-form/ProposeEntryRecord'),
   { ssr: false }
 );
-
-// Updated interface to match the requirements
-interface WordProposal {
-  altSpelling?: string;
-  contributorUUID: string;
-  createdAt: string;
-  lastModifiedAt: string;
-  mankonSentences?: string[];
-  mankonWord: string;
-  pairWords?: string[];
-  sentenceAudioFileIds: string[];
-  sentenceAudioFilenames: string[];
-  translatedSentences?: string[];
-  translatedWords: string[];
-  type?: string;
-  wordAudioFileIds: string[];
-  wordAudioFilenames: string[];
-  status: string;
-}
-
-interface Contributor {
-  contribution: string[];
-  createdAt: string;
-  lastModifiedAt: string;
-  password: string;
-  username: string;
-  role: string;
-}
 
 export default function MankonWordFormPage() {
   const { id } = useParams<{ id: string }>();
@@ -49,15 +20,13 @@ export default function MankonWordFormPage() {
   const router = useRouter();
 
   // Authentication states
-  const [username, setUsername] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [authError, setAuthError] = useState("");
-  const [authenticating, setAuthenticating] = useState(false);
+  const [username, setUsername] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   const [formData, setFormData] = useState<WordProposal>({
     altSpelling: "",
-    contributorUUID: "",
+    contributorUUID: [],
     createdAt: "",
     lastModifiedAt: "",
     mankonSentences: [],
@@ -78,53 +47,6 @@ export default function MankonWordFormPage() {
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
   const [currentSection, setCurrentSection] = useState(1);
 
-  // Authenticate user and get UUID
-  const authenticateUser = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setAuthenticating(true);
-    setAuthError("");
-    
-    try {
-      // Get reference to users in database
-      const usersRef = ref(db, 'contributors');
-      const snapshot = await get(usersRef);
-      let UUID: string | null = null;
-      
-      if (snapshot.exists()) {
-        const users = snapshot.val();
-        let foundUser: Contributor | null = null;
-        // Find the user by username
-        Object.keys(users).forEach(key => {
-          if (users[key].username === username) {
-            foundUser = {
-              ...users[key],
-            };
-            UUID = key;
-          }
-        });
-        
-        if (foundUser) {
-          // Set authentication state
-          setIsAuthenticated(true);
-          
-          // Set contributor UUID in form data
-          setFormData(prev => ({
-            ...prev,
-            contributorUUID: UUID as string,
-          }));
-        } else {
-          setAuthError("Username not found. Please try again.");
-        }
-      } else {
-        setAuthError("No users found in the database.");
-      }
-    } catch (error) {
-      console.error("Authentication error:", error);
-      setAuthError("Error authenticating user. Please try again.");
-    } finally {
-      setAuthenticating(false);
-    }
-  };
 
   // Fetch existing proposal if ID is not 0
   useEffect(() => {
@@ -347,6 +269,7 @@ export default function MankonWordFormPage() {
     }
 
     try {
+      
       // Generate timestamps
       const now = new Date().toISOString();
       
@@ -355,62 +278,69 @@ export default function MankonWordFormPage() {
         ...formData,
         lastModifiedAt: now,
       };
-      
+    
       // If it's a new form, add createdAt timestamp
       if (isEmptyForm) {
         proposalData.createdAt = now;
       }
-
-      // Generate custom filenames for audio files
-      const wordFileName = `${formData.mankonWord}_${formData.translatedWords[0]}_word_${formData.contributorUUID}.wav`;
+      if (formData.translatedWords 
+        && formData.translatedWords.length > 0 
+        && formData.wordAudioFileIds 
+        && formData.wordAudioFileIds.length > 0
+        && formData.sentenceAudioFilenames
+        && formData.sentenceAudioFilenames.length > 0
+      ) {
+        // Generate custom filenames for audio files
+        const wordFileName = `${formData.mankonWord}_${formData.translatedWords[0]}_word_${formData.contributorUUID}.wav`;
+        
+        // Get word audio file from blob URL
+        const wordAudioBlob = formData.wordAudioFileIds[0]; // This would be the blob URL in the current state
+        const wordFile = await getBlobAsFile(wordAudioBlob, wordFileName);
+        
+        if (!wordFile) {
+          throw new Error('Failed to create word audio file from recording');
+        }
+        
+        // Step 3: Upload audio files to drive
+        // Upload word audio
+        const wordFileId = await UploadAudio(wordFile);
+        if (wordFileId === null) {
+          throw new Error('Failed to upload word audio file');
+        }
+        
+        // Set word audio filename in form data
+        proposalData.wordAudioFilenames = [wordFileName];
+        proposalData.wordAudioFileIds = [wordFileId]; 
       
-      // Get word audio file from blob URL
-      const wordAudioBlob = formData.wordAudioFileIds[0]; // This would be the blob URL in the current state
-      const wordFile = await getBlobAsFile(wordAudioBlob, wordFileName);
+        // Get and upload sentence audio files
+        const sentenceFilenames: string[] = [];
+        const sentenceFileIds: string[] = [];
       
-      if (!wordFile) {
-        throw new Error('Failed to create word audio file from recording');
-      }
-      
-      // Step 3: Upload audio files to drive
-      // Upload word audio
-      const wordFileId = await UploadAudio(wordFile);
-      if (wordFileId === null) {
-        throw new Error('Failed to upload word audio file');
-      }
-      
-      // Set word audio filename in form data
-      proposalData.wordAudioFilenames = [wordFileName];
-      proposalData.wordAudioFileIds = [wordFileId]; 
-      
-      // Get and upload sentence audio files
-      const sentenceFilenames: string[] = [];
-      const sentenceFileIds: string[] = [];
-      
-      // Process each sentence audio file
-      for (let i = 0; i < (formData.sentenceAudioFilenames?.length || 0); i++) {
-        const blobUrl = formData.sentenceAudioFilenames[i];
-        if (blobUrl) {
-          const sentenceFileName = `${formData.mankonWord}_${formData.translatedWords[0]}_sentence${i+1}_${formData.contributorUUID}.wav`;
-          const sentenceFile = await getBlobAsFile(blobUrl, sentenceFileName);
-          
-          if (sentenceFile) {
-            // Upload each sentence audio file
-            const sentenceResponse = await UploadAudio(sentenceFile);
-            if (sentenceResponse===null) {
-              throw new Error(`Failed to upload sentence audio file ${i+1}`);
-            }
+        // Process each sentence audio file
+        for (let i = 0; i < (formData.sentenceAudioFilenames?.length || 0); i++) {
+          const blobUrl = formData.sentenceAudioFilenames[i];
+          if (blobUrl) {
+            const sentenceFileName = `${formData.mankonWord}_${formData.translatedWords[0]}_sentence${i+1}_${formData.contributorUUID}.wav`;
+            const sentenceFile = await getBlobAsFile(blobUrl, sentenceFileName);
             
-            sentenceFilenames.push(sentenceFileName);
-            sentenceFileIds.push(sentenceResponse); 
+            if (sentenceFile) {
+              // Upload each sentence audio file
+              const sentenceResponse = await UploadAudio(sentenceFile);
+              if (sentenceResponse===null) {
+                throw new Error(`Failed to upload sentence audio file ${i+1}`);
+              }
+              
+              sentenceFilenames.push(sentenceFileName);
+              sentenceFileIds.push(sentenceResponse); 
+            }
           }
         }
+      
+        // Set sentence audio filenames and IDs in proposal data
+        proposalData.sentenceAudioFilenames = sentenceFilenames;
+        proposalData.sentenceAudioFileIds = sentenceFileIds;
       }
-      
-      // Set sentence audio filenames and IDs in proposal data
-      proposalData.sentenceAudioFilenames = sentenceFilenames;
-      proposalData.sentenceAudioFileIds = sentenceFileIds;
-      
+        
       // Step 5: Update status
       setFormData((prev) => ({
         ...prev,
@@ -434,6 +364,7 @@ export default function MankonWordFormPage() {
       
       // Navigate back to contribute page on success
       router.push("/contribute/propose-dictionary-entry");
+    
     } catch (error) {
       console.error('Error saving proposal:', error);
       alert("Error saving your submission. Please try again.");
@@ -454,45 +385,7 @@ export default function MankonWordFormPage() {
   };
 
   if (!isAuthenticated) {
-    return (
-      <div className="content-wrapper">
-        <div className="content">
-      <div className="login-container">
-        <div className="login-card">
-          <h1 className="login-title">Hello! Welcome back.</h1>
-          <p className="login-subtitle">Please enter your username to contribute.</p>
-          <form onSubmit={authenticateUser} className="login-form">
-            <div className="input-group">
-              <input
-                type="text"
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="login-input"
-                placeholder="Your username"
-                required
-              />
-            </div>
-            <div className= "login-group">
-            {authError && (
-              <div className="error-message">
-                {authError}
-              </div>
-            )}
-            <button
-              type="submit"
-              disabled={authenticating}
-              className="next-button"
-            >
-              {authenticating ? "Just a moment..." : "Login"}
-            </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-    </div>
-    );
+    return (<Login type="contributor" username={username} setUsername={setUsername} setIsAuthenticated={setIsAuthenticated} setFormData={setFormData} />);
   }
 
   return (
