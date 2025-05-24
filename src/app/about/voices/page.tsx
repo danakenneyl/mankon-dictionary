@@ -1,5 +1,3 @@
-import "@/styles/guide.css"
-import "@/styles/home.css"
 import Image from "next/image"
 import "@/styles/voices.css"
 

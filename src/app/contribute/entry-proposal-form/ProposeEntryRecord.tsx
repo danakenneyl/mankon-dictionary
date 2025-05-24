@@ -1,7 +1,6 @@
 'use client';
 import { useReactMediaRecorder } from "react-media-recorder";
 import React, { useEffect, useState } from "react";
-import '@/styles/entry-proposal.css'; 
 
 interface ProposeEntryRecordProps {
   onRecordingComplete: (audioBlobUrl: string) => void;

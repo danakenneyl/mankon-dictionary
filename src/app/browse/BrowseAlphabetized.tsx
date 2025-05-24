@@ -4,31 +4,9 @@ import { useMemo, useState, useEffect, useCallback } from 'react';
 import { db } from "@/utils/firebase";
 import Link from 'next/link';
 import { ref, onValue } from "firebase/database";
-import "@/styles/home.css";
+import { WordEntry } from "@/utils/types";
 import "@/styles/contribute.css";
 import "@/styles/browse.css";
-
-// Updated interface to match the new requirements
-interface WordEntry {
-  altSpelling?: string;
-  contributorUUID: string;
-  createdAt: string;
-  lastModifiedAt: string;
-  mankonSentences?: string[];
-  mankonWord: string;
-  pairWords?: string[];
-  sentenceAudioFileIds: string[];
-  sentenceAudioFilenames: string[];
-  translatedSentences?: string[];
-  translatedWords: string[];
-  type?: string;
-  wordAudioFileIds: string[];
-  wordAudioFilenames: string[];
-  status: string;
-  partOfSpeech?: string;
-  nounClass?: string;
-  case?: string;
-}
 
 // TypeScript interface for the entries collection
 interface EntriesCollection {
@@ -40,7 +18,7 @@ interface GroupedEntries {
   [key: string]: [string, WordEntry][];
 }
 
-export default function DisplayAlphabetized({page}: {page: string}) {  
+export default function BrowseAlphabetized({page}: {page: string}) {  
   // Select correct alphabet based on URL parameter
   const englishAlphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
   const mankonAlphabet = ["A", "B", "Bv", "Tʃ", "D", "Dv", "Dz", "E", "Ə", "Ɛ", "F", "G", "Ɣ", "I", "Ɨ", "Dʒ", "K", "Kf", "L", "Lv", "M", "N", "Ɲ", "Ŋ", "O", "Ɔ", "S", "Ʃ", "T", "Tf", "Ts", "U", "V", "W", "Y", "Z", "Ʒ"];

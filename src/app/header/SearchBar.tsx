@@ -3,29 +3,13 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ref, onValue, Database } from "firebase/database";
+import { WordEntry } from "@/utils/types";
 import ToggleLang from "./ToggleLang";
 import { useSearch } from '@/utils/SearchContext';
 
 // Type definitions based on your structure
 interface EntriesCollection {
-  [key: string]: Entry;
-}
-
-interface Entry {
-  altSpelling?: string;
-  contributorUUIDs?: string[];
-  createdAt: string;
-  lastModifiedAt: string;
-  mankonSentences?: string[];
-  mankonWord: string;
-  pairWords?: string[];
-  sentenceAudioFilenames?: string[];
-  sentenceFileIds?: string[];
-  wordAudioFileId?: string;
-  translatedSentence?: string[];
-  translatedWords: string[];
-  type?: string;
-  status?: string;
+  [key: string]: WordEntry;
 }
 
 interface SearchBarProps {
@@ -34,7 +18,7 @@ interface SearchBarProps {
 
 export default function SearchBar({ db }: SearchBarProps) {
   const router = useRouter();
-  const [filteredData, setFilteredData] = useState<{key: string, entry: Entry}[]>([]);
+  const [filteredData, setFilteredData] = useState<{key: string, entry: WordEntry}[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const { searchEng } = useSearch();

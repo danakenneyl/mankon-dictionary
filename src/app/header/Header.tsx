@@ -11,8 +11,6 @@ import AboutMenu from './AboutMenu';
 import BrowseMenu from './BrowseMenu';
 import LanguageHelpMenu from './LanguageHelpMenu';
 import { db } from '@/utils/firebase';
-import '@/styles/header.css'
-import '@/styles/navbutton.css'
 import ContributeMenu from './ContributeMenu';
 
 export default function Header() {
@@ -21,7 +19,7 @@ export default function Header() {
   const closeOffcanvas = () => setIsOffcanvasOpen(false);
 
   return (
-    <Navbar expand="xxl" className="navbar" data-bs-theme="dark">
+    <Navbar expand="lg" className="navbar" data-bs-theme="dark">
       <Navbar.Brand className="brand-container">
         <Link className="toHome" href="/">
         <Image

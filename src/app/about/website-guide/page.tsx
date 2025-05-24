@@ -2,8 +2,6 @@ import ToggleLang from "@/app/header/ToggleLang"
 import NavButton from "@/app/header/NavButton"
 import Link from "next/link"
 import Image from "next/image"
-import "@/styles/guide.css"
-import "@/styles/home.css"
 
 export default function Guide() {
     return (
@@ -47,6 +45,8 @@ export default function Guide() {
                 <NavButton pageName="Browse in Mankon" href="/browse/browse-mankon" ></NavButton>
                 <li><strong>Browse in English:</strong> View the full dictionary organized according to English alphabetical order.</li>
                 <NavButton pageName="Browse in English" href="/browse/browse-english" ></NavButton>
+                <li><strong>Browse Names:</strong> Peruse Mankon names, historical figures, and culturally significant place names.</li>
+                <NavButton pageName="Browse Names" href="/browse/browse-english" ></NavButton>
             </ul>
 
             <h2 className="text-2xl font-semibold mb-3">Language Help</h2>
@@ -60,9 +60,9 @@ export default function Guide() {
             <h2 className="text-2xl font-semibold mb-3">Contributing to the Dictionary</h2>
             <ul className="list-disc list-inside mb-6">
                 <li><strong>Propose a Word:</strong> Submit a new Mankon word along with its English translation, two sample sentences, and recordings of your contributions.</li>
-                <NavButton pageName="Propose a New Word" href="/contribute/propose-dictionary-entry"></NavButton>
+                <NavButton pageName="Propose Word" href="/contribute/propose-dictionary-entry"></NavButton>
                 <li><strong>Word Requests:</strong> Help by recording words and sentences from a list of suggested entries. Perfect for contributors who cannot type or prefer to start from a ready-made list!</li>
-                <NavButton pageName="Browse Requested Words" href="/contribute/mankon-word-requests"></NavButton>
+                <NavButton pageName="Word Requests" href="/contribute/mankon-word-requests"></NavButton>
             </ul>
 
             <p className="mt-6">

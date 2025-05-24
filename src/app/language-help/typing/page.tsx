@@ -1,5 +1,5 @@
 'use client'; 
-import '@/styles/typing-mankon.css'
+
 export default function Typing() {
 
   return (
