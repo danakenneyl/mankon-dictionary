@@ -88,7 +88,7 @@ export default function Contribute() {
 
             <p className="alert-text">Please read ALL of the instructions above before filling out this form.</p>
             <div className="button-container">
-              <Link href="/contribute/entry-proposal-form/0">
+              <Link href="/contribute/proposal-form/0">
                 <button className="primary-button">Entry Proposal Form</button>
               </Link>
             </div>

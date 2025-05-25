@@ -5,29 +5,10 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import { ref, onValue } from "firebase/database";
 import { db } from "@/utils/firebase";
 import { FetchAudioFile } from '@/utils/ClientSideAPICalls';
+import { WordEntry } from "@/utils/types";
 import "@/styles/entry.css";
 
-// Updated interface to match the actual database structure
-interface WordEntry {
-  altSpelling?: string;
-  contributorUUIDs: string[];
-  createdAt: string;
-  lastModifiedAt: string;
-  mankonSentences?: string[];
-  mankonWord: string;
-  pairWords?: string[];
-  sentenceAudioFileIds: string[];
-  sentenceAudioFilenames: string[];
-  translatedSentences?: string[];
-  translatedWords: string[];
-  type?: string;
-  wordAudioFileIds: string[];
-  wordAudioFilenames: string[];
-  status: string;
-  partOfSpeech?: string;
-  nounClass?: string;
-  case?: string;
-}
+
 
 export default function Entry() {
   const { id } = useParams<{ id: string }>();
@@ -43,13 +24,11 @@ export default function Entry() {
     sentenceAudioFilenames: [],
     translatedSentences: [],
     translatedWords: [],
-    type: "",
+    type: [],
     wordAudioFileIds: [],
     wordAudioFilenames: [],
     status: "",
     partOfSpeech: "",
-    nounClass: "",
-    case: ""
   });
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);

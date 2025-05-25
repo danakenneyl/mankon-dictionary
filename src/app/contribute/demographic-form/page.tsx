@@ -1,37 +1,13 @@
 'use client';
-
+import "@/styles/globals.css";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { db } from '@/utils/firebase';
 import { ref, get, set, push } from 'firebase/database';
 import { v4 as uuidv4 } from 'uuid';
 import LanguageCheckBoxes from "./languageCheckbox";
+import { Demographics, Contributor } from "@/utils/types";
 
-interface DemographicAnswers {
-    UUID: string;
-    age: string;
-    location: string;
-    diaspora: boolean;
-    spokenLanguage: string;
-    currentLanguage: string;
-    childhoodLanguage: string;
-    yearsSpeaking: number;
-    learnSpeechModality: string;
-    speechProficiency: string;
-    writeProficiency: string;
-    readProficiency: string;
-    createdAt: string;
-    lastModifiedAt: string;
-}
-
-interface Contributor {
-    contribution: string[];
-    createdAt: string;
-    lastModifiedAt: string;
-    role: string;
-    password: string;
-    username: string;
-}
 interface diaspora {
     yes: boolean;
     no: boolean;
@@ -60,8 +36,6 @@ export interface formData {
     writeProficiency: string;
     readProficiency: string;
 }
-
-
 
 export default function DemographicQuestions() {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -206,7 +180,7 @@ export default function DemographicQuestions() {
     };
 
     // Combine checkbox and other language input
-    const buildLanguageInputString = (checkboxes: languageCheckboxes, other: string) => {
+    const buildLanguageInputArray = (checkboxes: languageCheckboxes, other: string) => {
         const languages = Object.entries(checkboxes)
             .filter(([, value]) => value)
             .map(([key]) => key);
@@ -215,7 +189,7 @@ export default function DemographicQuestions() {
             languages.push(...otherLanguages);
         }
         
-        return languages.join(",");
+        return languages;
     };
 
     // Submit form
@@ -245,15 +219,15 @@ export default function DemographicQuestions() {
                 password: "",
                 username: formData.username
             };
-            const demographic: DemographicAnswers = {
+            const demographic: Demographics = {
                 UUID: contributorUUID,
                 age: formData.age,
                 location: formData.location,
                 diaspora: formData.diaspora.yes,
-                spokenLanguage: buildLanguageInputString(formData.spokenLanguageCheck, formData.spokenLanguageOther),
-                currentLanguage: buildLanguageInputString(formData.currentLanguageCheck, formData.currentLanguageOther),
-                childhoodLanguage: buildLanguageInputString(formData.childhoodLanguageCheck, formData.childhoodLanguageOther),
-                yearsSpeaking: formData.yearsSpeaking,
+                spokenLanguage: buildLanguageInputArray(formData.spokenLanguageCheck, formData.spokenLanguageOther),
+                currentLanguage: buildLanguageInputArray(formData.currentLanguageCheck, formData.currentLanguageOther),
+                childhoodLanguage: buildLanguageInputArray(formData.childhoodLanguageCheck, formData.childhoodLanguageOther),
+                yearsSpeaking: formData.yearsSpeaking.toString(),
                 learnSpeechModality: formData.learnSpeechModality,
                 speechProficiency: formData.speechProficiency,
                 writeProficiency: formData.writeProficiency,

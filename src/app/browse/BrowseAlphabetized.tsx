@@ -86,7 +86,10 @@ export default function BrowseAlphabetized({page}: {page: string}) {
   const sortedEntries = entriesArray.sort(([, a], [, b]) => {
     if (page === "english") {
       // Sort by English translated word
-      return a.translatedWords[0].localeCompare(b.translatedWords[0]);
+      if (a.translatedWords && b.translatedWords) {
+        return a.translatedWords[0].localeCompare(b.translatedWords[0]);
+      }
+      return (a.mankonWord || '').localeCompare(b.mankonWord || '');
     } else{
       // Sort by Mankon word
       return a.mankonWord.localeCompare(b.mankonWord);
@@ -112,7 +115,7 @@ export default function BrowseAlphabetized({page}: {page: string}) {
 
     // Group each entry by matching it to the appropriate alphabet letter
     entries.forEach(entry => {
-      const word = page === "english" ? entry[1].translatedWords[0] : entry[1].mankonWord;
+      const word = page === "english" && entry[1].translatedWords ? entry[1].translatedWords[0] : entry[1].mankonWord;
       if (word && word.length > 0) {
         // Normalize the word for comparison (uppercase and remove diacritics)
         const normalizedWord = normalizeString(word);
@@ -212,12 +215,35 @@ export default function BrowseAlphabetized({page}: {page: string}) {
     return isEnglish 
       ? (
         <div>
-          <h5 className="mb-1">{entry.translatedWords[0]}</h5>
+
+          {entry.translatedWords && 
+          <h5 className="">
+            {entry.translatedWords[0]}
+            {entry.partOfSpeech && (
+              <button
+                key={entry.partOfSpeech}
+                className="typeButton-2"
+              >
+                {entry.partOfSpeech}
+              </button>
+            )}
+          </h5>}
+          
           <p className="mb-1">{entry.mankonWord}</p>
         </div>
       ) : (
         <div>
-          <h5 className="mb-1">{entry.mankonWord}</h5>
+          <h5 className="mb-1">
+            {entry.mankonWord} 
+            {entry.partOfSpeech && (
+              <button
+                key={entry.partOfSpeech}
+                className="typeButton-2"
+              >
+                {entry.partOfSpeech}
+              </button>
+            )}
+            </h5>
           <p className="mb-1">{entry.translatedWords ? entry.translatedWords.join(", "): " \n"}</p>
         </div>
       );
