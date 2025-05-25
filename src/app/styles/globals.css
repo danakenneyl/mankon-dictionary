@@ -436,6 +436,32 @@
     outline: none;
     box-shadow: 0 0 0 3px rgba(8, 61, 136, 0.25);
   }
+
+  .typeButton-2 {
+    background-color: white;
+    color: #083d88d7;
+    border: 2px solid #083d88d7;
+    border-radius: 50px;
+    padding: 2px 20px;
+    font-size: 15px;
+    font-weight: 200;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    transition: all 0.2s ease;
+    position: relative;
+    top: 0px;
+    margin-left: 1rem;
+  }
+  
+  .typeButton-2:hover {
+    background-color: rgba(8, 61, 136, 0.05);
+  }
+  
+  .typeButton-2:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(8, 61, 136, 0.25);
+  }
   
   /* Language Chooser Button */
   .chooseLang {
@@ -451,7 +477,7 @@
   /* Dropdown Navigation Button */
   .menu {
     margin: 0.20rem;
-    background-color: black;
+    background-color: transparent;
   }
 
   .browse {

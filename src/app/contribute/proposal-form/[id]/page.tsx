@@ -6,11 +6,11 @@ import { db } from "@/utils/firebase";
 import { UploadAudio } from '@/utils/ClientSideAPICalls';
 import { ref, get, set, update, push } from "firebase/database";
 import  Login  from "@/app/contribute/Login";
-import { WordProposal } from "@/utils/types";
+import { WordEntry } from "@/utils/types";
 
 // Dynamic import with SSR disabled
 const AudioRecorder = dynamic(
-  () => import('@/app/contribute/entry-proposal-form/ProposeEntryRecord'),
+  () => import('@/app/contribute/proposal-form/ProposeEntryRecord'),
   { ssr: false }
 );
 
@@ -24,9 +24,9 @@ export default function MankonWordFormPage() {
   const [username, setUsername] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const [formData, setFormData] = useState<WordProposal>({
+  const [formData, setFormData] = useState<WordEntry>({
     altSpelling: "",
-    contributorUUID: [],
+    contributorUUIDs: [],
     createdAt: "",
     lastModifiedAt: "",
     mankonSentences: [],
@@ -36,10 +36,11 @@ export default function MankonWordFormPage() {
     sentenceAudioFilenames: [],
     translatedSentences: [],
     translatedWords: [],
-    type: "",
+    type: [],
     wordAudioFileIds: [],
     wordAudioFilenames: [],
     status: "pending",
+    partOfSpeech: "",
   });
 
   // Updated errors state to include indexed sentenceAudioFilenames
@@ -83,7 +84,7 @@ export default function MankonWordFormPage() {
       const index = parseInt(name.split('[')[1].split(']')[0]);
       
       setFormData((prev) => {
-        const updatedArray = [...(prev[fieldName as keyof WordProposal] as string[] || [])];
+        const updatedArray = [...(prev[fieldName as keyof WordEntry] as string[] || [])];
         updatedArray[index] = value;
         
         return {
@@ -123,7 +124,7 @@ export default function MankonWordFormPage() {
 
   const handleRecordingComplete = (field: string, blobUrl: string, index?: number) => {
     // Determine the correct field name based on what's being recorded
-    let targetField: keyof WordProposal;
+    let targetField: keyof WordEntry;
     
     if (field === 'wordAudio') {
       targetField = 'wordAudioFileIds';
@@ -274,7 +275,7 @@ export default function MankonWordFormPage() {
       const now = new Date().toISOString();
       
       // Step 2: Prepare proposal data
-      const proposalData: WordProposal = {
+      const proposalData: WordEntry = {
         ...formData,
         lastModifiedAt: now,
       };
@@ -289,9 +290,11 @@ export default function MankonWordFormPage() {
         && formData.wordAudioFileIds.length > 0
         && formData.sentenceAudioFilenames
         && formData.sentenceAudioFilenames.length > 0
+        && formData.contributorUUIDs
+        && formData.contributorUUIDs.length > 0
       ) {
         // Generate custom filenames for audio files
-        const wordFileName = `${formData.mankonWord}_${formData.translatedWords[0]}_word_${formData.contributorUUID}.wav`;
+        const wordFileName = `${formData.mankonWord}_${formData.translatedWords[0]}_word_${formData.contributorUUIDs[0]}.wav`;
         
         // Get word audio file from blob URL
         const wordAudioBlob = formData.wordAudioFileIds[0]; // This would be the blob URL in the current state
@@ -320,7 +323,7 @@ export default function MankonWordFormPage() {
         for (let i = 0; i < (formData.sentenceAudioFilenames?.length || 0); i++) {
           const blobUrl = formData.sentenceAudioFilenames[i];
           if (blobUrl) {
-            const sentenceFileName = `${formData.mankonWord}_${formData.translatedWords[0]}_sentence${i+1}_${formData.contributorUUID}.wav`;
+            const sentenceFileName = `${formData.mankonWord}_${formData.translatedWords[0]}_sentence${i+1}_${formData.contributorUUIDs[0]}.wav`;
             const sentenceFile = await getBlobAsFile(blobUrl, sentenceFileName);
             
             if (sentenceFile) {

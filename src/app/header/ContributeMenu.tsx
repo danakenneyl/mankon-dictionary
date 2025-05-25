@@ -29,15 +29,15 @@ export default function ContributeMenu({ onItemClick }: BrowseMenuProps) {
         Contribute
       </Dropdown.Toggle>
       <Dropdown.Menu>
-        <Dropdown.Item onClick={() => handleNavigate("propose-dictionary-entry")}>
+        <Dropdown.Item onClick={() => handleNavigate("contribute-instructions")}>
           Propose Word
         </Dropdown.Item>
         <Dropdown.Divider />
-        <Dropdown.Item onClick={() => handleNavigate("mankon-word-requests")}>
+        <Dropdown.Item onClick={() => handleNavigate("initial-requests")}>
           Word Requests
         </Dropdown.Item>
         <Dropdown.Divider />
-        <Dropdown.Item onClick={() => handleNavigate("review-proposal")}>
+        <Dropdown.Item onClick={() => handleNavigate("db-interfaces")}>
           Admin Login
         </Dropdown.Item>
       </Dropdown.Menu>

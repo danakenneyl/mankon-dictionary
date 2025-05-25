@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { db } from "@/utils/firebase";
 import { get, ref } from "firebase/database";
-import { WordProposal, Contributor } from "@/utils/types";
+import { WordEntry, Contributor } from "@/utils/types";
 
 interface LoginProps {
     type: "administrator" | "contributor";
     username: string;
     setUsername: React.Dispatch<React.SetStateAction<string>>;
     setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
-    setFormData?: React.Dispatch<React.SetStateAction<WordProposal>>;
+    setFormData?: React.Dispatch<React.SetStateAction<WordEntry>>;
 }
 
 export default function Login({ type, username, setUsername, setIsAuthenticated, setFormData }: LoginProps) {

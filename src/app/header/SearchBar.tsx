@@ -122,7 +122,7 @@ export default function SearchBar({ db }: SearchBarProps) {
         // For English, match ignoring diacritics now
         const normalizedInput = getWordWithoutDiacritics(inputValue);
         match = filteredData.find(({entry}) => 
-          entry.translatedWords.some(engWord => 
+          entry.translatedWords && entry.translatedWords.some(engWord => 
             getWordWithoutDiacritics(engWord) === normalizedInput
           )
         );
@@ -143,7 +143,7 @@ export default function SearchBar({ db }: SearchBarProps) {
       const newIndex = Math.min(selectedIndex + 1, filteredData.length - 1);
       setSelectedIndex(newIndex);
       // For English, get the first word from the array
-      const newValue = searchEng 
+      const newValue = searchEng && filteredData && filteredData[newIndex].entry.translatedWords
         ? filteredData[newIndex].entry.translatedWords[0] 
         : filteredData[newIndex].entry.mankonWord;
       setInputValue(newValue);
@@ -151,7 +151,7 @@ export default function SearchBar({ db }: SearchBarProps) {
       const newIndex = selectedIndex - 1;
       setSelectedIndex(newIndex);
       // For English, get the first word from the array
-      const newValue = searchEng 
+      const newValue = searchEng && filteredData && filteredData[newIndex].entry.translatedWords
         ? filteredData[newIndex].entry.translatedWords[0] 
         : filteredData[newIndex].entry.mankonWord;
       setInputValue(newValue);
@@ -206,8 +206,8 @@ export default function SearchBar({ db }: SearchBarProps) {
               className={`dataItem ${selectedIndex === index ? "selected" : ""}`}
               onClick={() => handleNavigateToEntry(key)}
             >
-              {searchEng
-                ? <p>{entry.translatedWords.join(", ")}</p>
+              {searchEng 
+                ? entry.translatedWords ? <p>{entry.translatedWords.join(", ")}</p> : ""
                 : <p>{entry.mankonWord}</p>
               }
             </div>
