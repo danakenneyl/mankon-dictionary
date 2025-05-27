@@ -7,7 +7,7 @@ import Header from './header/Header';
 
 export const metadata = {
   title: 'Mankon Dictionary',
-  description: 'The Mankon Dictionary is a searchable, talking Mankon-English dictionary that documents a Western Grassfields Bantu language.',
+  description: 'The Mankon Bilingual Dictionary is a searchable, talking Mankon-English dictionary that documents a Western Grassfields Bantu language from the Ngemba language family.',
   verification: {
     google: '4Hx86Sk3InB7XpuulN8vdTt60jZa3fqW2m9IP1CIJNM',
   },

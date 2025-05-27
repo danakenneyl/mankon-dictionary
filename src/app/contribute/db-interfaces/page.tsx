@@ -39,7 +39,7 @@ export default function DatabaseInterfaces() {
                     {activeView === "entries" && <EntryInterface type="entries"/>}
                     {activeView === "initial" && <EntryInterface type="proposals" state="Initial Proposals"/>}
                     {activeView === "review" && <EntryInterface type="proposals" state="Review Proposals"/>}
-                    {activeView === "approve" && <EntryInterface type="proposals" state="Approve Proposals"/>}
+                    {activeView === "approve" && <EntryInterface type="proposals" state="Approve Proposals"/>}  
                 </div>
             </div>
         </div>
