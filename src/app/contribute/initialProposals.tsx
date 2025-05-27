@@ -1,64 +1,68 @@
 'use client';
 // pages/dictionary.tsx
-import { useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 import { db } from "@/utils/firebase";
 import Link from 'next/link';
 import { ref, onValue } from "firebase/database";
+import { WordEntry, EntryCollection } from "@/utils/types";
 import "@/styles/contribute.css";
 import "@/styles/browse.css";
+import "@/styles/globals.css";
 
-// Updated interface to match the new requirements
-interface WordProposal {
-  altSpelling?: string;
-  contributorUUID: string;
-  createdAt: string;
-  lastModifiedAt: string;
-  mankonSentences?: string[];
-  mankonWord: string;
-  pairWords?: string[];
-  sentenceAudioFileIds: string[];
-  sentenceAudioFilenames: string[];
-  translatedSentences?: string[];
-  translatedWords: string[];
-  type?: string;
-  wordAudioFileIds: string[];
-  wordAudioFilenames: string[];
-  status: string;
-  partOfSpeech?: string;
-  nounClass?: string;
-  case?: string;
+// Interface for grouped entries by letter
+interface GroupedEntries {
+  [key: string]: [string, WordEntry][];
 }
 
-// TypeScript interface for the proposals collection
-interface ProposalsCollection {
-  [key: string]: WordProposal;
+// Interface for grouped entries by type
+interface GroupedEntriesByType {
+  [key: string]: [string, WordEntry][];
 }
 
-// Interface for grouped proposals by letter
-interface GroupedProposals {
-  [key: string]: [string, WordProposal][];
-}
-
-export default function InitialProposals() {
-  const [proposals, setProposals] = useState<ProposalsCollection>({});
+export default function InitialProposals() {  
+  const mankonAlphabet = ["A", "B", "Bv", "Tʃ", "D", "Dv", "Dz", "E", "Ə", "Ɛ", "F", "G", "Ɣ", "I", "Ɨ", "Dʒ", "K", "Kf", "L", "Lv", "M", "N", "Ɲ", "Ŋ", "O", "Ɔ", "S", "Ʃ", "T", "Tf", "Ts", "U", "V", "W", "Y", "Z", "Ʒ"];
+  
+  // Define the types you want to prioritize - you can add more as needed
+  const priorityTypes = [
+    "animal",
+    "body part", 
+    "food",
+    "plant",
+    "tool",
+    "clothing",
+    "family",
+    "emotion",
+    "action",
+    "place",
+    "time",
+    "color",
+    "number"
+  ];
+  
+  const [entries, setEntries] = useState<EntryCollection>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [itemsPerPage] = useState<number>(50);
   
-  // Mankon alphabet for proper sorting and grouping
-  const mankonAlphabet = ["A", "B", "Bv", "Tʃ", "D", "Dv", "Dz", "Dʒ", "E", "G", "Ɣ", "Ɨ", "K", "Kf", "L", "Lv", "M", "N", "Ɲ", "Ŋ", "O", "Ɔ", "S", "Ʃ", "T", "Tf", "Ts", "V", "W", "Y", "Z", "Ʒ"];
+  // States for alphabetical browsing
+  const [alphabetCurrentPage, setAlphabetCurrentPage] = useState<number>(1);
+  const [alphabetItemsPerPage] = useState<number>(50);
+  const [selectedLetter, setSelectedLetter] = useState<string>("");
+  
+  // States for type browsing
+  const [typeCurrentPage, setTypeCurrentPage] = useState<number>(1);
+  const [typeItemsPerPage] = useState<number>(5);
+  const [selectedType, setSelectedType] = useState<string>("");
 
   useEffect(() => {
-    const proposalsRef = ref(db, 'proposals');
+    const entriesRef = ref(db, 'proposals');
     
-    // Listen for changes to the proposals in Firebase
-    const unsubscribe = onValue(proposalsRef, (snapshot) => {
+    // Listen for changes to the entries in Firebase
+    const unsubscribe = onValue(entriesRef, (snapshot) => {
       if (snapshot.exists()) {
-        const data = snapshot.val() as ProposalsCollection;
-        setProposals(data);
+        const data = snapshot.val() as EntryCollection;
+        setEntries(data);
       } else {
-        setProposals({});
+        setEntries({});
       }
       setLoading(false);
     }, (error) => {
@@ -71,36 +75,62 @@ export default function InitialProposals() {
     return () => unsubscribe();
   }, []);
 
-  // Get all proposals as an array, filtered to exclude those with status "initial"
-  const proposalsArray = Object.entries(proposals).filter(
-    ([, proposal]) => proposal.status === "initial"
+  // Filter entries to exclude names and get only initial status entries
+  const entriesArray: [string, WordEntry][] = Object.entries(entries).filter(
+    ([, entry]) => entry.status === "initial" 
   );
   
-  // Sort proposals alphabetically by Mankon word
-  const sortedProposals = proposalsArray.sort(([, a], [, b]) => {
+  // Sort entries by their Mankon word
+  const sortedEntries = entriesArray.sort(([, a], [, b]) => {
     return a.mankonWord.localeCompare(b.mankonWord);
   });
 
-  // Function to normalize characters (remove tones and convert to uppercase)
-  const normalizeChar = (char: string): string => {
-    // Convert to uppercase first
-    const upperChar = char.toUpperCase();
-    
-    // Handle all four tone marks in Mankon: acute (á), grave (à), caron/háček (ǎ), and circumflex (â)
-    // NFD normalization decomposes characters with diacritical marks
-    // Then we remove the combining marks in the Unicode range U+0300 to U+036F
-    return upperChar.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    
-    // This handles:
-    // - Acute accent (á) - U+0301
-    // - Grave accent (à) - U+0300
-    // - Circumflex (â) - U+0302
-    // - Caron/háček (ǎ) - U+030C
-  };
+  // Function to normalize a string (remove tones and convert to uppercase)
+  const normalizeString = useCallback((str: string): string => {
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
+  }, []);
 
-  // Group proposals by their first letter according to Mankon alphabet
-  const groupProposalsByLetter = (proposals: [string, WordProposal][]): GroupedProposals => {
-    const grouped: GroupedProposals = {};
+  // Group entries by type
+  const groupEntriesByType = useCallback((entries: [string, WordEntry][]): GroupedEntriesByType => {
+    const grouped: GroupedEntriesByType = {};
+    
+    // Initialize groups for each priority type
+    priorityTypes.forEach(type => {
+      grouped[type] = [];
+    });
+    
+    // Group each entry by type
+    entries.forEach(entry => {
+      const entryTypes = entry[1].type;
+      if (entryTypes && entryTypes.length > 0) {
+        // For each type in the entry, add it to the appropriate group
+        entryTypes.forEach(type => {
+          const normalizedType = type.toLowerCase().trim();
+          
+          // Check if this type matches any of our priority types
+          const matchingPriorityType = priorityTypes.find(priorityType => 
+            priorityType.toLowerCase() === normalizedType
+          );
+          
+          if (matchingPriorityType) {
+            grouped[matchingPriorityType].push(entry);
+          } else {
+            // If it's not in our priority list, add it as a new type
+            if (!grouped[type]) {
+              grouped[type] = [];
+            }
+            grouped[type].push(entry);
+          }
+        });
+      }
+    });
+    
+    return grouped;
+  }, [priorityTypes]);
+
+  // Group entries by letter
+  const groupEntriesByLetter = useCallback((entries: [string, WordEntry][]): GroupedEntries => {
+    const grouped: GroupedEntries = {};
     
     // Initialize groups for each letter in the Mankon alphabet
     mankonAlphabet.forEach(letter => {
@@ -108,22 +138,28 @@ export default function InitialProposals() {
     });
     
     // Also create an "Other" group for characters not in the alphabet
-    grouped["Other"] = [];
+    grouped["#"] = [];
 
-    // Group each proposal by its first letter/character
-    proposals.forEach(proposal => {
-      const word = proposal[1].mankonWord;
+    // Group each entry by matching it to the appropriate alphabet letter
+    entries.forEach(entry => {
+      const word = entry[1].mankonWord;
       if (word && word.length > 0) {
-        // Get the first character of the word and normalize it
-        const firstChar = normalizeChar(word.charAt(0));
+        // Normalize the word for comparison (uppercase and remove diacritics)
+        const normalizedWord = normalizeString(word);
         
-        // Find the matching letter in the Mankon alphabet (case insensitive)
+        // Find the matching letter in the Mankon alphabet
         let assigned = false;
         
-        for (const letter of mankonAlphabet) {
-          // Compare the normalized first character with the normalized first character of each letter
-          if (normalizeChar(letter.charAt(0)) === firstChar) {
-            grouped[letter].push(proposal);
+        // Sort the alphabet by length in descending order to check longer prefixes first
+        // This ensures "Dʒ" is checked before "D" for correct matching
+        const sortedAlphabet = [...mankonAlphabet].sort((a, b) => b.length - a.length);
+        
+        for (const letter of sortedAlphabet) {
+          const normalizedLetter = normalizeString(letter);
+          
+          // Check if the word starts with this letter
+          if (normalizedWord.startsWith(normalizedLetter)) {
+            grouped[letter].push(entry);
             assigned = true;
             break;
           }
@@ -131,51 +167,147 @@ export default function InitialProposals() {
         
         // If no match was found, add to "Other" group
         if (!assigned) {
-          grouped["Other"].push(proposal);
+          grouped["#"].push(entry);
         }
       }
     });
     
     return grouped;
-  };
+  }, [normalizeString, mankonAlphabet]);
 
-  // Group proposals by letter
-  const groupedProposals = groupProposalsByLetter(sortedProposals);
+  // Group entries by type and letter
+  const groupedEntriesByType = groupEntriesByType(sortedEntries);
+  const groupedEntries = groupEntriesByLetter(sortedEntries);
   
-  // Get only the letters that have proposals (including "Other" if it has entries)
-  const lettersWithProposals = [
+  // Get only the types that have entries
+  const typesWithEntries = useMemo(() => {
+    return Object.keys(groupedEntriesByType).filter(type => 
+      groupedEntriesByType[type] && groupedEntriesByType[type].length > 0
+    ).sort();
+  }, [groupedEntriesByType]);
+  
+  // Get only the letters that have entries (including "Other" if it has entries)
+  const lettersWithEntries = useMemo(() => [
     ...mankonAlphabet.filter(letter => 
-      groupedProposals[letter] && groupedProposals[letter].length > 0
+      groupedEntries[letter] && groupedEntries[letter].length > 0
     ),
-    ...(groupedProposals["Other"] && groupedProposals["Other"].length > 0 ? ["Other"] : [])
-  ];
+    ...(groupedEntries["#"] && groupedEntries["#"].length > 0 ? ["#"] : [])
+  ], [groupedEntries, mankonAlphabet]);
 
-  // Calculate pagination for words, not letter groups
-  // Flatten all proposals for pagination
-  const allProposals = sortedProposals;
-  const totalWords = allProposals.length;
+  // Set default selected type when entries load
+  useEffect(() => {
+    if (!loading && Object.keys(entries).length > 0 && !selectedType && typesWithEntries.length > 0) {
+      // Auto-select the first type with entries when the component loads
+      const firstTypeWithEntries = typesWithEntries[0];
+      if (firstTypeWithEntries) {
+        setSelectedType(firstTypeWithEntries);
+      }
+    }
+  }, [loading, entries, typesWithEntries, selectedType]);
+
+  // Set default selected letter when entries load (only if no type is selected)
+  useEffect(() => {
+    if (!loading && Object.keys(entries).length > 0 && !selectedLetter && !selectedType && lettersWithEntries.length > 0) {
+      // Auto-select the first letter with entries when the component loads
+      const firstLetterWithEntries = lettersWithEntries[0];
+      if (firstLetterWithEntries) {
+        setSelectedLetter(firstLetterWithEntries);
+      }
+    }
+  }, [loading, entries, lettersWithEntries, selectedLetter, selectedType]);
   
-  // Calculate pagination values for words
-  const indexOfLastWord = currentPage * itemsPerPage;
-  const indexOfFirstWord = indexOfLastWord - itemsPerPage;
-  const currentWords = allProposals.slice(indexOfFirstWord, indexOfFirstWord + itemsPerPage);
-  const totalPages = Math.ceil(totalWords / itemsPerPage);
+  // Reset page when type changes
+  useEffect(() => {
+    if (selectedType) {
+      setTypeCurrentPage(1);
+    }
+  }, [selectedType]);
+  
+  // Reset page when letter changes
+  useEffect(() => {
+    if (selectedLetter) {
+      setAlphabetCurrentPage(1);
+    }
+  }, [selectedLetter]);
 
-  // Function to change page
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+  // Get entries for the selected type
+  const entriesForSelectedType = selectedType ? groupedEntriesByType[selectedType] || [] : [];
+  
+  // Get entries for the selected letter
+  const entriesForSelectedLetter = selectedLetter ? groupedEntries[selectedLetter] || [] : [];
+  
+  // Calculate pagination values for type browsing
+  const totalTypeWords = entriesForSelectedType.length;
+  const typeIndexOfLastWord = typeCurrentPage * typeItemsPerPage;
+  const typeIndexOfFirstWord = typeIndexOfLastWord - typeItemsPerPage;
+  const currentTypeWords = entriesForSelectedType.slice(typeIndexOfFirstWord, typeIndexOfFirstWord + typeItemsPerPage);
+  const typeTotalPages = Math.ceil(totalTypeWords / typeItemsPerPage);
+  
+  // Calculate pagination values for alphabet browsing
+  const totalAlphabetWords = entriesForSelectedLetter.length;
+  const alphabetIndexOfLastWord = alphabetCurrentPage * alphabetItemsPerPage;
+  const alphabetIndexOfFirstWord = alphabetIndexOfLastWord - alphabetItemsPerPage;
+  const currentAlphabetWords = entriesForSelectedLetter.slice(alphabetIndexOfFirstWord, alphabetIndexOfFirstWord + alphabetItemsPerPage);
+  const alphabetTotalPages = Math.ceil(totalAlphabetWords / alphabetItemsPerPage);
 
-  // Function to go to next page
-  const nextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
+  // Function to change type
+  const selectType = (type: string) => {
+    setSelectedType(type);
+    setSelectedLetter(""); // Clear letter selection when selecting type
+    setTypeCurrentPage(1);
+  };
+
+  // Function to change letter
+  const selectLetter = (letter: string) => {
+    setSelectedLetter(letter);
+    setSelectedType(""); // Clear type selection when selecting letter
+    setAlphabetCurrentPage(1);
+  };
+
+  // Function to change page within a type
+  const paginateType = (pageNumber: number) => setTypeCurrentPage(pageNumber);
+
+  // Function to change page within a letter
+  const paginateAlphabet = (pageNumber: number) => setAlphabetCurrentPage(pageNumber);
+
+  // Function to go to next page for type
+  const nextTypePage = () => {
+    if (typeCurrentPage < typeTotalPages) {
+      setTypeCurrentPage(typeCurrentPage + 1);
     }
   };
 
-  // Function to go to previous page
-  const prevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
+  // Function to go to previous page for type
+  const prevTypePage = () => {
+    if (typeCurrentPage > 1) {
+      setTypeCurrentPage(typeCurrentPage - 1);
     }
+  };
+
+  // Function to go to next page for alphabet
+  const nextAlphabetPage = () => {
+    if (alphabetCurrentPage < alphabetTotalPages) {
+      setAlphabetCurrentPage(alphabetCurrentPage + 1);
+    }
+  };
+
+  // Function to go to previous page for alphabet
+  const prevAlphabetPage = () => {
+    if (alphabetCurrentPage > 1) {
+      setAlphabetCurrentPage(alphabetCurrentPage - 1);
+    }
+  };
+
+  // Function to display word entries
+  const getDisplayWord = (entry: WordEntry) => {
+    return (
+      <div>
+        <h5 className="mb-1">
+          {entry.mankonWord} 
+        </h5>
+        <p className="mb-1">{entry.translatedWords ? entry.translatedWords.join(", "): " \n"}</p>
+      </div>
+    );
   };
 
   if (loading) {
@@ -200,148 +332,248 @@ export default function InitialProposals() {
     );
   }
 
-  // Count total words across all groups
-  const totalWord = lettersWithProposals.reduce((sum, letter) => {
-    return sum + groupedProposals[letter].length;
-  }, 0);
-
   return (
-    <div>
-      <h2 className="text-3xl font-bold mb-6 text-center">Requested Words</h2>
+    <div className="content-wrapper">
+      <div className="content">
+        <h2 className="text-3xl font-bold mb-6 text-center">Requested Words</h2>
 
-      <div className="intro-decoration">
-        <div className="decoration-line"></div>
-        <div className="decoration-symbol"></div>
-        <div className="decoration-line"></div>
-      </div>
+        <div className="intro-decoration">
+          <div className="decoration-line"></div>
+          <div className="decoration-symbol"></div>
+          <div className="decoration-line"></div>
+        </div>
 
-      <p>
+        <p>
         While the Mankon Dictionary is interested in collecting any words that pop into your head, thinking of new words can be hard!
         To help you get started, we have compiled a list of words that still need attention from our community. 
         Clicking on the words below will take you to the proposal form for that word. All required typing fields will be filled automatically, 
         so you can focus on recording the word and two sentences if you cannot type.
-      </p>
+        </p>
 
-      <p className="alert-text request-wait">WAIT: Do you remember your username? You will need your username to complete your proposal.
+        <p className="alert-text request-wait">WAIT: Do you remember your username? You will need your username to complete your proposal.
         If you don&#39;t have a username, please head over to the Propose Word page to create one.
-      </p>
+        </p>
 
-      {/* Pagination Controls */}
-      {lettersWithProposals.length > 0 && (
-        <div className="custom-pagination flex justify-center items-center mt-8">
-          <button
-            onClick={() => setCurrentPage(1)}
-            disabled={currentPage === 1}
-            data-nav-type="pagination"
-            className="custom-nav-btn mx-1 px-3 py-1 rounded"
-          >
-            &laquo;
-          </button>
-          <button
-            onClick={prevPage}
-            disabled={currentPage === 1}
-            data-nav-type="pagination"
-            className="custom-nav-btn mx-1 px-3 py-1 rounded"
-          >
-            &lt;
-          </button>
-          {/* Page Numbers */}
-          {[...Array(totalPages)].map((_, i) => {
-            // Show 5 page numbers at a time with current page in the middle when possible
-            const pageNum = i + 1;
-            const showPageNumbers = 5; // How many page numbers to show at once
-            const halfShow = Math.floor(showPageNumbers / 2);
-            let startPage = Math.max(1, currentPage - halfShow);
-            const endPage = Math.min(totalPages, startPage + showPageNumbers - 1);
-            if (endPage - startPage + 1 < showPageNumbers) {
-              startPage = Math.max(1, endPage - showPageNumbers + 1);
-            }
-            if (pageNum >= startPage && pageNum <= endPage) {
-              return (
+        {/* Browse by Type Section */}
+        {typesWithEntries.length > 0 && (
+          <div className="mb-12">
+            <h3 className="text-2xl font-bold mb-4 text-center">Priority Requests</h3>
+            
+            {/* Type Navigation */}
+            <div className="custom-alpha-nav flex flex-wrap justify-center mt-6 mb-8">
+              {typesWithEntries.map(type => (
                 <button
-                  key={i}
-                  onClick={() => paginate(pageNum)}
-                  data-nav-type="pagination"
+                  key={type}
+                  data-nav-type="type"
                   className={`custom-nav-btn mx-1 px-3 py-1 rounded ${
-                    currentPage === pageNum ? 'custom-nav-selected' : ''
+                    selectedLetter === type
+                      ? 'custom-nav-selected'
+                      : ''
                   }`}
+                  onClick={() => selectType(type)}
                 >
-                  {pageNum}
+                  {type}
                 </button>
-              );
-            }
-            return null;
-          })}
-          <button
-            onClick={nextPage}
-            disabled={currentPage === totalPages}
-            data-nav-type="pagination"
-            className="custom-nav-btn mx-1 px-3 py-1 rounded"
-          >
-            &gt;
-          </button>
-          <button
-            onClick={() => setCurrentPage(totalPages)}
-            disabled={currentPage === totalPages}
-            data-nav-type="pagination"
-            className="custom-nav-btn mx-1 px-3 py-1 rounded"
-          >
-            &raquo;
-          </button>
-        </div>
-      )}
-      {/* Word count with pagination info */}
-      <p className="mb-4 text-gray-600 text-center">
-        {totalWord > 0 && (
-          <span> (showing {indexOfFirstWord + 1}-{Math.min(indexOfLastWord, totalWords)} of {totalWords})</span>
-        )}
-      </p>
+              ))}
+            </div>
 
-      {/* Dictionary Listing */}
-      <div className="grid grid-cols-1 gap-4">
-        <ul className="list-group">
-          {lettersWithProposals.map(letter => {
-            // Only include this letter's section if it has words in the current page
-            const wordsForThisLetter = currentWords.filter(([, proposal]) => {
-              const firstChar = normalizeChar(proposal.mankonWord.charAt(0));
-              const letterFirstChar = normalizeChar(letter.charAt(0));
-              
-              // For the "Other" category
-              if (letter === "Other") {
-                // Check if the word doesn't match any of the alphabet letters
-                return !mankonAlphabet.some(alphabetLetter => 
-                  normalizeChar(alphabetLetter.charAt(0)) === firstChar
-                );
-              }
-              
-              return firstChar === letterFirstChar;
-            });
-            
-            if (wordsForThisLetter.length === 0) {
-              return null; // Skip this letter if it has no words in the current page
-            }
-            
-            return (
-              <li key={letter} className="list-group-item">
-                {letter}
+            {/* Type Dictionary Listing */}
+            {selectedType && (
+              <div className="my-6">
+                <h4 className="text-xl font-bold mb-4">{selectedType} ({totalTypeWords} words)</h4>
+                
                 <div className="list-group">
-                  {wordsForThisLetter.map(([id, proposal]) => (
+                  {currentTypeWords.map(([id, entry]) => (
                     <Link 
                       key={id} 
-                      href={`/contribute/entry-proposal-form/${id}`}
+                      href={`/contribute/proposal-form/${id}`}
                       className="list-group-item list-group-item-action"
                     >
-                      <div>
-                        <h5 className="mb-1">{proposal.mankonWord}</h5>
-                        <p className="mb-1">{proposal.translatedWords ? proposal.translatedWords.join(", "): ""}</p>
-                      </div>
+                      {getDisplayWord(entry)}
                     </Link>
                   ))}
                 </div>
-              </li>
-            );
-          })}
-        </ul>
+
+                {/* Type Pagination */}
+                {totalTypeWords > typeItemsPerPage && (
+                  <div className="custom-pagination flex justify-center items-center mt-8">
+                    <button
+                      onClick={() => setTypeCurrentPage(1)}
+                      disabled={typeCurrentPage === 1}
+                      data-nav-type="pagination"
+                      className="custom-nav-btn mx-1 px-3 py-1 rounded"
+                    >
+                      &laquo;
+                    </button>
+                    <button
+                      onClick={prevTypePage}
+                      disabled={typeCurrentPage === 1}
+                      data-nav-type="pagination"
+                      className="custom-nav-btn mx-1 px-3 py-1 rounded"
+                    >
+                      &lt;
+                    </button>
+                    {[...Array(typeTotalPages)].map((_, i) => {
+                      const pageNum = i + 1;
+                      const showPageNumbers = 5;
+                      const halfShow = Math.floor(showPageNumbers / 2);
+                      let startPage = Math.max(1, typeCurrentPage - halfShow);
+                      const endPage = Math.min(typeTotalPages, startPage + showPageNumbers - 1);
+                      if (endPage - startPage + 1 < showPageNumbers) {
+                        startPage = Math.max(1, endPage - showPageNumbers + 1);
+                      }
+                      if (pageNum >= startPage && pageNum <= endPage) {
+                        return (
+                          <button
+                            key={i}
+                            onClick={() => paginateType(pageNum)}
+                            data-nav-type="pagination"
+                            className={`custom-nav-btn mx-1 px-3 py-1 rounded ${
+                              typeCurrentPage === pageNum ? 'custom-nav-selected' : ''
+                            }`}
+                          >
+                            {pageNum}
+                          </button>
+                        );
+                      }
+                      return null;
+                    })}
+                    <button
+                      onClick={nextTypePage}
+                      disabled={typeCurrentPage === typeTotalPages}
+                      data-nav-type="pagination"
+                      className="custom-nav-btn mx-1 px-3 py-1 rounded"
+                    >
+                      &gt;
+                    </button>
+                    <button
+                      onClick={() => setTypeCurrentPage(typeTotalPages)}
+                      disabled={typeCurrentPage === typeTotalPages}
+                      data-nav-type="pagination"
+                      className="custom-nav-btn mx-1 px-3 py-1 rounded"
+                    >
+                      &raquo;
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Browse Alphabetically Section */}
+        <div className="mb-8">
+          <h3 className="text-2xl font-bold mb-4 text-center">Browse Alphabetically</h3>
+          
+          {/* Alphabet Navigation */}
+          {lettersWithEntries.length > 0 && (
+            <div className="custom-alpha-nav flex flex-wrap justify-center mt-6 mb-8">
+              {lettersWithEntries.map(letter => (
+                <button
+                  key={letter}
+                  data-nav-type="alpha"
+                  className={`custom-nav-btn m-1 px-3 py-1 rounded ${
+                    selectedLetter === letter
+                      ? 'custom-nav-selected'
+                      : ''
+                  }`}
+                  onClick={() => selectLetter(letter)}
+                >
+                  {letter}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Dictionary Listing for Selected Letter */}
+          {selectedLetter && (
+            <div className="my-6">
+              <h4 className="text-xl font-bold mb-4">{selectedLetter} ({totalAlphabetWords} words)</h4>
+              
+              <div className="list-group">
+                {currentAlphabetWords.map(([id, entry]) => (
+                  <Link 
+                    key={id} 
+                    href={`/contribute/proposal-form/${id}`}
+                    className="list-group-item list-group-item-action"
+                  >
+                    {getDisplayWord(entry)}
+                  </Link>
+                ))}
+              </div>
+
+              {/* Pagination for words within the selected letter */}
+              {totalAlphabetWords > alphabetItemsPerPage && (
+                <div className="custom-pagination flex justify-center items-center mt-8">
+                  <button
+                    onClick={() => setAlphabetCurrentPage(1)}
+                    disabled={alphabetCurrentPage === 1}
+                    data-nav-type="pagination"
+                    className="custom-nav-btn mx-1 px-3 py-1 rounded"
+                  >
+                    &laquo;
+                  </button>
+                  <button
+                    onClick={prevAlphabetPage}
+                    disabled={alphabetCurrentPage === 1}
+                    data-nav-type="pagination"
+                    className="custom-nav-btn mx-1 px-3 py-1 rounded"
+                  >
+                    &lt;
+                  </button>
+                  {[...Array(alphabetTotalPages)].map((_, i) => {
+                    const pageNum = i + 1;
+                    const showPageNumbers = 5;
+                    const halfShow = Math.floor(showPageNumbers / 2);
+                    let startPage = Math.max(1, alphabetCurrentPage - halfShow);
+                    const endPage = Math.min(alphabetTotalPages, startPage + showPageNumbers - 1);
+                    if (endPage - startPage + 1 < showPageNumbers) {
+                      startPage = Math.max(1, endPage - showPageNumbers + 1);
+                    }
+                    if (pageNum >= startPage && pageNum <= endPage) {
+                      return (
+                        <button
+                          key={i}
+                          onClick={() => paginateAlphabet(pageNum)}
+                          data-nav-type="pagination"
+                          className={`custom-nav-btn mx-1 px-3 py-1 rounded ${
+                            alphabetCurrentPage === pageNum ? 'custom-nav-selected' : ''
+                          }`}
+                        >
+                          {pageNum}
+                        </button>
+                      );
+                    }
+                    return null;
+                  })}
+                  <button
+                    onClick={nextAlphabetPage}
+                    disabled={alphabetCurrentPage === alphabetTotalPages}
+                    data-nav-type="pagination"
+                    className="custom-nav-btn mx-1 px-3 py-1 rounded"
+                  >
+                    &gt;
+                  </button>
+                  <button
+                    onClick={() => setAlphabetCurrentPage(alphabetTotalPages)}
+                    disabled={alphabetCurrentPage === alphabetTotalPages}
+                    data-nav-type="pagination"
+                    className="custom-nav-btn mx-1 px-3 py-1 rounded"
+                  >
+                    &raquo;
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Show a message if no entries are found */}
+        {lettersWithEntries.length === 0 && typesWithEntries.length === 0 && (
+          <div className="text-center my-12">
+            <p className="text-xl">No dictionary entries found.</p>
+          </div>
+        )}
       </div>
     </div>
   );

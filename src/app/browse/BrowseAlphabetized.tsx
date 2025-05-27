@@ -4,14 +4,10 @@ import { useMemo, useState, useEffect, useCallback } from 'react';
 import { db } from "@/utils/firebase";
 import Link from 'next/link';
 import { ref, onValue } from "firebase/database";
-import { WordEntry } from "@/utils/types";
+import { WordEntry, EntryCollection } from "@/utils/types";
 import "@/styles/contribute.css";
 import "@/styles/browse.css";
 
-// TypeScript interface for the entries collection
-interface EntriesCollection {
-  [key: string]: WordEntry;
-}
 
 // Interface for grouped entries by letter
 interface GroupedEntries {
@@ -24,7 +20,7 @@ export default function BrowseAlphabetized({page}: {page: string}) {
   const mankonAlphabet = ["A", "B", "Bv", "Tʃ", "D", "Dv", "Dz", "E", "Ə", "Ɛ", "F", "G", "Ɣ", "I", "Ɨ", "Dʒ", "K", "Kf", "L", "Lv", "M", "N", "Ɲ", "Ŋ", "O", "Ɔ", "S", "Ʃ", "T", "Tf", "Ts", "U", "V", "W", "Y", "Z", "Ʒ"];
   const alphabet = page === "mankon" ? mankonAlphabet : englishAlphabet;
   const isEnglish = page === "english";
-  const [entries, setEntries] = useState<EntriesCollection>({});
+  const [entries, setEntries] = useState<EntryCollection>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -37,7 +33,7 @@ export default function BrowseAlphabetized({page}: {page: string}) {
     // Listen for changes to the entries in Firebase
     const unsubscribe = onValue(entriesRef, (snapshot) => {
       if (snapshot.exists()) {
-        const data = snapshot.val() as EntriesCollection;
+        const data = snapshot.val() as EntryCollection;
         setEntries(data);
       } else {
         setEntries({});

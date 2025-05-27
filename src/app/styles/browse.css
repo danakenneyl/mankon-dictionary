@@ -1,4 +1,4 @@
-/* Updated selector to target ALL custom pagination containers */
+/* Updated selector to target ALL custom navigation containers */
 div.custom-alpha-nav button.custom-nav-btn[data-nav-type="alpha"],
 div.custom-pagination button.custom-nav-btn[data-nav-type="pagination"] {
   background-color: white !important;
@@ -20,29 +20,56 @@ div.custom-pagination button.custom-nav-btn[data-nav-type="pagination"] {
   line-height: normal !important;
 }
 
-/* Selected state - simplified selector */
+/* Type buttons - wider for two words */
+div.custom-alpha-nav button.custom-nav-btn[data-nav-type="type"] {
+  background-color: white !important;
+  color: #083d88 !important;
+  border: 2px solid #083d88 !important;
+  border-radius: 20px !important; /* Rounded rectangle instead of circle */
+  width: auto !important; /* Auto width to fit content */
+  min-width: 80px !important; /* Minimum width for consistency */
+  height: 40px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.2s ease !important;
+  margin: 5px !important;
+  padding: 0 12px !important; /* Horizontal padding for text */
+  text-align: center !important;
+  line-height: normal !important;
+  white-space: nowrap !important; /* Prevent text wrapping */
+}
+
+/* Selected state */
 div.custom-alpha-nav button.custom-nav-btn[data-nav-type="alpha"].custom-nav-selected,
+div.custom-alpha-nav button.custom-nav-btn[data-nav-type="type"].custom-nav-selected,
 div.custom-pagination button.custom-nav-btn.custom-nav-selected {
   background-color: #083d88 !important;
   color: white !important;
   border-color: #083d88 !important;
 }
 
-/* Hover state - simplified selector */
+/* Hover state */
 div.custom-alpha-nav button.custom-nav-btn[data-nav-type="alpha"]:hover:not(.custom-nav-selected):not(:disabled),
+div.custom-alpha-nav button.custom-nav-btn[data-nav-type="type"]:hover:not(.custom-nav-selected):not(:disabled),
 div.custom-pagination button.custom-nav-btn:hover:not(.custom-nav-selected):not(:disabled) {
   background-color: rgba(8, 61, 136, 0.05) !important;
 }
 
-/* Disabled state - simplified selector */
+/* Disabled state */
 div.custom-alpha-nav button.custom-nav-btn[data-nav-type="alpha"]:disabled,
+div.custom-alpha-nav button.custom-nav-btn[data-nav-type="type"]:disabled,
 div.custom-pagination button.custom-nav-btn:disabled {
   opacity: 0.5 !important;
   cursor: not-allowed !important;
 }
 
-/* Focus state - simplified selector */
+/* Focus state */
 div.custom-alpha-nav button.custom-nav-btn[data-nav-type="alpha"]:focus,
+div.custom-alpha-nav button.custom-nav-btn[data-nav-type="type"]:focus,
 div.custom-pagination button.custom-nav-btn:focus {
   outline: none !important;
   box-shadow: 0 0 0 3px rgba(8, 61, 136, 0.25) !important;

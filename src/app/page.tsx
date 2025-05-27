@@ -6,7 +6,7 @@ export default function Home() {
     <div className="content-wrapper">
       <div className="content">
         <section className="homepage-intro">
-          <h1 className="intro-text">Welcome to the Mankon Dictionary!</h1>
+          <h1 className="intro-text">Welcome to the Mankon Bilingual Dictionary!</h1>
           
           <div className="intro-decoration">
             <div className="decoration-line"></div>
@@ -29,7 +29,7 @@ export default function Home() {
             <Link href="/about/website-guide">
             <button className="primary-button">Start Exploring</button>
             </Link>
-            <Link href="/contribute/propose-dictionary-entry">
+            <Link href="/contribute/contribute-instructions/">
               <button className="secondary-button">Contribute</button>
             </Link>
           </div>
