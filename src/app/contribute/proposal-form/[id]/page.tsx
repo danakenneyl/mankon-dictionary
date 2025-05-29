@@ -225,12 +225,12 @@ export default function MankonWordFormPage() {
     }
     // Validate first sentence audio with specific index
     if (!formData.sentenceAudioFilenames || !formData.sentenceAudioFilenames.length || !formData.sentenceAudioFilenames[0]) {
-      newErrors['sentenceAudioFilenames[0]'] = 'First sentence audio recording is required';
+      newErrors['sentenceAudioFilenamesOne'] = 'First sentence audio recording is required';
       isValid = false;
     }
     // Validate second sentence audio with specific index
     if (!formData.sentenceAudioFilenames || formData.sentenceAudioFilenames.length < 2 || !formData.sentenceAudioFilenames[1]) {
-      newErrors['sentenceAudioFilenames[1]'] = 'Second sentence audio recording is required';
+      newErrors['sentenceAudioFilenamesTwo'] = 'Second sentence audio recording is required';
       isValid = false;
     }
     setErrors(newErrors);
@@ -519,8 +519,8 @@ export default function MankonWordFormPage() {
                 onRecordingComplete={(blob: string) => handleCompletedRecording('sentenceAudio', blob, 0)}
                 initialAudio={(formData.sentenceAudioFilenames?.[0]) || ""}
               />
-              {errors.sentenceAudioFilenames && (
-                <p className="error-text">{errors.sentenceAudioFilenames[0]}</p>
+              {errors.sentenceAudioFilenamesOne && (
+                <p className="error-text">{errors.sentenceAudioFilenamesOne}</p>
               )}
             </div> 
             <div className="navigation-buttons">
@@ -596,8 +596,8 @@ export default function MankonWordFormPage() {
                   onRecordingComplete={(blob: string) => handleCompletedRecording('sentenceAudio', blob, 1)}
                   initialAudio={(formData.sentenceAudioFilenames && formData.sentenceAudioFilenames[1]) || ""}
                 />
-                {errors.sentenceAudioFilenames && (
-                  <p className="error-text">{errors.sentenceAudioFilenames[1]}</p>
+                {errors.sentenceAudioFilenamesTwo && (
+                  <p className="error-text">{errors.sentenceAudioFilenamesTwo}</p>
                 )}
               </div> 
               <div className="navigation-buttons">
