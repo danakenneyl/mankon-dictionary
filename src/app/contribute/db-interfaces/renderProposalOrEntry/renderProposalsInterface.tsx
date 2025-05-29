@@ -20,7 +20,7 @@ export default function RenderProposalsInterface({filteredEntries, state}: {filt
     const [selectedLetter, setSelectedLetter] = useState<string>("");
 
     // Alphabets
-    const mankonAlphabet = ["A", "B", "Bv", "Tʃ", "D", "Dv", "Dz", "E", "Ə", "Ɛ", "F", "G", "Ɣ", "I", "Ɨ", "Dʒ", "K", "Kf", "L", "Lv", "M", "N", "Ɲ", "Ŋ", "O", "Ɔ", "S", "Ʃ", "T", "Tf", "Ts", "U", "V", "W", "Y", "Z", "Ʒ"];
+    const mankonAlphabet = ["A", "B", "Bv", "Tʃ", "D", "Dv", "Dz", "E", "Ə", "Ɛ", "F", "G", "Gv", "Ɣ", "ʔ", "I", "Ɨ", "Dʒ", "K", "Kf", "L", "Lv", "M", "N", "Ɲ", "Ŋ", "O", "Ɔ", "S", "Ʃ", "T", "Tf", "Ts", "U", "V", "W", "Y", "Z", "Ʒ"];
     const alphabet = mankonAlphabet; // Using Mankon alphabet for proposals
 
     // Update entry in Firebase (only for type field)

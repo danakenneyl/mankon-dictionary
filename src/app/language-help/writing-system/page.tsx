@@ -44,8 +44,8 @@ export default function Writing() {
               <span>dz</span>
               <span>f</span>
               <span>g</span>
-              <span>ɣ</span>
               <span>gv</span>
+              <span>ɣ</span>
               <span>ʔ</span>
               <span>dʒ</span>
               <span>k</span>
