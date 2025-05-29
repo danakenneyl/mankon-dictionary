@@ -585,7 +585,7 @@ export default function MankonWordFormPage() {
                   <li>Pronounce the sentence naturally. <br/>(Ignore spelling convention and do not record the English translation.)</li>
                   <li>Press the <strong>&apos;Stop&apos;</strong> button. <br />(the <strong>&apos;Start&apos;</strong> button becomes the <strong>&apos;Stop&apos;</strong> button when you start recording)</li>
                   <li>
-                    Listen to your recording. If you like it, you can hit the <strong>&apos;Propose another Sentence&apos;</strong> button. 
+                    Listen to your recording. If you like it, you can hit the <strong>&apos;Submit Proposal&apos;</strong> button. 
                   </li>
                   <li>
                     If you don&apos;t like your recording, click the <strong>&apos;Clear&apos;</strong> button and try again.
