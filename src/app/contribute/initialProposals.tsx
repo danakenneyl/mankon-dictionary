@@ -20,24 +20,30 @@ interface GroupedEntriesByType {
 }
 
 export default function InitialProposals() {  
-  const mankonAlphabet = ["A", "B", "Bv", "Tʃ", "D", "Dv", "Dz", "E", "Ə", "Ɛ", "F", "G", "Ɣ", "I", "Ɨ", "Dʒ", "K", "Kf", "L", "Lv", "M", "N", "Ɲ", "Ŋ", "O", "Ɔ", "S", "Ʃ", "T", "Tf", "Ts", "U", "V", "W", "Y", "Z", "Ʒ"];
+  const mankonAlphabet = useMemo(() => ["A", "B", "Bv", "Tʃ", "D", "Dv", "Dz", "E", "Ə", "Ɛ", "F", "G", "Ɣ", "I", "Ɨ", "Dʒ", "K", "Kf", "L", "Lv", "M", "N", "Ɲ", "Ŋ", "O", "Ɔ", "S", "Ʃ", "T", "Tf", "Ts", "U", "V", "W", "Y", "Z", "Ʒ"], []);
   
   // Define the types you want to prioritize - you can add more as needed
-  const priorityTypes = [
+  const priorityTypes = useMemo(() => [
     "animal",
-    "body part", 
+    "kitchen",
+    "anatomy", 
     "food",
     "plant",
     "tool",
+    "illness",
+    "biblical",
     "clothing",
     "family",
     "emotion",
-    "action",
     "place",
-    "time",
+    "male name",
+    "female name",
+    "gender-neutral name",
     "color",
-    "number"
-  ];
+    "number",
+    "date",
+    "royal terms"
+  ], []);
   
   const [entries, setEntries] = useState<EntryCollection>({});
   const [loading, setLoading] = useState<boolean>(true);

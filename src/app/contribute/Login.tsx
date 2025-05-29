@@ -50,7 +50,7 @@ export default function Login({ type, username, setUsername, setIsAuthenticated,
                 // Set contributor UUID in form data
                 setFormData(prev => ({
                   ...prev,
-                  contributorUUID: [UUID as string],
+                  contributorUUIDs: [UUID as string],
                 }));
               }
             } else {

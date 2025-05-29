@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { db } from "@/utils/firebase";
 import { ref, update, remove } from "firebase/database";
 import { WordEntry } from "@/utils/types";
+import { DeleteAudioFile } from "@/utils/ClientSideAPICalls";
 
 
 export default function RenderEntriesInterface({filteredEntries, type,}: {filteredEntries: EntryCollection; type: string; state?: string}) {
@@ -58,6 +59,33 @@ export default function RenderEntriesInterface({filteredEntries, type,}: {filter
         if (!confirmed) return;
         
         try {
+            // Get the entry data to access file IDs
+            const entryData = filteredEntries[entryId];
+            
+            // Collect all audio file IDs from the entry
+            const audioFileIds = [
+                ...(entryData.wordAudioFileIds || []),
+                ...(entryData.sentenceAudioFileIds || [])
+            ];
+            
+            // Delete audio files if there are any
+            if (audioFileIds.length > 0) {
+                console.log('Deleting audio files:', audioFileIds);
+                
+                // Delete each audio file
+                for (const fileId of audioFileIds) {
+                    if (fileId && fileId.trim() !== '') {
+                        try {
+                            await DeleteAudioFile(fileId);
+                            console.log(`Successfully deleted audio file: ${fileId}`);
+                        } catch (audioError) {
+                            console.error(`Failed to delete audio file ${fileId}:`, audioError);
+                            // Continue with other files even if one fails
+                        }
+                    }
+                }
+            }
+
             const entryRef = ref(db, `${type}/${entryId}`);
             await remove(entryRef);
             

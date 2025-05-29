@@ -410,6 +410,11 @@
   .record-button:hover, .next-button:hover {
     background-color: rgb(196, 98, 0);
   }
+
+  .navigation-buttons {
+    padding-top: 1rem;
+    padding-right: 1rem;
+  }
   
   /* Navigation Type Button */
   .typeButton {
@@ -626,13 +631,9 @@
      FORM ELEMENTS
      ======================================== */
   
-  .nl-question-group {
-    margin-bottom: 1.5rem;
-  }
-  
-  .nl-question {
+  /* .nl-question-group {
     margin-bottom: 1rem;
-  }
+  } */
   
   .login-form {
     display: flex;
