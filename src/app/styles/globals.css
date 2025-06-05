@@ -768,16 +768,32 @@
     max-width: 800px;
     margin: 1.5rem auto;
   }
-  
-  .letter-grid span {
+
+  .alphabet, .kf {
+    display: flex;                  /* center the letter */
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
     font-size: 2.5rem;
     font-weight: bold;
     color: rgb(8, 62, 136);
     border: 2px dashed rgba(182, 28, 36, 0.8);
     border-radius: 8px;
-    padding: 1rem;
+    padding: 1.25rem;
     text-align: center;
-    width: 100%;
+    width: 80px;   
+  }
+  .alphabet {
+    height: 80px;  
+    margin-top: 0.5rem;
+  }
+  .kf {
+    height: 130px;
+  }
+
+  .alphabet:hover, .kf:hover {
+    outline: none;
+    background-color: rgba(213, 213, 213, 0.616);
   }
   
   /* Letter explanation grid */
@@ -807,7 +823,7 @@
   
   .explanation {
     font-size: 1rem;
-    margin: 0;
+    margin: 1rem;
   }
   
   /* ========================================
