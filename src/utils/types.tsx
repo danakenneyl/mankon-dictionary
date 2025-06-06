@@ -43,6 +43,10 @@ export interface Contributor {
 
 export interface Demographics {
   UUID: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  consentReceived: boolean;
   age: string;
   location: string;
   diaspora: boolean;

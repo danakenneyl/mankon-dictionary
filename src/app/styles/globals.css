@@ -320,6 +320,14 @@
     z-index: 2;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
+
+  .attribution-form{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:1.25rem;             /* uniform space between questions        */
+    width:100%;
+  }
   
   /* ========================================
      HOMEPAGE SPECIFIC STYLES
@@ -512,6 +520,73 @@
     background-color: #E87200;
     border-color: white;
   }
+
+  /* ========================================
+    Attribution Form STYLES
+    ======================================== */
+
+  /* 1. Center the whole pair horizontally and give 1 rem between “Yes” & “No” */
+  .diaspora-options{
+    display:flex;
+    justify-content:center;   /* centers the two option blocks   */
+    gap:1rem;                 /* space between the two blocks    */
+  }
+
+  /* 2. Keep each checkbox + label together and add 1 rem gap between them */
+  .diaspora-options div{
+    display:flex;
+    align-items:center;
+    gap:1rem;                 /* space between box and its label */
+    
+  }
+  input[type="checkbox"]{
+    /* strip default styling */
+    appearance:none;
+    -webkit-appearance:none;   /* Safari / older Chrome */
+    -moz-appearance:none;      /* Firefox               */
+  
+    /* box look */
+    width:2.25rem;
+    height:2.25rem;
+    border:2px solid #ff8800;  /* orange outline         */
+    border-radius:4px;         /* slight rounding        */
+    cursor:pointer;
+    display:grid;              /* for easy checkmark centering */
+    place-content:center;
+  }
+  /* Fill the box orange when checked */
+  input[type="checkbox"]:checked{
+    background:#ff8800;
+  }
+
+  /* Draw a white checkmark when checked */
+  input[type="checkbox"]:checked::after{
+    content:"";
+    width:0.35rem;
+    height:0.65rem;
+    border:2px solid #fff;
+    border-top:0;
+    border-left:0;
+    transform:rotate(45deg);
+}
+
+.language-checkboxes > div,
+.language-checkboxes .other-language-section{
+  display:flex;           /* keep label + control on one line */
+  align-items:center;     /* vertically centre the text        */
+  gap:0.5rem;             /* space between label and control   */
+  margin-bottom:0.5rem;   /* gentle breathing room             */
+}
+
+/* Optional: make the “Other” text field grow while keeping row inline */
+.language-checkboxes .other-language-section input.login-input{
+  flex:1;                 /* let input take remaining width    */
+  min-width:10rem;        /* don’t get too small               */
+}
+
+.lang-space {
+  margin-top: 3rem;
+}
   
   /* ========================================
      DROPDOWN MENU STYLES

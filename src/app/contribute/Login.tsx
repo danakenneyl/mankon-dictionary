@@ -75,39 +75,39 @@ export default function Login({ type, username, setUsername, setIsAuthenticated,
 
         <div className="content-wrapper">
         <div className="content">
-      <div className="login-container">
-        <div className="login-card">
-          <h1 className="login-title">{type === "administrator" ? "Administrator Login": "Hello! Welcome back."}</h1>
-          <p className="login-subtitle">Please enter your username.</p>
-          <form onSubmit={authenticateUser} className="login-form">
-            <div className="input-group">
-              <input
-                type="text"
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="login-input"
-                placeholder="Your username"
-                required
-              />
+          <div className="login-container">
+            <div className="login-card">
+              <h1 className="login-title">{type === "administrator" ? "Administrator Login": "Hello! Welcome back."}</h1>
+              <p className="login-subtitle">Please enter your username.</p>
+              <form onSubmit={authenticateUser} className="login-form">
+                <div className="input-group">
+                  <input
+                    type="text"
+                    id="username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="login-input"
+                    placeholder="Your username"
+                    required
+                  />
+                </div>
+                <div className= "login-group">
+                {authError && (
+                  <div className="error-message">
+                    {authError}
+                  </div>
+                )}
+                <button
+                  type="submit"
+                  disabled={authenticating}
+                  className="next-button"
+                >
+                  {authenticating ? "Just a moment..." : "Login"}
+                </button>
+                </div>
+              </form>
             </div>
-            <div className= "login-group">
-            {authError && (
-              <div className="error-message">
-                {authError}
-              </div>
-            )}
-            <button
-              type="submit"
-              disabled={authenticating}
-              className="next-button"
-            >
-              {authenticating ? "Just a moment..." : "Login"}
-            </button>
-            </div>
-          </form>
         </div>
-      </div>
     </div>
     </div>
 

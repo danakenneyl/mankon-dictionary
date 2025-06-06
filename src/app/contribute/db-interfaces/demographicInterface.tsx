@@ -50,9 +50,9 @@ export default function DemographicInterface() {
                             <p className="text-lg">Age: {demographic.age}</p>
                             <p className="text-lg">Currently living at: {demographic.location}</p>
                             <p className="text-lg">Identifies as diaspora: {demographic.diaspora}</p>
-                            <p className="text-lg">Languages understood: {demographic.spokenLanguage}</p>
-                            <p className="text-lg">Languages currently spoken: {demographic.currentLanguage}</p>
-                            <p className="text-lg">Childhood languages: {demographic.childhoodLanguage}</p>
+                            <p className="text-lg">Languages understood: {demographic.spokenLanguage.join(", ")}</p>
+                            <p className="text-lg">Languages currently spoken: {demographic.currentLanguage.join(", ")}</p>
+                            <p className="text-lg">Childhood languages: {demographic.childhoodLanguage.join(", ")}</p>
                             <p className="text-lg">Years speaking: {demographic.yearsSpeaking}</p>
                             <p className="text-lg">Learned how to speak: {demographic.learnSpeechModality}</p>
                             <p className="text-lg">Speech proficiency: {demographic.speechProficiency}</p>

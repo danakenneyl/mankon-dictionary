@@ -16,30 +16,42 @@ export default function Contribute() {
           </div>
           
           <div className="contribution-content">
-            <h2>Anonymous Demographic Form</h2>
+            <p>To contribute to the Mankon dictionary you must have an account. Once your account is set up
+              you will be able to propose new words you believe should be added to the dictionary. The Mankon dictionary would 
+              love to give you credit for contributing, although it is optional if you have any privacy concerns.
+              If you would like your name associated with the words that you propose, fill out the <strong>Attribution form </strong> 
+              in the second section below.
+            </p>
+            <h2>1. Create Account</h2>
+            <p className="alert-text">WAIT: If you already have an account, then you DO NOT need to fill out this form again.</p>
+            <div className="button-container">
+              <Link href="/contribute/account-setup">
+                <button className="primary-button">Create Account</button>
+              </Link>
+            </div>
+            <h2>2. Attribution Form (Optional)</h2>
+            <p>The Mankon Dictionary hopes to give credit to all of it&apos;s contributors.
+              Visible attribution formally recognizes cultural expertise and signals to community members 
+              and external audiences alike that the language is represented by its rightful stewards, Mankon speakers. 
+              This recognition can protect the Mankon community&apos;s relationship with academic institutions and other outsiders by 
+              demonstrating clear, community-led ownership of Mankon documentation. Naming the speaker 
+              protects your moral rights also, ensuring that any future use of recordings credits you appropriately 
+              and respects the cultural context in which you created them.</p>
             <p>
-              The Mankon Dictionary collects information related to our contributor&#39;s experience with 
-              Mankon speaking, reading, and writing to support the documentation of the Mankon literacy 
+              We also collect information related to our contributor&#39;s experience with 
+              Mankon speaking, reading, and writing, as well as diaspora identification to support the documentation of the Mankon literacy 
               rates of our contributors. Your participation in this project does not require an ability 
               to read or write in Mankon. Only your speaking abilities will be considered during the 
               Dictionary&#39;s entry approval process.
             </p>
-            <p> 
-              At the beginning of this first form, you will choose a username, which you should store 
-              in your own records. Your username will be required whenever you propose a new entry and will 
-              be used to anonymize your contributions to ensure your privacy. Please be aware that this project is 
-              open source, meaning that anonymized data, including submitted entries, will be publicly accessible. 
-              By participating, you acknowledge and consent to the collection and public sharing of your anonymized 
-              answers.
-            </p>
-            <p className="alert-text">WAIT: If you already have a username, then you DO NOT need to fill out this form again.</p>
+            <p className="alert-text">WAIT: You can still contribute proposals without filling out this form. You can fill this form out at anytime, but you only need to fill it out once.</p>
             <div className="button-container">
               <Link href="/contribute/demographic-form">
-                <button className="primary-button">Demographic Form</button>
+                <button className="primary-button">Attribution Form</button>
               </Link>
             </div>
 
-            <h2>Entry Proposal Form</h2>
+            <h2>3. Entry Proposal Form</h2>
             <h3>The Entry</h3>
             <p>
               For each entry proposal the Mankon Dictionary asks that you include the word you would 
@@ -72,10 +84,9 @@ export default function Contribute() {
               As part of the Mankon Dictionary project, we collect audio recordings from contributors to document 
               and preserve the Mankon language. By submitting a recording, you acknowledge and consent to your voice 
               being publicly available as part of this open-source project. While your audio recordings will be accessible 
-              to the public, no identifying information will be associated with them. Your contributions will remain 
-              anonymous, and no personal details will be linked to your recordings. If future versions of this project 
-              seek to publish identifying information alongside recordings, the Mankon Dictionary will contact its contributors
-              to obtain additional consent.
+              to the public, no identifying information will be associated with them unless you give the Mankon Dictionary 
+              express permission by filling out the <strong>Attribution Form </strong> above. Your contributions will remain 
+              anonymous, and no personal details will be linked to your recordings.
             </p>
             <h3>What if I cannot type in Mankon?</h3>
             <p>
