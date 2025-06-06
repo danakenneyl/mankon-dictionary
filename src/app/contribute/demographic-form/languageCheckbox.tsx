@@ -100,7 +100,8 @@ export default function LanguageCheckBoxes({
           name={`${category}LanguageOther`}
           value={otherValue}
           onChange={(e) => handleOtherLanguageChange(e, category, setFormData)}
-          placeholder="lang1, lang2"
+          className="login-input"
+          placeholder="other language, language"
         />
       </div>
     </div>

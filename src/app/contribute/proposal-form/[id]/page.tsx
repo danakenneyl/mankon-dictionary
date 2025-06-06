@@ -2,11 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
-import { db } from "@/utils/firebase";
+import { db } from '@/utils/firebase';
 import { UploadAudio } from '@/utils/ClientSideAPICalls';
-import { ref, get, set, update, push } from "firebase/database";
-import  Login  from "@/app/contribute/Login";
-import { WordEntry } from "@/utils/types";
+import { ref, get, set, update, push } from 'firebase/database';
+import Login from '@/app/contribute/Login';
+import { WordEntry } from '@/utils/types';
 
 // Dynamic import with SSR disabled
 const AudioRecorder = dynamic(
@@ -14,23 +14,45 @@ const AudioRecorder = dynamic(
   { ssr: false }
 );
 
+/* ------------------------------------------------------------------ */
+/*                          HELPER FUNCTIONS                          */
+/* ------------------------------------------------------------------ */
+
+const isBlobUrl = (url?: string) =>
+  typeof url === 'string' && url.startsWith('blob:');
+
+/** Convert a blob-URL string to a File object with a custom filename. */
+const blobUrlToFile = async (
+  blobUrl: string,
+  filename: string
+): Promise<File> => {
+  const response = await fetch(blobUrl);
+  const blob = await response.blob();
+  return new File([blob], filename, { type: 'audio/wav' });
+};
+
+/* ------------------------------------------------------------------ */
+/*                            MAIN COMPONENT                          */
+/* ------------------------------------------------------------------ */
+
 export default function MankonWordFormPage() {
   const { id } = useParams<{ id: string }>();
-  const isEmptyForm = id === "0";
+  const isEmptyForm = id === '0';
   const router = useRouter();
 
-  // Authentication states
+  /* ----------------------------- STATE ---------------------------- */
+
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   const [formData, setFormData] = useState<WordEntry>({
-    altSpelling: "",
+    altSpelling: '',
     contributorUUIDs: [],
-    createdAt: "",
-    lastModifiedAt: "",
+    createdAt: '',
+    lastModifiedAt: '',
     mankonSentences: [],
-    mankonWord: "",
+    mankonWord: '',
     pairWords: [],
     sentenceAudioFileIds: [],
     sentenceAudioFilenames: [],
@@ -39,593 +61,551 @@ export default function MankonWordFormPage() {
     type: [],
     wordAudioFileIds: [],
     wordAudioFilenames: [],
-    status: "pending",
-    partOfSpeech: "",
+    status: 'pending',
+    partOfSpeech: '',
   });
 
-  // Updated errors state to include indexed sentenceAudioFilenames
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
   const [currentSection, setCurrentSection] = useState(1);
 
+  /* ------------------------ FETCH EXISTING DATA ------------------- */
 
-  // Fetch existing proposal if ID is not 0
   useEffect(() => {
     const fetchProposal = async () => {
-      if (!isEmptyForm && isAuthenticated) {
-        try {
-          const proposalRef = ref(db, `proposals/${id}`);
-          const snapshot = await get(proposalRef);
+      if (isEmptyForm || !isAuthenticated) return;
+      
+      try {
+        const proposalRef = ref(db, `proposals/${id}`);
+        const snap = await get(proposalRef);
+        if (snap.exists()) {
+          const fetchedData = snap.val();
           
-          if (snapshot.exists()) {
-            const proposalData = snapshot.val();
-            setFormData(proposalData);
-          } else {
-            console.log("No proposal found with ID:", id);
-            // Optional: redirect to 404 or empty form
-          }
-        } catch (error) {
-          console.error("Error fetching proposal:", error);
+          // Preserve the current contributorUUIDs that were set during authentication
+          setFormData(prev => ({
+            ...fetchedData,
+            contributorUUIDs: prev.contributorUUIDs ? prev.contributorUUIDs : fetchedData.contributorUUIDs
+          }));
         }
+      } catch (err) {
+        console.error('Error fetching proposal:', err);
       }
     };
-
-    if (isAuthenticated) {
-      fetchProposal();
-    }
+    fetchProposal();
   }, [id, isAuthenticated, isEmptyForm]);
 
-  const handleStringInput = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
+  /* -------------------- GENERIC INPUT HANDLERS -------------------- */
+
+  const handleStringInput = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+
+  const handleTranslationInput = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) =>
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [e.target.name]: e.target.value.split(',').map(t => t.trim()),
     }));
-  }
-  const handleTranslationInput = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    // Construct Array
-    const {name , value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value.split(", ")
-    }));
-  }
-  const handleSentenceOne = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    // Construct Array
-    const name = e.target.name
-    const key = name as keyof WordEntry    // ← here
-    const value = e.target.value
 
-    setFormData((prev) => {
-      const updatedArray = [...(prev[key] || [])];
-      
-      updatedArray[0] = value;
-      return {
-      ...prev,
-      [key]: updatedArray
-      }
-    });
-  }
-  const handleSentenceTwo = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    // Construct Array
-    const name = e.target.name
-    const key = name as keyof WordEntry    // ← here
-    const value = e.target.value
-
-    setFormData((prev) => {
-      const updatedArray = [...(prev[key] || [])];
-      
-      updatedArray[1] = value;
-      return {
-      ...prev,
-      [key]: updatedArray
-      }
-    });
-  }
-
-  const handleCompletedRecording = (field: string, blobURL: string, index?: number) => {
-    let targetField: keyof WordEntry;
-    
-    if (field === "wordAudio") {
-      targetField = "wordAudioFilenames";
-    } else if (field === "sentenceAudio") {
-      targetField = "sentenceAudioFilenames";
-    } else {
-      console.error(`Unknown recording field: ${field}`);
-      return;
-    }
-  
-    // Handle clearing a recording (when blobURL is empty)
-    if (blobURL === "" || !blobURL) {
+  const handleSentence =
+    (index: 0 | 1) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const key = e.target.name as keyof WordEntry; // mankonSentences | translatedSentences
       setFormData(prev => {
-        if (targetField === "sentenceAudioFilenames" && index !== undefined) {
-          const updatedArray = [...(prev[targetField] || [])];
-          if (index < updatedArray.length) {
-            updatedArray[index] = "";
-          }
-          return {
-            ...prev,
-            [targetField]: updatedArray
-          };
-        } else {
-          return {
-            ...prev,
-            [targetField]: [""]
-          };
-        }
+        const arr = [...(prev[key] || [])];
+        arr[index] = e.target.value;
+        return { ...prev, [key]: arr };
       });
-      return; // Exit early after clearing
-    }
-  
-    // Handle setting a new recording (when blobURL has content)
-    if (targetField === "wordAudioFilenames") {
-      setFormData(prev => ({
-        ...prev,
-        [targetField]: [blobURL]
-      }));
-    } else if (targetField === "sentenceAudioFilenames" && index !== undefined) {
-      setFormData((prev) => {
-        const updatedArray = [...(prev[targetField] || [])];
-        while (updatedArray.length <= index) {
-          updatedArray.push("");
+    };
+
+  /* -------------- RECORDING HANDLER (WORD + SENTENCES) ------------ */
+
+  const handleCompletedRecording = (
+    field: 'wordAudio' | 'sentenceAudio',
+    blobURL: string,
+    index?: number
+  ) => {
+    const targetField =
+      field === 'wordAudio' ? 'wordAudioFilenames' : 'sentenceAudioFilenames';
+
+    setFormData(prev => {
+      const arr = [...(prev[targetField] || [])];
+
+      if (!blobURL) {
+        // clear recording
+        if (field === 'wordAudio') return { ...prev, [targetField]: [''] };
+
+        if (index !== undefined) {
+          arr[index] = '';
+          return { ...prev, [targetField]: arr };
         }
-        updatedArray[index] = blobURL;
-        return {
-          ...prev,
-          [targetField]: updatedArray
-        };
-      });
-    }
-  
-    // Clear error if recording is added after attempted submit
-    if (attemptedSubmit) {
-      if (targetField === 'sentenceAudioFilenames' && index !== undefined) {
-        // Clear specific indexed sentence audio error
-        setErrors((prev) => {
-          const updated = { ...prev };
-          delete updated[`sentenceAudioFilenames[${index}]`];
-          return updated;
-        });
-      } else if (errors[targetField]) {
-        // Clear general error
-        setErrors((prev) => {
-          const updated = { ...prev };
-          delete updated[targetField];
-          return updated;
-        });
+      } else {
+        // set recording
+        if (field === 'wordAudio') return { ...prev, [targetField]: [blobURL] };
+
+        if (index !== undefined) {
+          while (arr.length <= index) arr.push('');
+          arr[index] = blobURL;
+          return { ...prev, [targetField]: arr };
+        }
       }
+      return prev;
+    });
+
+    // clear any prior error for this recording
+    if (attemptedSubmit) {
+      const errorKey =
+        field === 'wordAudio'
+          ? 'wordAudioFilenames'
+          : index === 0
+          ? 'sentenceAudioFilenamesOne'
+          : 'sentenceAudioFilenamesTwo';
+
+      setErrors(prev => {
+        const rest = { ...prev };
+        delete rest[errorKey];   // remove the one error key
+        return rest;
+      });
     }
-  };
-  const nextSection = () => {
-    setCurrentSection(currentSection + 1);
-  }
-  const prevSection = () => {
-    setCurrentSection(currentSection -1);
   }
 
-  const validateForm = () : boolean => {
-    const newErrors: Record<string, string> = {};
+
+  /* ------------------------ SECTION NAVIGATION -------------------- */
+
+  const nextSection = () => setCurrentSection(s => s + 1);
+  const prevSection = () => setCurrentSection(s => s - 1);
+
+  /* -------------------------- VALIDATION -------------------------- */
+
+  const validateForm = (): boolean => {
+    const newErr: Record<string, string> = {};
     let isValid = true;
 
-    // Check mankonWord is present
-    if (!formData.mankonWord || formData.mankonWord.trim() === '') {
-      newErrors.mankonWord = "This field is required";
-      isValid = false;
-    } 
-    // Check English Translation is present
-    if (!formData.translatedWords || formData.translatedWords.length === 0 ||
-      (formData.translatedWords.length === 1 && formData.translatedWords[0].trim() === '')) {
-      newErrors.translatedWords = "At least one translation is required";
-      isValid = false;
-    } 
-    // Validate word audio
-    if (!formData.wordAudioFilenames || !formData.wordAudioFilenames.length || !formData.wordAudioFilenames[0]) {
-      newErrors['wordAudioFilenames'] = 'Word audio recording is required';
+    if (!formData.mankonWord.trim()) {
+      newErr.mankonWord = 'This field is required';
       isValid = false;
     }
-    // Validate first sentence audio with specific index
-    if (!formData.sentenceAudioFilenames || !formData.sentenceAudioFilenames.length || !formData.sentenceAudioFilenames[0]) {
-      newErrors['sentenceAudioFilenamesOne'] = 'First sentence audio recording is required';
-      isValid = false;
-    }
-    // Validate second sentence audio with specific index
-    if (!formData.sentenceAudioFilenames || formData.sentenceAudioFilenames.length < 2 || !formData.sentenceAudioFilenames[1]) {
-      newErrors['sentenceAudioFilenamesTwo'] = 'Second sentence audio recording is required';
-      isValid = false;
-    }
-    setErrors(newErrors);
-    return isValid;
-  }
 
-  // Convert blob URL to File object with custom filename
-  const getBlobAsFile = async (blobUrl: string | null, fileName: string): Promise<File | null> => {
-    if (!blobUrl) return null;
-    
-    try {
-      const response = await fetch(blobUrl);
-      const blobData = await response.blob();
-      // Create file from the blob with custom name
-      return new File([blobData], fileName, { type: 'audio/wav' });
-    } catch (error) {
-      console.error('Error converting blob to file:', error);
-      return null;
+    if (!formData.translatedWords ||
+      !formData.translatedWords.length ||
+      !formData.translatedWords[0]?.trim()
+    ) {
+      newErr.translatedWords = 'At least one translation is required';
+      isValid = false;
     }
+
+    if (!formData.wordAudioFilenames || !formData.wordAudioFilenames[0]) {
+      newErr.wordAudioFilenames = 'Word audio recording is required';
+      isValid = false;
+    }
+
+    if (!formData.sentenceAudioFilenames || !formData.sentenceAudioFilenames[0]) {
+      newErr.sentenceAudioFilenamesOne = 'First sentence audio is required';
+      isValid = false;
+    }
+
+    if (!formData.sentenceAudioFilenames || !formData.sentenceAudioFilenames[1]) {
+      newErr.sentenceAudioFilenamesTwo = 'Second sentence audio is required';
+      isValid = false;
+    }
+
+    setErrors(newErr);
+    return isValid;
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    setSubmitting(true);
-    event.preventDefault();
-    setAttemptedSubmit(true);
-  
-    // Step 1: Validate form before submitting
-    if (!validateForm()) {
-      console.log('Form validation failed');
-      setSubmitting(false);
-      return;
-    }
-  
-    // Step 2: Prepare proposal data
-    try {
-      // last modified timestamp
-      const now = new Date().toISOString();
-      
-      const proposalData: WordEntry = {
-        ...formData,
-        lastModifiedAt: now,
-      };
-  
-      // If it's a new form, add createdAt timestamp
-      if (isEmptyForm) {
-       proposalData.createdAt = now;
-      }
-  
-      // Check for audio files using filenames (which contain blob URLs) instead of IDs
-      if (formData.translatedWords 
-        && formData.translatedWords.length > 0 
-        && formData.wordAudioFilenames          // ← Check for blob URLs here
-        && formData.wordAudioFilenames.length > 0
-        && formData.wordAudioFilenames[0]       // ← Make sure first element exists and isn't empty
-        && formData.sentenceAudioFilenames
-        && formData.sentenceAudioFilenames.length > 0
-        && formData.contributorUUIDs
-        && formData.contributorUUIDs.length > 0
-      ) {
-        // Generate custom filenames for audio files
-        const wordFileName = `${formData.mankonWord}_${formData.translatedWords[0]}_word_${formData.contributorUUIDs[0]}.wav`;
-        
-        // Get word audio file from blob URL (stored in wordAudioFilenames during recording)
-        const wordAudioBlob = formData.wordAudioFilenames[0]; // This is the blob URL
-        const wordFile = await getBlobAsFile(wordAudioBlob, wordFileName);
-        
-        if (!wordFile) {
-          throw new Error('Failed to create word audio file from recording');
-        }
-  
-        // Step 3: Upload audio files to drive
-        // Upload word audio
-        const wordFileId = await UploadAudio(wordFile);
-        if (wordFileId === null) {
-          throw new Error('Failed to upload word audio file');
-        }
-  
-        // Set word audio filename and ID in proposal data
-        proposalData.wordAudioFilenames = [wordFileName];
-        proposalData.wordAudioFileIds = [wordFileId]; 
-  
-        // Get and upload sentence audio files
-        const sentenceFilenames: string[] = [];
-        const sentenceFileIds: string[] = [];
-  
-        // Process each sentence audio file
-        for (let i = 0; i < formData.sentenceAudioFilenames.length; i++) {
-          const blobUrl = formData.sentenceAudioFilenames[i];
-          if (blobUrl) {
-            const sentenceFileName = `${formData.mankonWord}_${formData.translatedWords[0]}_sentence${i+1}_${formData.contributorUUIDs[0]}.wav`;
-            const sentenceFile = await getBlobAsFile(blobUrl, sentenceFileName);
-            
-            if (sentenceFile) {
-              // Upload each sentence audio file
-              const sentenceResponse = await UploadAudio(sentenceFile);
-              if (sentenceResponse === null) {
-                throw new Error(`Failed to upload sentence audio file ${i+1}`);
-              }
-              
-              sentenceFilenames.push(sentenceFileName);
-              sentenceFileIds.push(sentenceResponse); 
-            }
-          }
-        }
-  
-        // Set sentence audio filenames and IDs in proposal data
-        proposalData.sentenceAudioFilenames = sentenceFilenames;
-        proposalData.sentenceAudioFileIds = sentenceFileIds;
-      }
-  
-      // Step 5: Update status
-      proposalData.status = "pending";
-  
-      // Step 6: Save proposal to Firebase
-      let proposalRef;
-  
-      if (isEmptyForm) {
-        // Create a new one
-        proposalRef = push(ref(db, 'proposals'));
-        await set(proposalRef, proposalData);
-        console.log('New proposal created successfully');
-      } else {
-        // Update existing
-        proposalRef = ref(db, `proposals/${id}`);
-        await update(proposalRef, proposalData);
-        console.log('Existing proposal updated successfully');
-      }
-      
-      // Navigate back to contribute page on success
-      router.push("/contribute/contribute-instructions");
-    } catch (error) {
-      console.error('Error saving proposal:', error);
-      alert("Error saving your submission. Please try again.");
-    } finally {
-      setAttemptedSubmit(false); // Reset submission state regardless of outcome
-      setSubmitting(false);
-    }
-  }
+  /* --------------------------- SUBMIT ----------------------------- */
 
-  if (!isAuthenticated) {
-    return (<Login type="contributor" username={username} setUsername={setUsername} setIsAuthenticated={setIsAuthenticated} setFormData={setFormData} />);
+  // Fixed handleSubmit function - replace your existing one
+
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  setAttemptedSubmit(true);
+  if (!validateForm()) return;
+
+  setSubmitting(true);
+
+  try {
+    const nowIso = new Date().toISOString();
+    const proposal: WordEntry = {
+      ...formData,
+      lastModifiedAt: nowIso,
+      createdAt: isEmptyForm ? nowIso : formData.createdAt,
+      status: 'pending',
+    };
+
+    if (proposal.translatedWords && 
+        proposal.contributorUUIDs &&
+        proposal.sentenceAudioFilenames 
+    ) {
+      /* ---------- WORD RECORDING ---------- */
+      if (formData.wordAudioFilenames && isBlobUrl(formData.wordAudioFilenames[0])) {
+        const wordFileName = `${proposal.mankonWord}_${proposal.translatedWords[0]}_word_${proposal.contributorUUIDs[0]}.wav`;
+        const wordFile = await blobUrlToFile(
+          formData.wordAudioFilenames[0],
+          wordFileName
+        );
+        
+        console.log('Uploading word file:', wordFile.name); // Debug log
+        const wordFileId = await UploadAudio(wordFile);
+        
+        if (!wordFileId) {
+          console.error('Failed to upload word audio');
+          return;
+        }
+        
+        proposal.wordAudioFilenames = [wordFileName];
+        proposal.wordAudioFileIds = [wordFileId];
+      }
+
+      /* -------- SENTENCE RECORDINGS -------- */
+      // Initialize arrays to preserve existing data
+      const sentenceNames: string[] = [...(proposal.sentenceAudioFilenames || [])];
+      const sentenceIds: string[] = [...(proposal.sentenceAudioFileIds || [])];
+
+      // Process each sentence audio
+      for (let i = 0; i < proposal.sentenceAudioFilenames.length; i++) {
+        const url = proposal.sentenceAudioFilenames[i];
+        
+        if (isBlobUrl(url)) {
+          // This is a new recording (blob URL)
+          const fname = `${proposal.mankonWord}_${proposal.translatedWords[0]}_sentence${i + 1}_${proposal.contributorUUIDs[0]}.wav`;
+          const file = await blobUrlToFile(url, fname);
+          
+          console.log(`Uploading sentence ${i + 1} file:`, file.name); // Debug log
+          const id = await UploadAudio(file);
+
+          if (!id) {
+            console.error(`Failed to upload sentence ${i + 1} audio`);
+            return;
+          }
+
+          sentenceNames[i] = fname;
+          sentenceIds[i] = id;
+        }
+        // If it's not a blob URL, keep existing filename/id (already handled by array spread)
+      }
+
+      proposal.sentenceAudioFilenames = sentenceNames;
+      proposal.sentenceAudioFileIds = sentenceIds;
+    }
+
+    /* --------------- FIREBASE --------------- */
+    if (isEmptyForm) {
+      const newRef = push(ref(db, 'proposals'));
+      await set(newRef, proposal);
+    } else {
+      await update(ref(db, `proposals/${id}`), proposal);
+    }
+
+    router.push('/contribute/contribute-instructions');
+  } catch (err) {
+    console.error('Error saving proposal:', err);
+    alert('Error saving your submission. Please try again.');
+  } finally {
+    setSubmitting(false);
+    setAttemptedSubmit(false);
   }
+};
+
+  /* ----------------------- AUTH GATE ----------------------------- */
+
+  if (!isAuthenticated)
+    return (
+      <Login
+        type="contributor"
+        username={username}
+        setUsername={setUsername}
+        setIsAuthenticated={setIsAuthenticated}
+        setFormData={setFormData}
+      />
+    );
+
+  /* -------------------------- RENDER ------------------------------ */
 
   return (
     <div className="content-wrapper">
       <div className="content">
-        <h1 className="text-3xl font-bold mb-6 text-center">Entry Proposal Form</h1>
+        <h1 className="text-3xl font-bold mb-6 text-center">
+          Entry Proposal Form
+        </h1>
         <div className="intro-decoration">
-        <div className="decoration-line"></div>
-        <div className="decoration-symbol"></div>
-        <div className="decoration-line"></div>
+          <div className="decoration-line" />
+          <div className="decoration-symbol" />
+          <div className="decoration-line" />
         </div>
 
-      <p className="text-center">Required answers are marked with an asterisk (*)</p>
+        <p className="text-center">
+          Required answers are marked with an asterisk (*)
+        </p>
 
-      <form onSubmit={handleSubmit} className="nl-form">
-        {/* Section 1 Word Information */}
-        {currentSection === 1 && (
-          <div className="nl-section word-section">
-            <div className="nl-question-group">
-              <label className="nl-question">
-                What Mankon word would you like to propose? <span className="required-indicator">*</span>
-              </label>
-              <br />
-              <input
-                type="text"
-                name="mankonWord"
-                value={formData.mankonWord}
-                onChange={handleStringInput}
-                className={`${errors.mankonWord ? 'error' : 'nl-input'}`}
-                placeholder="Enter word here"
-              />
-              {errors.mankonWord && (
-                <p className="error-text">{errors.mankonWord}</p>
-              )}
-            </div>
-            <hr className="section-divider-propose" />
-            <div className="nl-question-group">
-              <label className="nl-question">
-                What is this word&apos;s English translation? <span className="required-indicator">*</span>
-              </label>
-              <br />
-              <input
-                type="text"
-                name="translatedWords"
-                value={(formData.translatedWords && formData.translatedWords.join(", ")) || ""}
-                onChange={handleTranslationInput}
-                className={`${errors.translatedWords ? 'error' : 'nl-input'}`}
-                placeholder="Enter translation(s), comma separated"
-              />
-              {errors.mankonWord && (
-                <p className="error-text">{errors.translatedWords}</p>
-              )}
-            </div>
-            <hr className="section-divider-propose" />
-            <div className="nl-question-group">
-              <label className="nl-question">
-                Record your word&apos;s pronunciation<span className="required-indicator">*</span>
-              </label>
-              <ol className="nl-instruction-list">
-                <li>Click the <strong>&apos;Start&apos;</strong> button <br />(you may need to give permission to use your microphone. Click &apos;Allow&apos;).</li>
-                <li>Wait 3 seconds until the timer begins counting.</li>
-                <li>Pronounce the word as you would say it. Ignore spelling convention and do not record the English translation.</li>
-                <li>Press the <strong>&apos;Stop&apos;</strong> button. <br />(the <strong>&apos;Start&apos;</strong> button becomes the <strong>&apos;Stop&apos;</strong> button when you start recording)</li>
-                <li>
-                  Listen to your recording. If you like it, you can hit the <strong>&apos;Propose a Sentence&apos;</strong> button. 
-                </li>
-                <li>
-                  If you don&apos;t like your recording, click the <strong>&apos;Clear&apos;</strong> button and try again.
-                </li>
-              </ol>
-              <AudioRecorder
-                instanceId="audio-word"
-                onRecordingComplete={(blob: string) => handleCompletedRecording('wordAudio', blob)}
-                initialAudio={(formData.wordAudioFilenames?.[0]) || ""}
-              />
-              {errors.wordAudioFilenames && (
-                <p className="error-text">{errors.wordAudioFilenames}</p>
-              )}
-            </div> 
-            <div className="navigation-buttons">
-                <button 
-                  type="button" 
-                  className="next-button" 
+        <form onSubmit={handleSubmit} className="nl-form">
+          {/* ------------------------------------------------------ */}
+          {/*             SECTION 1 – WORD INFORMATION              */}
+          {/* ------------------------------------------------------ */}
+          {currentSection === 1 && (
+            <div className="nl-section word-section">
+              {/* WORD */}
+              <div className="nl-question-group">
+                <label className="nl-question">
+                  What Mankon word would you like to propose?{' '}
+                  <span className="required-indicator">*</span>
+                </label>
+                <br />
+                <input
+                  type="text"
+                  name="mankonWord"
+                  value={formData.mankonWord}
+                  onChange={handleStringInput}
+                  className={`${errors.mankonWord ? 'error' : 'nl-input'}`}
+                  placeholder="Enter word here"
+                />
+                {errors.mankonWord && (
+                  <p className="error-text">{errors.mankonWord}</p>
+                )}
+              </div>
+
+              <hr className="section-divider-propose" />
+
+              {/* TRANSLATION */}
+              <div className="nl-question-group">
+                <label className="nl-question">
+                  What is this word&apos;s English translation?{' '}
+                  <span className="required-indicator">*</span>
+                </label>
+                <br />
+                <input
+                  type="text"
+                  name="translatedWords"
+                  value={(formData.translatedWords || []).join(', ')}
+                  onChange={handleTranslationInput}
+                  className={`${
+                    errors.translatedWords ? 'error' : 'nl-input'
+                  }`}
+                  placeholder="Enter translation(s), comma separated"
+                />
+                {errors.translatedWords && (
+                  <p className="error-text">{errors.translatedWords}</p>
+                )}
+              </div>
+
+              <hr className="section-divider-propose" />
+
+              {/* WORD RECORDING */}
+              <div className="nl-question-group">
+                <label className="nl-question">
+                  Record your word&apos;s pronunciation
+                  <span className="required-indicator">*</span>
+                </label>
+
+                {/* Instructions */}
+                <ol className="nl-instruction-list">
+                  <li>
+                    Click the <strong>&apos;Start&apos;</strong> button and give
+                    mic permission.
+                  </li>
+                  <li>Wait 3 s until the timer begins.</li>
+                  <li>
+                    Pronounce the word naturally (no English translation).
+                  </li>
+                  <li>
+                    Press <strong>&apos;Stop&apos;</strong>, listen, and retry if
+                    needed.
+                  </li>
+                </ol>
+
+                <AudioRecorder
+                  instanceId="audio-word"
+                  onRecordingComplete={blob =>
+                    handleCompletedRecording('wordAudio', blob)
+                  }
+                  initialAudio={formData.wordAudioFilenames? formData.wordAudioFilenames[0] : ''}
+                />
+
+                {errors.wordAudioFilenames && (
+                  <p className="error-text">{errors.wordAudioFilenames}</p>
+                )}
+              </div>
+
+              {/* NAV */}
+              <div className="navigation-buttons">
+                <button
+                  type="button"
+                  className="next-button"
                   onClick={nextSection}
                 >
                   Propose a Sentence
                 </button>
               </div>
-          </div>
+            </div>
           )}
-        {/* Section 2: First Sentence Example */}
-        {currentSection === 2 && (
-          <div className="nl-section word-section">
-            <div className="nl-question-group">
-              <label className="nl-question">
-                Please write a Mankon sentence that features &quot;{formData.mankonWord}&quot;
-              </label>
-              <br />
-              <input
-                type="text"
-                name="mankonSentences"
-                value={(formData.mankonSentences && formData.mankonSentences[0]) || ""}
-                onChange={handleSentenceOne}
-                className={`${errors.mankonSentences ? 'error' : 'nl-input'}`}
-                placeholder="Enter sentence"
-              />
-            
-            </div>
-            <hr className="section-divider-propose" />
-            <div className="nl-question-group">
-              <label className="nl-question">
-                What is English translation of the above sentence? 
-              </label>
-              <br />
-              <input
-                type="text"
-                name="translatedSentences"
-                value={(formData.translatedSentences && formData.translatedSentences[0]) || ""}
-                onChange={handleSentenceOne
-                }
-                className={`${errors.translatedWords ? 'error' : 'nl-input'}`}
-                placeholder="Enter sentence"
-              />
-             
-            </div>
-            <hr className="section-divider-propose" />
-            <div className="nl-question-group">
-              <label className="nl-question">
-                Record your sentence <span className="required-indicator">*</span>
-              </label>
-              <ol className="nl-instruction-list">
-                <li>Click the <strong>&apos;Start&apos;</strong> button <br />(you may need to give permission to use your microphone. Click &apos;Allow&apos;).</li>
-                <li>Wait 3 seconds until the timer begins counting.</li>
-                <li>Pronounce the sentence naturally. <br/>(Ignore spelling convention and do not record the English translation.)</li>
-                <li>Press the <strong>&apos;Stop&apos;</strong> button. <br />(the <strong>&apos;Start&apos;</strong> button becomes the <strong>&apos;Stop&apos;</strong> button when you start recording)</li>
-                <li>
-                  Listen to your recording. If you like it, you can hit the <strong>&apos;Propose another Sentence&apos;</strong> button. 
-                </li>
-                <li>
-                  If you don&apos;t like your recording, click the <strong>&apos;Clear&apos;</strong> button and try again.
-                </li>
-              </ol>
-              <AudioRecorder
-                instanceId="audio-word"
-                onRecordingComplete={(blob: string) => handleCompletedRecording('sentenceAudio', blob, 0)}
-                initialAudio={(formData.sentenceAudioFilenames?.[0]) || ""}
-              />
-              {errors.sentenceAudioFilenamesOne && (
-                <p className="error-text">{errors.sentenceAudioFilenamesOne}</p>
-              )}
-            </div> 
-            <div className="navigation-buttons">
-              <button 
-                type="button" 
-                className="next-button" 
-                onClick={prevSection}
-              >
-                Go back
-              </button>
-              <button 
-                type="button" 
-                className="next-button" 
-                onClick={nextSection}
-              >
-                Propose another Sentence
-              </button>
-            </div>
-          </div>
-          )}
-          {currentSection === 3 && (
+
+          {/* ------------------------------------------------------ */}
+          {/*             SECTION 2 – SENTENCE #1                   */}
+          {/* ------------------------------------------------------ */}
+          {currentSection === 2 && (
             <div className="nl-section word-section">
+              {/* MANKON SENTENCE 1 */}
               <div className="nl-question-group">
                 <label className="nl-question">
-                  Please write another Mankon sentence that features &quot;{formData.mankonWord}&quot;
+                  Write a Mankon sentence that features
+                  &nbsp;&quot;{formData.mankonWord}&quot;
                 </label>
                 <br />
                 <input
                   type="text"
                   name="mankonSentences"
-                  value={(formData.mankonSentences && formData.mankonSentences[1])||""}
-                  onChange={handleSentenceTwo}
+                  value={formData.mankonSentences ? formData.mankonSentences[0] : ''}
+                  onChange={handleSentence(0)}
                   className="nl-input"
                   placeholder="Enter sentence"
                 />
-              
               </div>
+
               <hr className="section-divider-propose" />
+
+              {/* ENGLISH SENTENCE 1 */}
               <div className="nl-question-group">
                 <label className="nl-question">
-                  What is English translation of the above sentence? 
+                  English translation of the sentence
                 </label>
                 <br />
                 <input
                   type="text"
                   name="translatedSentences"
-                  value={(formData.translatedSentences && formData.translatedSentences[1])||""}
-                  onChange={handleSentenceTwo}
+                  value={formData.translatedSentences ? formData.translatedSentences[0] : ''}
+                  onChange={handleSentence(0)}
                   className="nl-input"
                   placeholder="Enter sentence"
                 />
-              
               </div>
+
               <hr className="section-divider-propose" />
+
+              {/* SENTENCE 1 RECORD */}
               <div className="nl-question-group">
                 <label className="nl-question">
                   Record your sentence <span className="required-indicator">*</span>
                 </label>
-                <ol className="nl-instruction-list">
-                  <li>Click the <strong>&apos;Start&apos;</strong> button <br />(you may need to give permission to use your microphone. Click &apos;Allow&apos;).</li>
-                  <li>Wait 3 seconds until the timer begins counting.</li>
-                  <li>Pronounce the sentence naturally. <br/>(Ignore spelling convention and do not record the English translation.)</li>
-                  <li>Press the <strong>&apos;Stop&apos;</strong> button. <br />(the <strong>&apos;Start&apos;</strong> button becomes the <strong>&apos;Stop&apos;</strong> button when you start recording)</li>
-                  <li>
-                    Listen to your recording. If you like it, you can hit the <strong>&apos;Submit Proposal&apos;</strong> button. 
-                  </li>
-                  <li>
-                    If you don&apos;t like your recording, click the <strong>&apos;Clear&apos;</strong> button and try again.
-                  </li>
-                </ol>
                 <AudioRecorder
-                  instanceId="audio-word"
-                  onRecordingComplete={(blob: string) => handleCompletedRecording('sentenceAudio', blob, 1)}
-                  initialAudio={(formData.sentenceAudioFilenames && formData.sentenceAudioFilenames[1]) || ""}
+                  instanceId="audio-sent-1"
+                  onRecordingComplete={blob =>
+                    handleCompletedRecording('sentenceAudio', blob, 0)
+                  }
+                  initialAudio={formData.sentenceAudioFilenames ? formData.sentenceAudioFilenames[0] : ''}
                 />
-                {errors.sentenceAudioFilenamesTwo && (
-                  <p className="error-text">{errors.sentenceAudioFilenamesTwo}</p>
+                {errors.sentenceAudioFilenamesOne && (
+                  <p className="error-text">
+                    {errors.sentenceAudioFilenamesOne}
+                  </p>
                 )}
-              </div> 
+              </div>
+
+              {/* NAV */}
               <div className="navigation-buttons">
-                <button 
-                  type="button" 
-                  className="next-button" 
+                <button
+                  type="button"
+                  className="next-button"
                   onClick={prevSection}
                 >
                   Go back
                 </button>
-                <button 
-                  type="submit" 
-                  className="next-button" 
+                <button
+                  type="button"
+                  className="next-button"
+                  onClick={nextSection}
                 >
-                  {submitting ? "Submitting..." : "Submit Proposal"}
+                  Propose another Sentence
                 </button>
               </div>
-              {/* Error message for missing answers */}
+            </div>
+          )}
+
+          {/* ------------------------------------------------------ */}
+          {/*             SECTION 3 – SENTENCE #2                   */}
+          {/* ------------------------------------------------------ */}
+          {currentSection === 3 && (
+            <div className="nl-section word-section">
+              {/* MANKON SENTENCE 2 */}
+              <div className="nl-question-group">
+                <label className="nl-question">
+                  Write another Mankon sentence with
+                  &nbsp;&quot;{formData.mankonWord}&quot;
+                </label>
+                <br />
+                <input
+                  type="text"
+                  name="mankonSentences"
+                  value={formData.mankonSentences ? formData.mankonSentences[1] : ''}
+                  onChange={handleSentence(1)}
+                  className="nl-input"
+                  placeholder="Enter sentence"
+                />
+              </div>
+
+              <hr className="section-divider-propose" />
+
+              {/* ENGLISH SENTENCE 2 */}
+              <div className="nl-question-group">
+                <label className="nl-question">
+                  English translation of the sentence
+                </label>
+                <br />
+                <input
+                  type="text"
+                  name="translatedSentences"
+                  value={formData.translatedSentences ? formData.translatedSentences[1] : ''}
+                  onChange={handleSentence(1)}
+                  className="nl-input"
+                  placeholder="Enter sentence"
+                />
+              </div>
+
+              <hr className="section-divider-propose" />
+
+              {/* SENTENCE 2 RECORD */}
+              <div className="nl-question-group">
+                <label className="nl-question">
+                  Record your sentence <span className="required-indicator">*</span>
+                </label>
+                <AudioRecorder
+                  instanceId="audio-sent-2"
+                  onRecordingComplete={blob =>
+                    handleCompletedRecording('sentenceAudio', blob, 1)
+                  }
+                  initialAudio={formData.sentenceAudioFilenames ? formData.sentenceAudioFilenames[1] : ''}
+                />
+                {errors.sentenceAudioFilenamesTwo && (
+                  <p className="error-text">
+                    {errors.sentenceAudioFilenamesTwo}
+                  </p>
+                )}
+              </div>
+
+              {/* NAV / SUBMIT */}
+              <div className="navigation-buttons">
+                <button
+                  type="button"
+                  className="next-button"
+                  onClick={prevSection}
+                >
+                  Go back
+                </button>
+                <button type="submit" className="next-button">
+                  {submitting ? 'Submitting...' : 'Submit Proposal'}
+                </button>
+              </div>
+
               {attemptedSubmit && Object.keys(errors).length > 0 && (
-                <p className="error-text" style={{ marginTop: '10px' }}>
-                  You missed some answers! <br/>Go back carefully through the entire form to find what you missed.
+                <p className="error-text mt-2 text-center">
+                  You missed some answers!<br />
+                  Go back through the form to fix them.
                 </p>
               )}
             </div>
           )}
-      </form>
-
-    </div>
+        </form>
+      </div>
     </div>
   );
 }

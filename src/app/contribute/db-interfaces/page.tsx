@@ -1,6 +1,6 @@
 "use client";
 import "@/styles/globals.css";
-import "./interfaces.css";
+import "@/styles/interfaces.css";
 import {useState} from "react";
 import ContributorInterface from "./contributorInterface";
 import DemographicInterface from "./demographicInterface";
