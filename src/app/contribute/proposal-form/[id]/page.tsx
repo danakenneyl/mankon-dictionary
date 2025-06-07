@@ -401,17 +401,21 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                 {/* Instructions */}
                 <ol className="nl-instruction-list">
                   <li>
-                    Click the <strong>&apos;Start&apos;</strong> button and give
-                    mic permission.
+                    Click the <strong>&apos;Start&apos;</strong> button. 
+                    <br/> (you may need enable your microphone. If a pop-up appears, click <strong>&apos;Allow&apos;</strong>. Then hit the <strong>&apos;Stop&apos;</strong> then <strong>&apos;Clear&apos;</strong> buttons below to restart your recording)
                   </li>
-                  <li>Wait 3 s until the timer begins.</li>
+                  <li>Wait 3 seconds until the timer begins counting up.</li>
                   <li>
-                    Pronounce the word naturally (no English translation).
+                    Pronounce the word naturally 
+                    <br/>(Ignore spelling and do not record the English translation)
                   </li>
                   <li>
-                    Press <strong>&apos;Stop&apos;</strong>, listen, and retry if
-                    needed.
+                    Press <strong>&apos;Stop&apos;</strong>
+                    <br/> (A little audio bar should pop up)
                   </li>
+                  <li>Listen to your recording.</li>
+                  <li>If you don&apos;t like your recording, hit <strong>&apos;Clear&apos;</strong> and try again. If you are 
+                  happy with your recording, click the <strong>&apos;Propose a Sentence&apos;</strong> button below.</li>
                 </ol>
 
                 <AudioRecorder
@@ -487,6 +491,22 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                 <label className="nl-question">
                   Record your sentence <span className="required-indicator">*</span>
                 </label>
+
+                {/* Instructions */}
+                <ol className="nl-instruction-list">
+                  <li>
+                    Click the <strong>&apos;Start&apos;</strong> button. 
+                  </li>
+                  <li>Wait 3 seconds</li>
+                  <li>
+                    Record a single sentence that features {formData.mankonWord && <> &quot;{formData.mankonWord}&quot;</>}. (5-10 words)
+                  </li>
+                  <li>
+                    Press <strong>&apos;Stop&apos;</strong></li>
+                  <li>Listen to your recording.</li>
+                  <li>If you don&apos;t like your recording, hit <strong>&apos;Clear&apos;</strong> and try again. If you are 
+                  happy with your recording, click the <strong>&apos;Propose a Sentence&apos;</strong> button below.</li>
+                </ol>
                 <AudioRecorder
                   instanceId="audio-sent-1"
                   onRecordingComplete={blob =>
@@ -568,6 +588,21 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                 <label className="nl-question">
                   Record your sentence <span className="required-indicator">*</span>
                 </label>
+                {/* Instructions */}
+                <ol className="nl-instruction-list">
+                  <li>
+                    Click the <strong>&apos;Start&apos;</strong> button. 
+                  </li>
+                  <li>Wait 3 seconds</li>
+                  <li>
+                    Record a single sentence that features {formData.mankonWord && <> &quot;{formData.mankonWord}&quot;</>}. (5-10 words)
+                  </li>
+                  <li>
+                    Press <strong>&apos;Stop&apos;</strong></li>
+                  <li>Listen to your recording.</li>
+                  <li>If you don&apos;t like your recording, hit <strong>&apos;Clear&apos;</strong> and try again. If you are 
+                  happy with your recording, click the <strong>&apos;Propose a Sentence&apos;</strong> button below.</li>
+                </ol>
                 <AudioRecorder
                   instanceId="audio-sent-2"
                   onRecordingComplete={blob =>
