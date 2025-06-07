@@ -65,7 +65,7 @@ export default function Guide() {
                 <NavButton pageName="Word Requests" href="/contribute/mankon-word-requests"></NavButton>
             </ul>
 
-            <p className="mt-6">
+            <p className="mt-6 conclusion">
                 Every contribution strengthens our dictionary and helps share the beauty of the Mankon language with the world. Thank you for being part of this important project!
             </p>
             </section>

@@ -227,6 +227,7 @@ export default function Writing() {
               <li>Mankon uses <strong>dʒ</strong> while GACL uses <strong>j</strong>.</li>
               <li>Mankon uses <strong>ʒ</strong> while GACL uses <strong>zh</strong>.</li>
               <li>Mankon uses <strong>ɲ</strong> while GACL uses <strong>ny</strong>.</li>
+              <li>Mankon uses <strong>ŋ</strong> while GACL uses <strong>ng</strong>.</li>
             </ul>
           </section>
 

@@ -8,7 +8,7 @@
     float: right; /* Float the image to the right */
     margin-left: 20px; /* Add space between image and text */
     margin-bottom: 10px; /* Add space below the image */
-    width: 275px; /* Set width for the image container */
+    max-width: 275px; /* Set width for the image container */
   }
   
   .bio-img {

@@ -78,20 +78,17 @@ export default function EntryInterface(props: Props) {
     }
 
     return (
-        <div className="left">
+        <div className="outline">
             {filteredEntries && Object.keys(filteredEntries).length > 0 ? (
                 <>
-                    <section className="max-w-3xl mx-auto p-6 interface-head">
-                        <h1 className="text-4xl font-bold mb-6 text-center">
-                            {props.type === "proposals" ? props.state : "Complete Entries"}
-                        </h1>
-                        <div className="intro-decoration">
-                            <div className="decoration-line"></div>
-                            <div className="decoration-symbol"></div>
-                            <div className="decoration-line"></div>
-                        </div>
-                    </section>
-                    
+                    <h1 className="text-4xl font-bold mb-6 text-center">
+                        {props.type === "proposals" ? props.state : "Complete Entries"}
+                    </h1>
+                    <div className="intro-decoration">
+                        <div className="decoration-line"></div>
+                        <div className="decoration-symbol"></div>
+                        <div className="decoration-line"></div>
+                    </div>
                     {props.state === "Initial Proposals" && <RenderProposalsInterface filteredEntries={filteredEntries} state={props.state}/> }
                     {props.state === "Review Proposals" && <RenderEntriesInterface filteredEntries={filteredEntries} type={props.type} state={props.state}/> }
                     {props.state === "Approve Proposals" && <RenderProposalsInterface filteredEntries={filteredEntries} state={props.state}/>}

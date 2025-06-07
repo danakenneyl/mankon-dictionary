@@ -521,6 +521,10 @@
     border-color: white;
   }
 
+  .letter-and-nav {
+    flex-direction: row;
+  }
+
   /* ========================================
     Attribution Form STYLES
     ======================================== */
@@ -582,6 +586,10 @@
 .language-checkboxes .other-language-section input.login-input{
   flex:1;                 /* let input take remaining width    */
   min-width:10rem;        /* don’t get too small               */
+}
+
+.account-input {
+  padding: 1rem;
 }
 
 .lang-space {
@@ -791,6 +799,17 @@
     justify-content: center;
     width: 100%;
   }
+
+  .outline {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    outline: 2px orange solid;
+
+  }
   
   /* ========================================
      RECORDING
@@ -992,4 +1011,69 @@
     .search {
       width: 90%;
     }
+  }
+
+  @media (max-width: 476px) {
+    .content-wrapper {
+      width: 100%;
+    }
+    .content {
+      width: 100%;
+      padding: 0.45rem;
+    }
+    .homepage-intro {
+      padding-right: 0.5rem;
+      padding-left: 0.5rem;
+    }
+    .action-buttons {
+      gap: 10px;
+    }
+    .primary-button, .secondary-button {
+      padding-top: 0rem;
+      padding-bottom: 0rem;
+      padding-right: 0.35rem;
+      padding-left: 0.35rem
+    }
+    h1 {
+      padding-top: 1rem;
+    }
+    h2 {
+      text-align: center;
+    }
+    h3 {
+      text-align: center;
+      margin-left: 0rem !important;
+    }
+    .conclusion {
+      padding: 1rem;
+      text-align: center;
+    }
+    .intro-decoration {
+      margin-bottom: 20px;
+    }
+    .bio-container {
+      padding: 1rem;
+      margin-bottom: 0px !important;
+    }
+    .bio-image {
+      margin-left: 0px !important;
+    }
+    .login-card {
+      padding: 0rem;
+    }
+    .outline {
+      width: 100%;
+      padding: 1rem;
+    }
+    .interface-homepage {
+      padding: 0rem !important;
+    }
+    .nl-section {
+      padding: 0rem !important;
+    }
+    .nl-input {
+      width: 100%;
+    }
+
+ 
   }

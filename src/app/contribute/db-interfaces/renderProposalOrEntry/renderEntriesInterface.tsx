@@ -290,7 +290,7 @@ const renderEntriesInterface = () => {
     const totalEntries = Object.keys(filteredEntries).length;
     
     return (
-        <div className="content-card">
+        <>
             {/* Pagination controls */}
             <div className="center-buttons" style={{ marginBottom: '20px' }}>
                 <button
@@ -302,7 +302,7 @@ const renderEntriesInterface = () => {
                         cursor: currentEntryIndex === 0 ? 'not-allowed' : 'pointer'
                     }}
                 >
-                    ← Previous
+                    ← Prev
                 </button>
                 <span style={{ margin: '0 20px', fontSize: '16px', fontWeight: 'bold' }}>
                     {currentEntryIndex + 1} of {totalEntries}
@@ -372,7 +372,7 @@ const renderEntriesInterface = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

@@ -56,15 +56,15 @@ export default function ContributorInterface() {
         return () => unsubscribe();
       }, []);
     
-    return (<div className="center">
-                <section className="max-w-3xl mx-auto p-6 interface-head">
+    return (<div className="outline">
+          
                 <h1 className="text-4xl font-bold mb-6 text-center">Contributors</h1>
                 <div className="intro-decoration">
                 <div className="decoration-line"></div>
                 <div className="decoration-symbol"></div>
                 <div className="decoration-line"></div>
                 </div>
-                </section>
+
                 <div className="contributors-list">
                     {Object.entries(contributors).map(([id, contributor]) => (
                         <div key={id} className="contributor-card">
