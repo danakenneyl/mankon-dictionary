@@ -36,13 +36,13 @@ export default function InitialProposals() {
     "family",
     "emotion",
     "place",
-    "male name",
-    "female name",
-    "gender-neutral name",
+    "male",
+    "female",
+    "gender-neutral",
     "color",
     "number",
     "date",
-    "royal terms"
+    "royal"
   ], []);
   
   const [entries, setEntries] = useState<EntryCollection>({});
@@ -341,7 +341,7 @@ export default function InitialProposals() {
   return (
     <div className="content-wrapper">
       <div className="content">
-        <h2 className="text-3xl font-bold mb-6 text-center">Requested Words</h2>
+        <h1 className="text-3xl font-bold mb-6 text-center">Requested Words</h1>
 
         <div className="intro-decoration">
           <div className="decoration-line"></div>

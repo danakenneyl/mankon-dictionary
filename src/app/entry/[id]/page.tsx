@@ -1,14 +1,12 @@
 'use client';
 import { useParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import { ref, onValue } from "firebase/database";
-import { db } from "@/utils/firebase";
-import { FetchAudioFile } from '@/utils/ClientSideAPICalls';
+import { ref as databaseRef, onValue } from "firebase/database";
+import { ref as storageRef, getDownloadURL } from "firebase/storage";
+import { db, storage } from "@/utils/firebase";
 import { WordEntry } from "@/utils/types";
 import "@/styles/entry.css";
-
-
 
 export default function Entry() {
   const { id } = useParams<{ id: string }>();
@@ -33,10 +31,59 @@ export default function Entry() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [audioUrls, setAudioUrls] = useState<{[key: string]: string}>({});
-
-  useEffect(() => {
-    const entriesRef = ref(db, `proposals/${id}`);
+    // Fetch audio file from Firebase Storage using filename
+    const fetchAudioFromStorage = useCallback(async (filename: string): Promise<string> => {
+      try {
+        // Create a reference to the file in Firebase Storage
+        // Adjust the path structure based on your Firebase Storage organization
+        // console.log(`Attempting to fetch: proposal/${filename.slice(0, -4)}.ogg`);
+        const audioRef = storageRef(storage, `proposal/${filename.slice(0, -4)}.ogg`);
+        const url = await getDownloadURL(audioRef);
+        return url;
+      } catch (error) {
+        console.error(`Error fetching audio file ${filename}:`, error);
+        throw error;
+      }
+    }, []);
     
+    // Fetch all audio files for sentences and words
+    const fetchAllAudioFiles = useCallback(async (data: WordEntry) => {
+      try {
+        const audioMap: {[key: string]: string} = {};
+        
+        // Fetch sentence audio files using filenames
+        if (data.sentenceAudioFilenames && data.sentenceAudioFilenames.length > 0) {
+          for (let i = 0; i < data.sentenceAudioFilenames.length; i++) {
+            if (data.sentenceAudioFilenames[i]) {
+              try {
+                const url = await fetchAudioFromStorage(data.sentenceAudioFilenames[i]);
+                audioMap[`sentence_${i}`] = url;
+              } catch (err) {
+                console.error(`Failed to fetch sentence audio ${i}:`, err);
+              }
+            }
+          }
+        }
+        
+        // Fetch word audio file using filename
+        if (data.wordAudioFilenames && data.wordAudioFilenames.length > 0) {
+          try {
+            const url = await fetchAudioFromStorage(data.wordAudioFilenames[0]);
+            audioMap['word'] = url;
+          } catch (err) {
+            console.error("Failed to fetch word audio:", err);
+          }
+        }
+        
+        setAudioUrls(audioMap);
+      } catch (err) {
+        console.error("Error fetching audio files:", err);
+      }
+    }, [fetchAudioFromStorage]);
+    
+  useEffect(() => {
+    // Access Realtime Database
+    const entriesRef = databaseRef(db, `proposals/${id}`);
     // Listen for changes to the entries in Firebase
     const unsubscribe = onValue(entriesRef, (snapshot) => {
       if (snapshot.exists()) {
@@ -55,60 +102,30 @@ export default function Entry() {
 
     // Clean up the listener when component unmounts
     return () => unsubscribe();
-  }, [id]);
+  }, [id, fetchAllAudioFiles]);
   
-  // Fetch all audio files for sentences
-  const fetchAllAudioFiles = async (data: WordEntry) => {
-    try {
-      const audioMap: {[key: string]: string} = {};
-      
-      // Fetch sentence audio files
-      if (data.sentenceAudioFileIds && data.sentenceAudioFileIds.length > 0) {
-        for (let i = 0; i < data.sentenceAudioFileIds.length; i++) {
-          if (data.sentenceAudioFileIds[i]) {
-            const url = await FetchAudioFile(data.sentenceAudioFileIds[i]);
-            audioMap[`sentence_${i}`] = url;
-          }
-        }
-      }
-      // Fetch word audio file
-      if (data.wordAudioFileIds != undefined) {
-        const url = await FetchAudioFile(data.wordAudioFileIds[0]);
-        audioMap['word'] = url;
-      }
-      
-      setAudioUrls(audioMap);
-    } catch (err) {
-      console.error("Error fetching audio files:", err);
-    }
-  };
 
   // Play audio using the fetched URLs
   const playAudio = (type: string, index?: number) => {
-    if (index != undefined) {
-      const audioKey = `${type}_${index}`;
-      const audioUrl = audioUrls[audioKey];
-      
-      if (!audioUrl) {
-        console.error(`Audio URL not found for ${audioKey}`);
-        return;
-      }
-      const audio = new Audio(audioUrl);
-      audio.play().catch(err => {
-        console.error("Error playing audio:", err);
-      });
+    let audioKey: string;
+    
+    if (index !== undefined) {
+      audioKey = `${type}_${index}`;
+    } else {
+      audioKey = type;
     }
-    else {
-      const audioUrl = audioUrls[type];
-      if (!audioUrl) {
-        console.error(`Audio URL not found for ${type}`);
-        return;
-      }
-      const audio = new Audio(audioUrl);
-      audio.play().catch(err => {
-        console.error("Error playing audio:", err);
-      });
+    
+    const audioUrl = audioUrls[audioKey];
+    
+    if (!audioUrl) {
+      console.error(`Audio URL not found for ${audioKey}`);
+      return;
     }
+    
+    const audio = new Audio(audioUrl);
+    audio.play().catch(err => {
+      console.error("Error playing audio:", err);
+    });
   };
 
   if (loading) {
@@ -137,7 +154,7 @@ export default function Entry() {
                 {entry.partOfSpeech}
               </button>
             )}
-            {entry.wordAudioFileIds && (
+            {entry.wordAudioFilenames && entry.wordAudioFilenames.length > 0 && (
               <VolumeUpIcon
                 className="pronunciation"
                 onClick={() => playAudio('word')}
@@ -179,7 +196,9 @@ export default function Entry() {
                   {entry.mankonSentences.map((example, index) => (
                     <li className="list-group-item" key={index}>
                       <strong className="mankonExample">{example}</strong>
-                      {entry.sentenceAudioFileIds && entry.sentenceAudioFileIds[index] && (
+                      {entry.sentenceAudioFilenames && 
+                       entry.sentenceAudioFilenames[index] && 
+                       audioUrls[`sentence_${index}`] && (
                         <VolumeUpIcon 
                           className="pronunciation" 
                           onClick={() => playAudio('sentence', index)}

@@ -14,7 +14,7 @@ export default function Writing() {
       return;
     }
 
-    const audio = new Audio(`/audio/${id}.wav`);
+    const audio = new Audio(`/audio/${id}.ogg`);
     audioCache.current[id] = audio;
     audio.play();
   };
@@ -140,7 +140,7 @@ export default function Writing() {
             </div>
             <hr className="section-divider-mini" />
             <div className="letter-row">
-              <span><button className="alphabet" onClick={() => playAudio("ɲ")}>ɛ</button></span>
+              <span><button className="alphabet" onClick={() => playAudio("ɲ")}>ɲ</button></span>
               <p className="explanation">This letter appears in the Mankon name Anye, &quot;àɲɛ&quot;, and while English speakers typically use a slightly different pronounciation, the sound is approximated in the word &quot;canyon&quot;</p>
             </div>
             <hr className="section-divider-mini" />
