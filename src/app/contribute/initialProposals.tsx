@@ -339,8 +339,7 @@ export default function InitialProposals() {
   }
 
   return (
-    <div className="content-wrapper">
-      <div className="content">
+    <>
         <h1 className="text-3xl font-bold mb-6 text-center">Requested Words</h1>
 
         <div className="intro-decoration">
@@ -386,22 +385,9 @@ export default function InitialProposals() {
             {/* Type Dictionary Listing */}
             {selectedType && (
               <div className="my-6">
-                <h4 className="text-xl font-bold mb-4">{selectedType} ({totalTypeWords} words)</h4>
-                
-                <div className="list-group">
-                  {currentTypeWords.map(([id, entry]) => (
-                    <Link 
-                      key={id} 
-                      href={`/contribute/proposal-form/${id}`}
-                      className="list-group-item list-group-item-action"
-                    >
-                      {getDisplayWord(entry)}
-                    </Link>
-                  ))}
-                </div>
-
-                {/* Type Pagination */}
-                {totalTypeWords > typeItemsPerPage && (
+                <h3 className="text-xl font-bold mb-4">{selectedType} ({totalTypeWords} words)</h3>
+                 {/* Type Pagination */}
+                 {totalTypeWords > typeItemsPerPage && (
                   <div className="custom-pagination flex justify-center items-center mt-8">
                     <button
                       onClick={() => setTypeCurrentPage(1)}
@@ -462,6 +448,19 @@ export default function InitialProposals() {
                     </button>
                   </div>
                 )}
+                <div className="list-group">
+                  {currentTypeWords.map(([id, entry]) => (
+                    <Link 
+                      key={id} 
+                      href={`/contribute/proposal-form/${id}`}
+                      className="list-group-item list-group-item-action"
+                    >
+                      {getDisplayWord(entry)}
+                    </Link>
+                  ))}
+                </div>
+
+               
               </div>
             )}
           </div>
@@ -494,20 +493,7 @@ export default function InitialProposals() {
           {/* Dictionary Listing for Selected Letter */}
           {selectedLetter && (
             <div className="my-6">
-              <h4 className="text-xl font-bold mb-4">{selectedLetter} ({totalAlphabetWords} words)</h4>
-              
-              <div className="list-group">
-                {currentAlphabetWords.map(([id, entry]) => (
-                  <Link 
-                    key={id} 
-                    href={`/contribute/proposal-form/${id}`}
-                    className="list-group-item list-group-item-action"
-                  >
-                    {getDisplayWord(entry)}
-                  </Link>
-                ))}
-              </div>
-
+              <h3 className="text-xl font-bold mb-4">{selectedLetter} ({totalAlphabetWords} words)</h3>
               {/* Pagination for words within the selected letter */}
               {totalAlphabetWords > alphabetItemsPerPage && (
                 <div className="custom-pagination flex justify-center items-center mt-8">
@@ -570,6 +556,17 @@ export default function InitialProposals() {
                   </button>
                 </div>
               )}
+              <div className="list-group">
+                {currentAlphabetWords.map(([id, entry]) => (
+                  <Link 
+                    key={id} 
+                    href={`/contribute/proposal-form/${id}`}
+                    className="list-group-item list-group-item-action"
+                  >
+                    {getDisplayWord(entry)}
+                  </Link>
+                ))}
+              </div>
             </div>
           )}
         </div>
@@ -580,7 +577,6 @@ export default function InitialProposals() {
             <p className="text-xl">No dictionary entries found.</p>
           </div>
         )}
-      </div>
-    </div>
+    </>
   );
 }

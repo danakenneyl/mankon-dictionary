@@ -6,7 +6,7 @@ export default function Contribute() {
   return (
     <div className="content-wrapper">
       <div className="content">
-        <section className="homepage-intro">
+
           <h1 className="intro-text">Propose a New Entry</h1>
           
           <div className="intro-decoration">
@@ -104,7 +104,6 @@ export default function Contribute() {
               </Link>
             </div>
           </div>
-        </section>
       </div>
     </div>
   );

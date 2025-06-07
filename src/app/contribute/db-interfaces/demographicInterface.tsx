@@ -33,17 +33,17 @@ export default function DemographicInterface() {
         return () => unsubscribe();
       }, []);
     
-    return (<div className="left">
+    return (<div className="outline">
                 {demographics && Object.keys(demographics).length > 0 ? 
                 <>
-                    <section className="max-w-3xl mx-auto p-6 interface-head">
+ 
                     <h1 className="text-4xl font-bold mb-6 text-center">Demographics</h1>
                     <div className="intro-decoration">
                     <div className="decoration-line"></div>
                     <div className="decoration-symbol"></div>
                     <div className="decoration-line"></div>
                     </div>
-                    </section>
+
                     {Object.entries(demographics).map(([id, demographic]) => (
                         <div key = {id} className="demographic-card">
                             <h3 className="text-2xl font-bold">{demographic.UUID}</h3>

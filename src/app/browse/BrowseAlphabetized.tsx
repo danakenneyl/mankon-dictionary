@@ -270,14 +270,13 @@ export default function BrowseAlphabetized({page}: {page: string}) {
   return (
     <div className="content-wrapper">
       <div className="content">
-        <h2 className="text-3xl font-bold mb-6 text-center">Browse</h2>
+        <h1 className="text-3xl font-bold mb-6 text-center">Browse</h1>
 
         <div className="intro-decoration">
           <div className="decoration-line"></div>
           <div className="decoration-symbol"></div>
           <div className="decoration-line"></div>
         </div>
-
         {/* Alphabet Navigation */}
         {lettersWithEntries.length > 0 && (
           <div className="custom-alpha-nav flex flex-wrap justify-center mt-6 mb-8">
@@ -300,10 +299,74 @@ export default function BrowseAlphabetized({page}: {page: string}) {
 
         {/* Dictionary Listing for Selected Letter */}
         {selectedLetter && (
-          <div className="my-6">
-            <h3 className="text-2xl font-bold mb-4">{selectedLetter}</h3>
-            
+          <div className="my-6"> 
+          <div className="letter-and-nav">
+            <h3 className="text-2xl font-bold mb-4 text-center">{selectedLetter}</h3>
+                    {/* Pagination for words within the selected letter */}
+            {totalWords > itemsPerPage && (
+                <div className="custom-pagination flex justify-center items-center mt-8">
+                  <button
+                    onClick={() => setCurrentPage(1)}
+                    disabled={currentPage === 1}
+                    data-nav-type="pagination"
+                    className="custom-nav-btn mx-1 px-3 py-1 rounded"
+                  >
+                    &laquo;
+                  </button>
+                  <button
+                    onClick={prevPage}
+                    disabled={currentPage === 1}
+                    data-nav-type="pagination"
+                    className="custom-nav-btn mx-1 px-3 py-1 rounded"
+                  >
+                    &lt;
+                  </button>
+                  {[...Array(totalPages)].map((_, i) => {
+                    const pageNum = i + 1;
+                    const showPageNumbers = 5;
+                    const halfShow = Math.floor(showPageNumbers / 2);
+                    let startPage = Math.max(1, currentPage - halfShow);
+                    const endPage = Math.min(totalPages, startPage + showPageNumbers - 1);
+                    if (endPage - startPage + 1 < showPageNumbers) {
+                      startPage = Math.max(1, endPage - showPageNumbers + 1);
+                    }
+                    if (pageNum >= startPage && pageNum <= endPage) {
+                      return (
+                        <button
+                          key={i}
+                          onClick={() => paginate(pageNum)}
+                          data-nav-type="pagination"
+                          className={`custom-nav-btn mx-1 px-3 py-1 rounded ${
+                            currentPage === pageNum ? 'custom-nav-selected' : ''
+                          }`}
+                        >
+                          {pageNum}
+                        </button>
+                      );
+                    }
+                    return null;
+                  })}
+                  <button
+                    onClick={nextPage}
+                    disabled={currentPage === totalPages}
+                    data-nav-type="pagination"
+                    className="custom-nav-btn mx-1 px-3 py-1 rounded"
+                  >
+                    &gt;
+                  </button>
+                  <button
+                    onClick={() => setCurrentPage(totalPages)}
+                    disabled={currentPage === totalPages}
+                    data-nav-type="pagination"
+                    className="custom-nav-btn mx-1 px-3 py-1 rounded"
+                  >
+                    &raquo;
+                  </button>
+                </div>
+              )}
+            </div>
             <div className="list-group">
+
               {currentWords.map(([id, entry]) => (
                 <Link 
                   key={id} 
@@ -314,69 +377,6 @@ export default function BrowseAlphabetized({page}: {page: string}) {
                 </Link>
               ))}
             </div>
-
-            {/* Pagination for words within the selected letter */}
-            {totalWords > itemsPerPage && (
-              <div className="custom-pagination flex justify-center items-center mt-8">
-                <button
-                  onClick={() => setCurrentPage(1)}
-                  disabled={currentPage === 1}
-                  data-nav-type="pagination"
-                  className="custom-nav-btn mx-1 px-3 py-1 rounded"
-                >
-                  &laquo;
-                </button>
-                <button
-                  onClick={prevPage}
-                  disabled={currentPage === 1}
-                  data-nav-type="pagination"
-                  className="custom-nav-btn mx-1 px-3 py-1 rounded"
-                >
-                  &lt;
-                </button>
-                {[...Array(totalPages)].map((_, i) => {
-                  const pageNum = i + 1;
-                  const showPageNumbers = 5;
-                  const halfShow = Math.floor(showPageNumbers / 2);
-                  let startPage = Math.max(1, currentPage - halfShow);
-                  const endPage = Math.min(totalPages, startPage + showPageNumbers - 1);
-                  if (endPage - startPage + 1 < showPageNumbers) {
-                    startPage = Math.max(1, endPage - showPageNumbers + 1);
-                  }
-                  if (pageNum >= startPage && pageNum <= endPage) {
-                    return (
-                      <button
-                        key={i}
-                        onClick={() => paginate(pageNum)}
-                        data-nav-type="pagination"
-                        className={`custom-nav-btn mx-1 px-3 py-1 rounded ${
-                          currentPage === pageNum ? 'custom-nav-selected' : ''
-                        }`}
-                      >
-                        {pageNum}
-                      </button>
-                    );
-                  }
-                  return null;
-                })}
-                <button
-                  onClick={nextPage}
-                  disabled={currentPage === totalPages}
-                  data-nav-type="pagination"
-                  className="custom-nav-btn mx-1 px-3 py-1 rounded"
-                >
-                  &gt;
-                </button>
-                <button
-                  onClick={() => setCurrentPage(totalPages)}
-                  disabled={currentPage === totalPages}
-                  data-nav-type="pagination"
-                  className="custom-nav-btn mx-1 px-3 py-1 rounded"
-                >
-                  &raquo;
-                </button>
-              </div>
-            )}
           </div>
         )}
 

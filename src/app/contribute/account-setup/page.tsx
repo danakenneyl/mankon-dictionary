@@ -151,7 +151,7 @@ export default function AccountSetup() {
                         </div>
                         <p className="center-text txt">Please choose a username and password.</p>
                         {/* Question 1: Unique username */}
-                        <div >
+                        <div className="account-input">
                             <input 
                                 type="text" 
                                 name="username" 
@@ -164,7 +164,7 @@ export default function AccountSetup() {
                             <p>{usernameStatus.message}</p>
                         </div>
                         {/* Question 1: Password */}
-                        <div>
+                        <div className="account-input">
                             <input 
                                 type="text" 
                                 name="password" 
@@ -181,14 +181,15 @@ export default function AccountSetup() {
                                 {submitError}
                             </div>
                         )}
-
-                        <button 
-                            type="submit" 
-                            disabled={isSubmitting}
-                            className="next-button"
-                            >
-                            Create Account
-                        </button>
+                        <div className="flex items-center justify-center">
+                            <button 
+                                type="submit" 
+                                disabled={isSubmitting}
+                                className="next-button "
+                                >
+                                Create Account
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>

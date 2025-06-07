@@ -6,16 +6,12 @@ export default function Voices() {
       <div className="flex justify-center">
         <div className="content-wrapper">
           <div className="content">
-            
-            <section className="max-w-3xl mx-auto p-6">
               <h1 className="text-4xl font-bold mb-6 text-center">Founding Voices</h1>
               <div className="intro-decoration">
               <div className="decoration-line"></div>
               <div className="decoration-symbol"></div>
               <div className="decoration-line"></div>
               </div>
-            </section>
-
             {/* Voice 1 */}
             <div className="bio-container">
               <div className="bio-name">
