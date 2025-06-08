@@ -601,7 +601,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                     Press <strong>&apos;Stop&apos;</strong></li>
                   <li>Listen to your recording.</li>
                   <li>If you don&apos;t like your recording, hit <strong>&apos;Clear&apos;</strong> and try again. If you are 
-                  happy with your recording, click the <strong>&apos;Propose a Sentence&apos;</strong> button below.</li>
+                  happy with your recording, click the <strong>&apos;Submit Proposal&apos;</strong> button below.</li>
                 </ol>
                 <AudioRecorder
                   instanceId="audio-sent-2"

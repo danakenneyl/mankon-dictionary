@@ -60,9 +60,9 @@ export default function Guide() {
             <h2 className="text-2xl font-semibold mb-3">Contributing to the Dictionary</h2>
             <ul className="list-disc list-inside mb-6">
                 <li><strong>Propose a Word:</strong> Submit a new Mankon word along with its English translation, two sample sentences, and recordings of your contributions.</li>
-                <NavButton pageName="Propose Word" href="/contribute/propose-dictionary-entry"></NavButton>
+                <NavButton pageName="Propose Word" href="/contribute/contribute-instructions"></NavButton>
                 <li><strong>Word Requests:</strong> Help by recording words and sentences from a list of suggested entries. Perfect for contributors who cannot type or prefer to start from a ready-made list!</li>
-                <NavButton pageName="Word Requests" href="/contribute/mankon-word-requests"></NavButton>
+                <NavButton pageName="Word Requests" href="/contribute/initial-requests"></NavButton>
             </ul>
 
             <p className="mt-6 conclusion">
