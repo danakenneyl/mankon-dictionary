@@ -9,7 +9,7 @@ export interface BrowseWord {
 export default function alphabetize(data: BaseEntry[], isEnglish: boolean): Record<string, BrowseWord[]> {
   const groups: Record<string, BrowseWord[]> = {};
   // Mankon alphabet with multi-character letters
-  const mankonAlphabet = ["A", "B", "Bv", "Tʃ", "D", "Dv", "Dz", "Dʒ", "E", "G", "Ɣ", "Ɨ", "K", "Kf", "L", "Lv", "M", "N", "Ɲ", "Ŋ", "O", "Ɔ", "S", "Ʃ", "T", "Tf", "Ts", "V", "W", "Y", "Z", "Ʒ"];
+  const mankonAlphabet = ["A", "B", "Bv", "Tʃ", "D", "Dv", "Dz", "E", "Ə", "Ɛ", "F", "G", "Gv", "Ɣ", "I", "Ɨ", "Dʒ", "K", "Kf", "L", "Lv", "M", "N", "Ɲ", "Ŋ", "O", "Ɔ", "S", "Ʃ", "T", "Tf", "Ts", "U", "V", "W", "Y", "Z", "Ʒ", "ʔ"];
   
   function removeAccents(str: string): string {
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').normalize('NFC');

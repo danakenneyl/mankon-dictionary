@@ -68,7 +68,6 @@ export default function Writing() {
             <span><button className="alphabet" onClick={() => playAudio("gv")}>gv</button></span>
 
             <span><button className="alphabet" onClick={() => playAudio("ɣ")}>ɣ</button></span>
-            <span><button className="alphabet" onClick={() => playAudio("ʔ")}>ʔ</button></span>
             <span><button className="alphabet" onClick={() => playAudio("dʒ")}>dʒ</button></span>
             <span><button className="alphabet" onClick={() => playAudio("k")}>k</button></span>
             <span><button className="kf" onClick={() => playAudio("pf")}>kf pf</button></span>
@@ -90,6 +89,7 @@ export default function Writing() {
             <span><button className="alphabet" onClick={() => playAudio("y")}>y</button></span>
             <span><button className="alphabet" onClick={() => playAudio("z")}>z</button></span>
             <span><button className="alphabet" onClick={() => playAudio("ʒ")}>ʒ</button></span>
+            <span><button className="alphabet" onClick={() => playAudio("ʔ")}>ʔ</button></span>
             </div>
           </section>
 
@@ -165,9 +165,13 @@ export default function Writing() {
           <section>
             <h2> The Community-Based Teaching and Learning Alphabet (CABTAL)</h2>
             <p>
-              The alphabet used by CABTAL heavily borrows from the standardized writing system developed for a diverse range of Cameroonian languages in 1979. The CABTAL alphabet is primarily used in Bible translations for Mankon. Recently, they have committed to developing a Mankon Dictionary in collaboration with SIL-Cameroon.
-              CABTAL uses the same 9 vowels as the Mankon Alphabet, but represents all consonants using letters from the English Alphabet.
+                The CABTAL alphabet, originally used by MALACO, is primarily used to translate the Bible into Mankon. 
+                It was adapted from the General Alphabet of Cameroonian Languages. 
+                Recently, some MALACO members formed a sub-group, MALACA. 
+                MALACA has committed to working with CABTAL and SIL-Cameroon to create it&apos;s own Mankon dictionary. 
+                CABTAL’s alphabet has the same 9 vowels as the Mankon alphabet. However, it uses letters from the English alphabet to write all consonants.
             </p>
+
 
             <h3>Vowels</h3>
               <div className="letter-grid">
@@ -185,49 +189,62 @@ export default function Writing() {
               <h3>Consonants</h3>
               <div className="letter-grid">
               <span><button className="alphabet" onClick={() => playAudio("b")}>b</button></span>
-              <span><button className="alphabet" onClick={() => playAudio("bv")}>bv</button></span>
               <span><button className="alphabet" onClick={() => playAudio("ch")}>ch</button></span>
               <span><button className="alphabet" onClick={() => playAudio("d")}>d</button></span>
-              <span><button className="alphabet" onClick={() => playAudio("dv")}>dv</button></span>
-              <span><button className="alphabet" onClick={() => playAudio("dz")}>dz</button></span>
               <span><button className="alphabet" onClick={() => playAudio("f")}>f</button></span>
               <span><button className="alphabet" onClick={() => playAudio("g")}>g</button></span>
-              <span><button className="alphabet" onClick={() => playAudio("gv")}>gv</button></span>
-
               <span><button className="alphabet" onClick={() => playAudio("ɣ")}>gh</button></span>
-              <span><button className="alphabet" onClick={() => playAudio("ʔ")}>&apos;</button></span>
               <span><button className="alphabet" onClick={() => playAudio("dʒ")}>j</button></span>
               <span><button className="alphabet" onClick={() => playAudio("k")}>k</button></span>
-              <span><button className="kf" onClick={() => playAudio("pf")}>kf pf</button></span>
               <span><button className="alphabet" onClick={() => playAudio("l")}>l</button></span>
-              <span><button className="alphabet" onClick={() => playAudio("lv")}>lv</button></span>
               <span><button className="alphabet" onClick={() => playAudio("m")}>m</button></span>
               <span><button className="alphabet" onClick={() => playAudio("n")}>n</button></span>
-
-              <span><button className="alphabet" onClick={() => playAudio("ɲ")}>ny</button></span>
-              <span><button className="alphabet" onClick={() => playAudio("ŋ")}>ng</button></span>
+              <span><button className="alphabet" onClick={() => playAudio("ŋ")}>ŋ</button></span>
               <span><button className="alphabet" onClick={() => playAudio("r")}>r</button></span>
               <span><button className="alphabet" onClick={() => playAudio("s")}>s</button></span>
-              <span><button className="alphabet" onClick={() => playAudio("ʃ")}>sh</button></span>
               <span><button className="alphabet" onClick={() => playAudio("t")}>t</button></span>
-              <span><button className="alphabet" onClick={() => playAudio("tf")}>tf</button></span>
-              <span><button className="alphabet" onClick={() => playAudio("ts")}>ts</button></span>
               <span><button className="alphabet" onClick={() => playAudio("v")}>v</button></span>
               <span><button className="alphabet" onClick={() => playAudio("w")}>w</button></span>
               <span><button className="alphabet" onClick={() => playAudio("y")}>y</button></span>
               <span><button className="alphabet" onClick={() => playAudio("z")}>z</button></span>
+              <span><button className="alphabet" onClick={() => playAudio("ʔ")}>&apos;</button></span>
+              </div>
+
+              <h3>Unofficial Consonants</h3>
+              <div className="letter-grid">
+              <span><button className="alphabet" onClick={() => playAudio("bv")}>bv</button></span>
+              <span><button className="alphabet" onClick={() => playAudio("dv")}>dv</button></span>
+              <span><button className="alphabet" onClick={() => playAudio("dz")}>dz</button></span>
+              <span><button className="alphabet" onClick={() => playAudio("gv")}>gv</button></span>
+              <span><button className="alphabet" onClick={() => playAudio("pf")}>kf</button></span>
+              <span><button className="alphabet" onClick={() => playAudio("lv")}>lv</button></span>
+              <span><button className="alphabet" onClick={() => playAudio("ɲ")}>ny</button></span>
+              <span><button className="alphabet" onClick={() => playAudio("ʃ")}>sh</button></span>
+              <span><button className="alphabet" onClick={() => playAudio("tf")}>tf</button></span>
+              <span><button className="alphabet" onClick={() => playAudio("ts")}>ts</button></span>
               <span><button className="alphabet" onClick={() => playAudio("ʒ")}>zh</button></span>
               </div>
-            <h3>Differences from the Mankon Alphabet</h3>
+       
+            <h3>Differences Between the Two Alphabets</h3>
             <ul>
-              <li>Mankon uses <strong>tʃ</strong> while GACL uses <strong>ch</strong>.</li>
-              <li>Mankon uses <strong>ʃ</strong> while GACL uses <strong>sh</strong>.</li>
-              <li>Mankon uses <strong>ʔ</strong> while GACL uses <strong>&apos;</strong> (apostrophe).</li>
-              <li>Mankon uses <strong>ɣ</strong> while GACL uses <strong>gh</strong>.</li>
-              <li>Mankon uses <strong>dʒ</strong> while GACL uses <strong>j</strong>.</li>
-              <li>Mankon uses <strong>ʒ</strong> while GACL uses <strong>zh</strong>.</li>
-              <li>Mankon uses <strong>ɲ</strong> while GACL uses <strong>ny</strong>.</li>
-              <li>Mankon uses <strong>ŋ</strong> while GACL uses <strong>ng</strong>.</li>
+              <li>
+                The Mankon Alphabet uses a 40 letter alphabet. 
+                All Mankon phonemes are assigned their own official letter. 
+                </li>
+              <li>
+                CABTAL uses a 29 letter alphabet to write Mankon. To achieve this small number, 
+                CABTAL does not consider most Mankon phonemes that must be represented by two letters (digraphs) to be official letters. 
+                CABTAL still uses these digraphs in Bible translation. Therefore, they must still be learned 
+                regardless of which alphabet is used. 
+              </li>
+              <li>Mankon uses <strong>tʃ</strong> while CABTAL uses <strong>ch</strong>.</li>
+              <li>Mankon uses <strong>ʃ</strong> while CABTAL uses <strong>sh</strong>.</li>
+              <li>Mankon uses <strong>ʔ</strong> while CABTAL uses <strong>&apos;</strong> (apostrophe).</li>
+              <li>Mankon uses <strong>ɣ</strong> while CABTAL uses <strong>gh</strong>.</li>
+              <li>Mankon uses <strong>dʒ</strong> while CABTAL uses <strong>j</strong>.</li>
+              <li>Mankon uses <strong>ʒ</strong> while CABTAL uses <strong>zh</strong>.</li>
+              <li>Mankon uses <strong>ɲ</strong> while CABTAL uses <strong>ny</strong>.</li>
+              <li>Mankon uses <strong>ŋg</strong> while CABTAL uses <strong>ng</strong>.</li>
             </ul>
           </section>
 
