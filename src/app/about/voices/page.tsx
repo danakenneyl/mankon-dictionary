@@ -12,7 +12,38 @@ export default function Voices() {
               <div className="decoration-symbol"></div>
               <div className="decoration-line"></div>
               </div>
+
             {/* Voice 1 */}
+            <div className="bio-container">
+              <div className="bio-name">
+                <h2 className="text-2xl font-semibold mb-3">Tata Gideon Anye Ndiene</h2>
+              </div>
+              <div className="bio-image">
+                <Image
+                  src="/images/GideonNdiene.jpg"
+                  alt="Tata Gideon Anye Ndiene"
+                  className="bio-img"
+                  width={325}
+                  height={361}
+                />
+              </div>
+              <div className="bio-text">
+                <p>
+                  Tata Gideon Anye Ndiene was born in Mankon in 1947. He went to primary school in the then Basel Mission School Mbengwi in Momo from 1955-1958 and completed his educucation at the Basel Mission School Azire Mankon from 1959-1962. After teaching probationarily from 1963-1965 in Council School Santa Mezam, he was transferred to Council Nyenji Batibo Sub Division where he taught from 1965-1966.
+                </p>
+                <p>
+                  In 1967, he wrote and succeeded the professional entrance examination into the West Cameroon Police College Mutengene, Tiko Sub Division. He successfully passed and was posted to Police Station Mamfe Manyu Division from 1967-1973. He then transferred to Victoria in Fako Division Cameroon where he served for ten years. He served in Kumba from 1983-1985, then transfered to Bamenda, his subdivision of origin, from 1985-1995 before retiring. Throughout his career, he did in-service studies as a Road Traffic Officer, went to Clerical School in Buea for six months in Mutengene, Police School of Transmission (Mose Code), and acquired the London Diploma in Business English. 
+                </p>
+                <p>
+                  He married in 1970 to Elder late Mary Ngum Anye with whom he had children. He is the son of the late Tata Ndiene Soh and Paulina Ngum, the daughter of Princess Swirri of Ngwa&apos;for II. 
+                </p>
+                <p>
+                  Tata Gideon has undergone training in the writing, reading, and presently teaching of Mankon. He has, however, never stopped learning more from other teachers. 
+                  He is currently a retired civil servant of the GDNS, Yde Cmr. and lives in the U.S. with his daughter, Vivian Bi Anye.
+                </p>
+              </div>
+            </div>
+            {/* Voice 2 */}
             <div className="bio-container">
               <div className="bio-name">
                 <h2 className="text-2xl font-semibold mb-3">Samuel Fonteh</h2>
@@ -35,7 +66,7 @@ export default function Voices() {
               </div>
             </div>
 
-            {/* Voice 2 */}
+            {/* Voice 3 */}
             <div className="bio-container">
               <div className="bio-name">
                 <h2 className="text-2xl font-semibold mb-3">Christopher Che Chi</h2>
@@ -74,7 +105,7 @@ export default function Voices() {
               </div>
             </div>
 
-            {/* Voice 3 */}
+            {/* Voice 4 */}
             <div className="bio-container">
               <div className="bio-name">
                 <h2 className="text-2xl font-semibold mb-3">Dr. Judith Shu Tse</h2>
