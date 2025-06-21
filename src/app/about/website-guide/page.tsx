@@ -46,7 +46,7 @@ export default function Guide() {
                 <li><strong>Browse in English:</strong> View the full dictionary organized according to English alphabetical order.</li>
                 <NavButton pageName="Browse in English" href="/browse/browse-english" ></NavButton>
                 <li><strong>Browse Names:</strong> Peruse Mankon names, historical figures, and culturally significant place names.</li>
-                <NavButton pageName="Browse Names" href="/browse/browse-english" ></NavButton>
+                <NavButton pageName="Browse Names" href="/browse/browse-name" ></NavButton>
             </ul>
 
             <h2 className="text-2xl font-semibold mb-3">Language Help</h2>
