@@ -30,11 +30,12 @@ export default function ContributeMenu({ onItemClick }: BrowseMenuProps) {
       </Dropdown.Toggle>
       <Dropdown.Menu>
         <Dropdown.Item onClick={() => handleNavigate("contribute-instructions")}>
-          Propose Word
+          Get Started
         </Dropdown.Item>
+
         <Dropdown.Divider />
         <Dropdown.Item onClick={() => handleNavigate("initial-requests")}>
-          Word Requests
+          Propose Word
         </Dropdown.Item>
         <Dropdown.Divider />
         <Dropdown.Item onClick={() => handleNavigate("db-interfaces")}>

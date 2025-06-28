@@ -69,7 +69,7 @@
     margin: 0 auto;
   }
   
-  ul {
+  ul, .list-item {
     padding-left: 1.5rem;
   }
   
@@ -550,7 +550,8 @@
     -moz-appearance:none;      /* Firefox               */
   
     /* box look */
-    width:2.25rem;
+    min-width:2.25rem;
+    max-width:2.25rem;
     height:2.25rem;
     border:2px solid #ff8800;  /* orange outline         */
     border-radius:4px;         /* slight rounding        */

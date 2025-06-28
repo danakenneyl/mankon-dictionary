@@ -36,6 +36,10 @@ export default function LanguageHelpMenu({ onItemClick }: BrowseMenuProps) {
         <Dropdown.Item onClick={() => handleNavigate("voices")}>
           Founding Voices
         </Dropdown.Item>
+        <Dropdown.Divider />
+        <Dropdown.Item onClick={() => handleNavigate("contact-us")}>
+          Contact Us
+        </Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
   );

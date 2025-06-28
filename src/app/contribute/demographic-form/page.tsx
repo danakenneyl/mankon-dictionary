@@ -44,7 +44,8 @@ export interface formData {
     communicationMode: communicationMode;
     email: string;
     phoneNumber: string;
-    consentReceived: boolean;
+    researchConsentReceived: boolean;
+    attributionConsentReceived: boolean;
 }
 
 export default function DemographicQuestions() {
@@ -98,7 +99,8 @@ export default function DemographicQuestions() {
         },
         email: "",
         phoneNumber: "",
-        consentReceived: false
+        researchConsentReceived: false,
+        attributionConsentReceived: false
     });
 
     // Required fields for fast reference
@@ -192,10 +194,17 @@ export default function DemographicQuestions() {
         }));
     };
 
-    const handleConsentChange = () => {
+    const handleResearchConsentChange = () => {
         setFormData((prevData) => ({
             ...prevData,
-            consentReceived: !prevData.consentReceived
+            researchConsentReceived: !prevData.researchConsentReceived
+        }));
+    };
+
+        const handleAttributionConsentChange = () => {
+        setFormData((prevData) => ({
+            ...prevData,
+            attributionConsentReceived: !prevData.attributionConsentReceived
         }));
     };
 
@@ -288,7 +297,8 @@ export default function DemographicQuestions() {
                 age: formData.age,
                 location: formData.location,
                 diaspora: formData.diaspora.yes,
-                consentReceived: formData.consentReceived,
+                researchConsentReceived: formData.researchConsentReceived,
+                attributionConsentReceived: formData.attributionConsentReceived,
                 spokenLanguage: buildLanguageString(
                   formData.spokenLanguageCheck,
                   formData.spokenLanguageOther
@@ -342,8 +352,7 @@ export default function DemographicQuestions() {
                         </div>
                         <div className="attribution-form">
                         {/* Username */}
-                        <div className="lang-space">
-                            <h2 className= "language-checkboxes">Section 1:  General Information</h2>
+                            <h2 className= "language-checkboxes">Section 1:  General Demographic Information</h2>
                         <div>
                             <p>
                                 Please enter your username.
@@ -356,17 +365,6 @@ export default function DemographicQuestions() {
                                 value={formData.username}
                                 onChange={handleUserInput}
                                 placeholder="username"
-                                className="login-input attribution-input"
-                                required
-                            />
-                        {/* Full Name */}
-                            <p>Please enter your full name.</p>
-                            <input 
-                                type="text" 
-                                name="name" 
-                                value={formData.name}
-                                onChange={handleUserInput}
-                                placeholder="Full Name"
                                 className="login-input attribution-input"
                                 required
                             />
@@ -389,9 +387,13 @@ export default function DemographicQuestions() {
                             <p className="center-text">
                                 Where do you currently live?
                                 <br/>
-                                Include State/Province/Region and Country separated by a comma
+                                Include State/Province/Region and Country separated by a comma. 
+                                <br/>
+                                <strong>DO NOT include your personal address</strong>
                                 <br/>
                                 Example: Minnesota, USA
+                                
+                                
                                 </p> 
                             <input 
                                 type="text" 
@@ -402,7 +404,6 @@ export default function DemographicQuestions() {
                                 className="login-input attribution-input"
                                 required
                             />
- 
 
                         {/* Diaspora */}
                  
@@ -431,7 +432,7 @@ export default function DemographicQuestions() {
                             </div>
                         </div>
                         {/* All Languages Spoken*/}
-                        <div className="lang-space">
+                  
                             <h2 className= "language-checkboxes">Section 2:  General Language History</h2>
                             <p >What language(s) do you speak?</p> 
                             <LanguageCheckBoxes category="spoken" formData={formData} setFormData={setFormData} />
@@ -441,10 +442,9 @@ export default function DemographicQuestions() {
                         {/* Childhood Languages */}
                             <p>What language(s) do/did you speak with your parents growing up?</p> 
                             <LanguageCheckBoxes category="childhood" formData={formData} setFormData={setFormData} />
-              
-                        </div>
+    
 
-                        <div className="lang-space">
+                    <div>
                             <h2 className= "language-checkboxes">Section 3:  Mankon Language History</h2>
                             {/* Years Speaking */}
           
@@ -474,7 +474,7 @@ export default function DemographicQuestions() {
                   
 
                         {/* Speech Proficiency */}
-              
+                    
                 
                         <p>How proficient are you at speaking Mankon? (Scale 1-5)</p>
                         <ul>
@@ -535,11 +535,102 @@ export default function DemographicQuestions() {
                             placeholder="0"
                             required
                         />
-                        </div>
-                        <div className="lang-space">
+             
+                    </div>
                             <h2 className= "language-checkboxes">Section 4:  Contact and Consent</h2>
+                            <p className="center-text">
                             <strong>Please read the following section carefully before checking any boxes.</strong>
-                        {/* Communication Preferences */}
+                            </p>
+                         
+                        <h3 className="center-text">
+                            <strong>Data Ownership and Licensing</strong>
+                        </h3>
+                        <p>
+                            Recordings might be associated with your name and the general demographic information you provide. 
+                            This type of acknowledgement/authorship is an important ethical practice in the linguistics field; The Mankon Dictionary&apos;s consent process is written to give you full control over whether your recorded speech is attributed to you by name. 
+                            This practice is in accordance with guidelines from the Linguistic Society of America (LSA), 
+                            which states, “Research participants have the right to control whether their actions are recorded in such a way that they can be connected with their personal identity” 
+                            and recognizes that ownership and attribution of language use by speakers is a key part of research ethics in our field. 
+                            <br/>
+                            As a Mankon speaker, you retain ownership of your language data, and license usage rights for others using a <strong>Creative Commons Attribution-Non-Commercial 4.0 International License (CC BY-NC-SA 4.0)</strong> - human-readable license text; Legal License text. This license allows people to: 
+                        </p>
+                        <div className="list-item">
+                            <li><strong>Share</strong> — copy and redistribute the material in any medium or format.</li>
+                            <li><strong>Adapt</strong> — remix, transform, and build upon the material.</li>
+                        </div>
+                        <p>
+                            Under the following conditions:
+                            <br/><strong>Attribution</strong> — You must give appropriate credit, provide a link to the license, and indicate if changes were made.
+                            <br/><strong>NonCommercial</strong> — the material may not be used for commercial purposes.
+                            <br/><strong>Whom do I contact if I have questions, concerns or feedback about my experience?</strong> 
+                            <br></br>
+                            This research has been reviewed and approved by an IRB within the Human Research Protections Program (HRPP) at the University of Minnesota. 
+                            To share feedback privately with the HRPP about your experience or treatment, call the Research Participants&apos; 
+                            Advocate Line at 612-625-1650 (Toll Free: 1-888-224-8636) or go to z.umn.edu/participants. You are encouraged to contact the HRPP if: 
+                        </p>
+                        <div className="list-item">
+                            <li>Your questions, concerns, or complaints are not being answered by the research team.</li>
+                            <li>You cannot reach the research team.</li>
+                            <li>You want to talk to someone besides the research team.</li>
+                            <li>You have questions about your rights as a research participant</li>
+                            <li>You want to get information or provide input about this research.</li>
+                        </div>
+      
+
+                        <h3 className="center-text">
+                            <strong>Agreement & Use of Mankon Language Data </strong>
+                        </h3>
+                        <p>
+                            The following items are optional, meaning that <strong>you do not have to agree to it in order to participate</strong> in this project. Please indicate your consent by initialing. 
+                        </p>
+
+                        <div className="diaspora-options homepage-intro">
+                            <input 
+                                type="checkbox" 
+                                id="consent-checkbox" 
+                                checked={formData.attributionConsentReceived} 
+                                onChange={handleAttributionConsentChange}
+                            />
+                            <label >
+                                My language data can be publicly attributed to my name when shared by the researcher team in research publications, in curricular materials,
+                                and on the Mankon Dictionary Website. 
+                                This means that my name, generation (e.g., age group or cohort), diaspora status, 
+                                and general location may be displayed alongside recordings I submit to the Mankon Dictionary.
+                            </label>
+                        </div>
+
+                        <div className="diaspora-options homepage-intro">
+                            <input 
+                                type="checkbox" 
+                                id="consent-checkbox" 
+                                checked={formData.researchConsentReceived} 
+                                onChange={handleResearchConsentChange}
+                            />
+                            <label>
+                                The Researchers for this Project can use my recording data for linguistic research purposes, 
+                                including publishing the data in research papers under a Creative Commons Attribution-NonCommercial 4.0 International License - CC BY-NC 4.0
+                                (human-readable explanation; Legal License text). 
+                            </label>
+                        </div>
+                        <p>
+                            For questions about research appointments, the research study, research results, or other concerns, contact the researcher Dana Kenney-Lillejord - Institute of Linguistics - kenny130@umn.edu - 763-232-9392
+                            <br/>
+                            <br/>
+                            Your typed signature documents your agreement to participate in this research project according to the terms indicated above, and indicates your understanding that you can withdraw from participation at any time. 
+                        </p>
+                        {/* Full Name */}
+                        <p>Sign below by typing your full name.</p>
+                        <input 
+                            type="text" 
+                            name="name" 
+                            value={formData.name}
+                            onChange={handleUserInput}
+                            placeholder="Full Name"
+                            className="login-input attribution-input"
+                            required
+                        />
+                        <hr className="section-divider" />
+                         {/* Communication Preferences */}
                         <p>If you are interested in contributing in a larger capacity, let us know how we can reach out to you! (Optional)</p>
                         <div className="diaspora-options">
                             <div>
@@ -561,7 +652,7 @@ export default function DemographicQuestions() {
                                 <label htmlFor="comm-phone">Phone Number</label>
                             </div>
                         </div>
-                        </div>
+               
 
                         {/* Email Input */}
                         {formData.communicationMode.email && (
@@ -592,22 +683,6 @@ export default function DemographicQuestions() {
                                 />
                             </div>
                         )}
-                        <p>
-                            I understand that any entries I submit to the Mankon dictionary project may be published alongside identifying information 
-                            I provide—including my name, generation (e.g., age group or cohort), diaspora status, and general location. By checking the box below, 
-                            I voluntarily give permission for this information to be displayed with my submissions on the Mankon Dictionary website. I acknowledge 
-                            that it may be visible to other users and researchers, and confirm that I have the authority to grant this consent.
-                            </p>
-                        <div className="diaspora-options">
-                            <input 
-                                type="checkbox" 
-                                id="consent-checkbox" 
-                                checked={formData.consentReceived} 
-                                onChange={handleConsentChange}
-                            />
-                            <label>I consent</label>
-                        </div>
-                        </div>
 
                         {submitError && (
                             <div className="error-message text-red-500 mt-2">

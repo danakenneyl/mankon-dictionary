@@ -7,7 +7,7 @@ export default function Contribute() {
     <div className="content-wrapper">
       <div className="content">
 
-          <h1 className="intro-text">Propose a New Entry</h1>
+          <h1 className="intro-text">Get Started</h1>
           
           <div className="intro-decoration">
             <div className="decoration-line"></div>
@@ -85,15 +85,14 @@ export default function Contribute() {
               and preserve the Mankon language. By submitting a recording, you acknowledge and consent to your voice 
               being publicly available as part of this open-source project. While your audio recordings will be accessible 
               to the public, no identifying information will be associated with them unless you give the Mankon Dictionary 
-              express permission by filling out the <strong>Attribution Form </strong> above. Your contributions will remain 
-              anonymous, and no personal details will be linked to your recordings.
+              express permission by filling out the <strong>Attribution Form </strong> above. 
             </p>
             <h3>What if I cannot type in Mankon?</h3>
             <p>
               That is completely fine! If you are comfortable typing in any language, 
               the Mankon Dictionary is happy to accept proposals in any writing system. 
               If you are not comfortable typing at all, that is OK too!
-              Head over to the word requests page and click on any word that interests you.
+              Head over to the Propose Word page and click on any requested word that interests you.
               You will be able to propose a new entry without any typing at all.
             </p>
 
