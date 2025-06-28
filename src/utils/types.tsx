@@ -46,7 +46,8 @@ export interface Demographics {
   name: string;
   email: string;
   phoneNumber: string;
-  consentReceived: boolean;
+  attributionConsentReceived: boolean;
+  researchConsentReceived: boolean;
   age: string;
   location: string;
   diaspora: boolean;

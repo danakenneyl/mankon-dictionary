@@ -297,11 +297,9 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     } else {
       await update(ref(db, `proposals/${id}`), proposal);
     }
-    if (isEmptyForm) {
-      router.push('/contribute/contribute-instructions');
-    } else {
-      router.push('/contribute/initial-requests');
-    }
+   
+    router.push('/contribute/initial-requests');
+
     
   } catch (err) {
     console.error('Error saving proposal:', err);
