@@ -181,7 +181,7 @@ export default function AccountSetup() {
                             <strong>Why is this project being done?</strong>
                         </p>
                         <p>
-                            The purpose of this research is to better understand and explain the grammar of Mankon and to carry this knowledge to L1 and L2 learners of Mankon. 
+                            The purpose of this research is to make it possible to better understand and explain the grammar of Mankon and to carry this knowledge to L1 and L2 learners of Mankon. 
                             The research is part of Dana Kenney-Lillejord&apos;s undergraduate research in linguistics. 
                         </p>
                         <hr className="section-divider" />
@@ -216,8 +216,9 @@ export default function AccountSetup() {
                             <strong>What are my responsibilities if I take part? </strong>
                         </p>
                         <p>
-                            All you will need to do for this project is to fill out the &apos;Propose Word&apos; form or find a word on the &apos;Word Requests&apos; page and fill out its accompanying proposal form. 
-                            The Mankon Dictionary will also provide you with opportunities for Mankon writing and translation practice. 
+                            All you will need to do for this project is to fill out an &apos;Entry Proposal&apos; form. If you cannot type in Mankon, you will select words from a list of requests put together by the Dicitonary. 
+                            If you can type, then you are encouraged to submit your own Mankon words, transcriptions, and translations. 
+                            The Mankon Dictionary will also provide you with opportunities for Mankon writing and translation practice if you have an interest in improving your Mankon literacy skills. 
                         </p>
                         <hr className="section-divider" />
 
@@ -243,20 +244,22 @@ export default function AccountSetup() {
                             <strong>What happens to the information collected for the project? </strong>
                         </p>
                         <p>
-                           The language data (audio) you provide in the Entry Proposal Form and written transcriptions you provide on the ‘Writing Practice’ page, will be used for the following purposes: 
-                           <li>As materials to be shared with all Mankon people, other researchers, language learners, or the general public, according to your preferences </li>
-                           <li>As part of a Mankon language material collection (i.e. annotated corpus) for linguistic researchers; and, </li>
-                           <li>As data/information to be studied by the researcher (and possibly others, depending on your preferences) for descriptive and analytical research; </li>
-                            
+                           The language data (audio) you provide in the Entry Proposal Form and written transcriptions you provide on the &apos;Writing Practice&apos; page, will be used for the following purposes: 
                         </p>
+                        <div className="list-item">
+                            <li className="list-item">As materials to be shared with all Mankon people, other researchers, language learners, or the general public, according to your preferences </li>
+                           <li className="list-item">As part of a Mankon language material collection (i.e. annotated corpus) for linguistic researchers; and, </li>
+                           <li className="list-item">As data/information to be studied by the researcher (and possibly others, depending on your preferences) for descriptive and analytical research; </li>
+                        </div>
                         <hr className="section-divider" />
                         <p>
-                            If you fill out the optional Attribution Consent Form available on the Create Account Page, you will have ownership of your language data.
+                            If you fill out the optional Attribution Consent Form available on the Get Started Page, you will have ownership of your language data.
                             That means that you can request a copy of the recorded audio from any or all of your entries, and use it as you choose. 
                             It also means that you get to choose how your language data is used and shared. 
                             You will have the opportunity to tell us how we can use and share your language data, and in which contexts you want your identity to be associated with it.
                             With your consent, we will use your language data under Creative Commons licensure; 
-                            this allow you to keep some rights and share some rights (read more at https://creativecommons.org/faq/#general-license-information). 
+                            this will allow you to keep some rights and share some rights 
+                            (<a href="https://creativecommons.org/faq/#general-license-information" target="_blank" rel="noopener noreferrer">read about the Creative Commons license here</a>).
                         </p>
                         <hr className="section-divider" />
 
