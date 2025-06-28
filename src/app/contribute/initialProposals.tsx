@@ -380,7 +380,7 @@ export default function InitialProposals() {
           {!expandedSections['entry-proposal'] &&<p>
               Click on the + button to see detailed instuctions for contributing.
               <br/>
-              Then click on the &quot;Propose Word&quot; button to navigate to the contribution form. 
+              Then click on the &quot;Entry Proposal Form&quot; button to navigate to the contribution form. 
           </p> }
           
           {expandedSections['entry-proposal'] && (
