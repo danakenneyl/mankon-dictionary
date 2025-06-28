@@ -581,7 +581,7 @@ export default function DemographicQuestions() {
                             <strong>Agreement & Use of Mankon Language Data </strong>
                         </h3>
                         <p>
-                            The following items are optional, meaning that <strong>you do not have to agree to it in order to participate</strong> in this project. Please indicate your consent by initialing. 
+                            The following items are optional, meaning that <strong>you do not have to agree to it in order to participate</strong> in this project. Please indicate your consent by checking the boxes. 
                         </p>
 
                         <div className="diaspora-options homepage-intro">
