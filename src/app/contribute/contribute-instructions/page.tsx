@@ -23,7 +23,16 @@ export default function Contribute() {
               in the second section below.
             </p>
             <h2>1. Create Account</h2>
-            <p className="alert-text">WAIT: If you already have an account, then you DO NOT need to fill out this form again.</p>
+            <div className="aspect-video text-center mb-6">
+              <iframe 
+                className="w-full h-full rounded-lg"
+                src="https://www.youtube.com/embed/bpFfBBk7TMc" 
+                title="Mankon Dictionary Tutorial" 
+                frameBorder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowFullScreen>
+              </iframe>
+            </div>
             <div className="button-container">
               <Link href="/contribute/account-setup">
                 <button className="primary-button">Create Account</button>
@@ -44,7 +53,16 @@ export default function Contribute() {
               to read or write in Mankon. Only your speaking abilities will be considered during the 
               Dictionary&#39;s entry approval process.
             </p>
-            <p className="alert-text">WAIT: You can still contribute proposals without filling out this form. You can fill this form out at anytime, but you only need to fill it out once.</p>
+            <div className="aspect-video text-center mb-6">
+              <iframe 
+                className="w-full h-full rounded-lg"
+                src="https://www.youtube.com/embed/54XtwdkZ5b4" 
+                title="Mankon Dictionary Tutorial" 
+                frameBorder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowFullScreen>
+              </iframe>
+            </div>
             <div className="button-container">
               <Link href="/contribute/demographic-form">
                 <button className="primary-button">Attribution Form</button>
@@ -95,7 +113,16 @@ export default function Contribute() {
               Head over to the Propose Word page and click on any requested word that interests you.
               You will be able to propose a new entry without any typing at all.
             </p>
-
+            <div className="aspect-video text-center mb-6">
+              <iframe 
+                className="w-full h-full rounded-lg"
+                src="https://www.youtube.com/embed/_Oir9S5h61M" 
+                title="Mankon Dictionary Tutorial" 
+                frameBorder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowFullScreen>
+              </iframe>
+            </div>
             <p className="alert-text">Please read ALL of the instructions above before filling out this form.</p>
             <div className="button-container">
               <Link href="/contribute/proposal-form/0">
