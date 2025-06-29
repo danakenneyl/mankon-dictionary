@@ -21,6 +21,17 @@ export default function Guide() {
              Here’s a quick guide to help you navigate the Mankon Dictionary.
             </p>
 
+            <div className="aspect-video text-center mb-6">
+              <iframe 
+                className="w-full h-full rounded-lg"
+                src="https://www.youtube.com/embed/Z5SPVPOwlBA" 
+                title="Mankon Dictionary Tutorial" 
+                frameBorder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowFullScreen>
+              </iframe>
+            </div>
+
             <h2 className="text-2xl font-semibold mb-3">Navigation Basics</h2>
             <ul className="list-disc list-inside mb-6">
                 <li><strong>Homepage:</strong> Click the Mankon Dictionary logo at any time to return to the homepage.</li>
