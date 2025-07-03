@@ -18,6 +18,7 @@ const ProposeEntryRecord: React.FC<ProposeEntryRecordProps> = ({
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [counter, setCounter] = useState<number>(0);
   const [localBlobUrl, setLocalBlobUrl] = useState<string | null>(initialAudio || null);
+  const [isCleared, setIsCleared] = useState<boolean>(false); // Track if user cleared
 
   const {status, startRecording, stopRecording, mediaBlobUrl, clearBlobUrl } = useReactMediaRecorder({
     video: false,
@@ -27,8 +28,8 @@ const ProposeEntryRecord: React.FC<ProposeEntryRecordProps> = ({
     },
     onStop: (blobUrl) => {
       console.log(`${instanceId} recording stopped, blob URL:`, blobUrl);
-      // Directly call onRecordingComplete when recording stops
-      if (blobUrl) {
+      // Only set the recording if it hasn't been cleared
+      if (blobUrl && !isCleared) {
         setLocalBlobUrl(blobUrl);
         onRecordingComplete(blobUrl);
       }
@@ -43,14 +44,14 @@ const ProposeEntryRecord: React.FC<ProposeEntryRecordProps> = ({
     }
   }, [initialAudio, localBlobUrl, onRecordingComplete]);
 
-  // Also update when mediaBlobUrl changes as a backup
+  // Update when mediaBlobUrl changes, but only if not cleared
   useEffect(() => {
-    if (mediaBlobUrl && !isRecording && mediaBlobUrl !== localBlobUrl) {
+    if (mediaBlobUrl && !isRecording && mediaBlobUrl !== localBlobUrl && !isCleared) {
       console.log(`${instanceId} mediaBlobUrl updated:`, mediaBlobUrl);
       setLocalBlobUrl(mediaBlobUrl);
       onRecordingComplete(mediaBlobUrl);
     }
-  }, [mediaBlobUrl, instanceId, isRecording, onRecordingComplete, localBlobUrl]);
+  }, [mediaBlobUrl, instanceId, isRecording, onRecordingComplete, localBlobUrl, isCleared]);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout | null = null;
@@ -75,21 +76,35 @@ const ProposeEntryRecord: React.FC<ProposeEntryRecordProps> = ({
   const resetTimer = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    // Set cleared flag BEFORE clearing everything
+    setIsCleared(true);
+    
     setCounter(0);
     setSecond("00");
     setMinute("00");
     setLocalBlobUrl(null);
+    
     if (clearBlobUrl) {
       clearBlobUrl();
     }
-    // Also clear the parent component's recording data
+    
+    // Clear the parent component's recording data
     onRecordingComplete("");
+    
+    // Reset the cleared flag after a short delay to allow for new recordings
+    setTimeout(() => {
+      setIsCleared(false);
+    }, 100);
   };
 
   const handleToggleRecording = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    
     if (!isRecording) {
+      // Reset cleared flag when starting a new recording
+      setIsCleared(false);
       startRecording();
       setIsRecording(true);
     } else {
