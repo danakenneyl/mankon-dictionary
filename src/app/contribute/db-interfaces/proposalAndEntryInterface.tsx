@@ -90,7 +90,7 @@ export default function EntryInterface(props: Props) {
                         <div className="decoration-line"></div>
                     </div>
                     {props.state === "Initial Proposals" && <RenderProposalsInterface filteredEntries={filteredEntries} state={props.state}/> }
-                    {props.state === "Review Proposals" && <RenderEntriesInterface filteredEntries={filteredEntries} type={props.type} state={props.state}/> }
+                    {props.state === "Review Proposals" && <RenderEntriesInterface filteredEntries={filteredEntries} type={props.type}/> }
                     {props.state === "Approve Proposals" && <RenderProposalsInterface filteredEntries={filteredEntries} state={props.state}/>}
                     {props.type === "entries" && <RenderEntriesInterface filteredEntries={filteredEntries} type={props.type}/> }
                 </>
