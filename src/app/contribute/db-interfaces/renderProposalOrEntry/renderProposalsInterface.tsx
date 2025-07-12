@@ -1,8 +1,11 @@
 import { EntryCollection } from "@/utils/types";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { db } from "@/utils/firebase";
-import { ref, update } from "firebase/database";
+import { ref, update, remove, set } from "firebase/database";
 import { WordEntry } from "@/utils/types";
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import { ref as storageRef, getDownloadURL } from "firebase/storage";
+import { storage } from "@/utils/firebase";
 import "@/styles/browse.css";
 
 // Interface for grouped entries by letter
@@ -10,18 +13,72 @@ interface GroupedEntries {
   [key: string]: [string, WordEntry][];
 }
 
+// Function to check if a proposal can be approved
+function canBeApproved(proposal: WordEntry): boolean {
+  return !!(
+    proposal.mankonWord &&
+    proposal.mankonSentences &&
+    proposal.mankonSentences.length > 0 &&
+    proposal.wordAudioFilenames &&
+    proposal.wordAudioFilenames.length > 0 &&
+    proposal.sentenceAudioFilenames &&
+    proposal.sentenceAudioFilenames.length > 0 &&
+    proposal.partOfSpeech &&
+    proposal.partOfSpeech.length > 0
+  );
+
+    // return true;
+}
+
 export default function RenderProposalsInterface({filteredEntries, state}: {filteredEntries: EntryCollection; state: string}) {
     const [localChanges, setLocalChanges] = useState<{[entryId: string]: Partial<WordEntry>}>({});
     const [hasChanges, setHasChanges] = useState<{[entryId: string]: boolean}>({});
+    const [approving, setApproving] = useState<{[entryId: string]: boolean}>({});
     
     // Pagination and alphabetization state
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [itemsPerPage] = useState<number>(10); // Fewer items per page for editing interface
     const [selectedLetter, setSelectedLetter] = useState<string>("");
 
+    const [audioUrls, setAudioUrls] = useState<{[key: string]: string}>({});
+
     // Alphabets
     const mankonAlphabet = ["A", "B", "Bv", "Tʃ", "D", "Dv", "Dz", "E", "Ə", "Ɛ", "F", "G", "Gv", "Ɣ", "ʔ", "I", "Ɨ", "Dʒ", "K", "Kf", "L", "Lv", "M", "N", "Ɲ", "Ŋ", "O", "Ɔ", "S", "Ʃ", "T", "Tf", "Ts", "U", "V", "W", "Y", "Z", "Ʒ"];
     const alphabet = mankonAlphabet; // Using Mankon alphabet for proposals
+
+    // Approve entry function - moves from proposals to entries
+    const approveEntry = async (entryId: string, entry: WordEntry) => {
+        try {
+            setApproving(prev => ({ ...prev, [entryId]: true }));
+            
+            // Create the approved entry data
+            const approvedEntry = {
+                ...entry,
+                approvedAt: new Date().toISOString(),
+                lastModifiedAt: new Date().toISOString(),
+                status: 'approved'
+            };
+            
+            // Add to entries collection
+            const entryRef = ref(db, `entries/${entryId}`);
+            await set(entryRef, approvedEntry);
+            
+            // Remove from proposals collection
+            const proposalRef = ref(db, `proposals/${entryId}`);
+            await remove(proposalRef);
+            
+            alert('Entry approved and moved to dictionary successfully!');
+            
+            // You might want to refresh the data or update the parent component here
+            // This depends on how your data flow is structured
+            
+        } catch (error) {
+            console.error('Error approving entry:', error);
+            alert('Failed to approve entry. Please try again.');
+        } finally {
+            setApproving(prev => ({ ...prev, [entryId]: false }));
+        }
+    };
 
     // Update entry in Firebase (only for type field)
     const updateEntry = async (entryId: string) => {
@@ -134,12 +191,19 @@ export default function RenderProposalsInterface({filteredEntries, state}: {filt
         return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
     }, []);
 
-    // Convert filteredEntries to array and sort
+    // Convert filteredEntries to array and sort, filter for approval state
     const entriesArray = useMemo(() => {
-        return Object.entries(filteredEntries).sort(([, a], [, b]) => {
+        const allEntries = Object.entries(filteredEntries).sort(([, a], [, b]) => {
             return a.mankonWord.localeCompare(b.mankonWord);
         });
-    }, [filteredEntries]);
+        
+        // Filter for approval state - only show complete entries
+        if (state === "Approve Proposals") {
+            return allEntries.filter(([, entry]) => canBeApproved(entry));
+        }
+        
+        return allEntries;
+    }, [filteredEntries, state]);
 
     // Group entries by their first letter according to selected alphabet
     const groupEntriesByLetter = useCallback((entries: [string, WordEntry][]): GroupedEntries => {
@@ -250,6 +314,87 @@ export default function RenderProposalsInterface({filteredEntries, state}: {filt
         }
     };
 
+    // Fetch audio file from Firebase Storage using filename
+    const fetchAudioFromStorage = useCallback(async (filename: string): Promise<string> => {
+    try {
+        const normalizedFilename = filename.normalize('NFC');
+        const audioRef = storageRef(storage, `proposal/${normalizedFilename.slice(0, -4)}.ogg`);
+        console.log(`proposal/${normalizedFilename.slice(0, -4)}.ogg`);
+        const url = await getDownloadURL(audioRef);
+        return url;
+    } catch (error) {
+        // console.error(`Error fetching audio file ${filename}:`, error);
+        throw error;
+    }
+    }, []);
+
+    // Fetch audio files for a specific entry
+    const fetchAudioForEntry = useCallback(async (entryId: string, entry: WordEntry) => {
+    try {
+        const audioMap: {[key: string]: string} = {};
+        
+        // Fetch sentence audio files
+        if (entry.sentenceAudioFilenames && entry.sentenceAudioFilenames.length > 0) {
+        for (let i = 0; i < entry.sentenceAudioFilenames.length; i++) {
+            if (entry.sentenceAudioFilenames[i]) {
+            try {
+                const url = await fetchAudioFromStorage(entry.sentenceAudioFilenames[i]);
+                audioMap[`${entryId}_sentence_${i}`] = url;
+            } catch (err) {
+                console.error(`Failed to fetch sentence audio ${i}:`, err);
+            }
+            }
+        }
+        }
+        
+        // Fetch word audio file
+        if (entry.wordAudioFilenames && entry.wordAudioFilenames.length > 0) {
+        try {
+            const url = await fetchAudioFromStorage(entry.wordAudioFilenames[0]);
+            audioMap[`${entryId}_word`] = url;
+        } catch (err) {
+            console.error("Failed to fetch word audio:", err);
+        }
+        }
+        
+        setAudioUrls(prev => ({ ...prev, ...audioMap }));
+    } catch (err) {
+        console.error("Error fetching audio files:", err);
+    }
+    }, [fetchAudioFromStorage]);
+
+    // Play audio function
+    const playAudio = (entryId: string, type: string, index?: number) => {
+    let audioKey: string;
+    
+    if (index !== undefined) {
+        audioKey = `${entryId}_${type}_${index}`;
+    } else {
+        audioKey = `${entryId}_${type}`;
+    }
+    
+    const audioUrl = audioUrls[audioKey];
+    
+    if (!audioUrl) {
+        console.error(`Audio URL not found for ${audioKey}`);
+        return;
+    }
+    
+    const audio = new Audio(audioUrl);
+    audio.play().catch(err => {
+        console.error("Error playing audio:", err);
+    });
+    };
+
+    // Use effect to fetch audio when entries change
+    useEffect(() => {
+    if (state === "Approve Proposals") {
+        currentWords.forEach(([id, entry]) => {
+        fetchAudioForEntry(id, entry);
+        });
+    }
+    }, [currentWords, state, fetchAudioForEntry]);
+
     // Render array field for semantic categories
     const renderSemanticCategoriesField = (entryId: string, originalValue: string | string[] | undefined) => {
         const currentValue = getCurrentValue(entryId, 'type', originalValue);
@@ -326,6 +471,9 @@ export default function RenderProposalsInterface({filteredEntries, state}: {filt
                 <div className="text-center mb-4">
                     <h3 className="text-xl font-bold">
                         Letter: {selectedLetter} ({totalWords} entries)
+                        {state === "Approve Proposals" && (
+                            <span className="text-sm text-green-600 ml-2"></span>
+                        )}
                     </h3>
                     <p className="text-sm text-gray-600">
                         Page {currentPage} of {totalPages} ({indexOfFirstWord + 1}-{Math.min(indexOfLastWord, totalWords)} of {totalWords})
@@ -366,6 +514,182 @@ export default function RenderProposalsInterface({filteredEntries, state}: {filt
                                     </button>
                                 </div>
                             )}
+                        </div>
+                    )}
+
+                    {state === "Approve Proposals" && (
+                        <div className="approval-proposal-card">
+                            <div className="flex justify-between items-start mb-4">
+                                <h3 className="text-2xl font-bold">{entry.mankonWord}</h3>
+                                <div className="text-sm text-green-600 font-semibold">
+                                    ✓ Ready for Approval
+                                </div>
+                            </div>
+                            
+                            <div className="mini-entry-display mb-4" style={{ 
+  border: '1px solid #e0e0e0', 
+  borderRadius: '8px', 
+  padding: '16px', 
+  backgroundColor: '#f9f9f9' 
+}}>
+  <div className="entry__word mb-3" style={{ 
+    fontSize: '1.5rem', 
+    fontWeight: 'bold', 
+    display: 'flex', 
+    alignItems: 'center', 
+    gap: '8px' 
+  }}>
+    <span>{entry.mankonWord}</span>
+    {entry.partOfSpeech && (
+      <button
+        className="typeButton"
+        style={{
+          fontSize: '0.8rem',
+          padding: '2px 8px',
+          backgroundColor: '#e3f2fd',
+          border: '1px solid #2196f3',
+          borderRadius: '4px',
+          color: '#1976d2'
+        }}
+      >
+        {entry.partOfSpeech}
+      </button>
+    )}
+    {entry.wordAudioFilenames && entry.wordAudioFilenames.length > 0 && (
+      <VolumeUpIcon
+        className="pronunciation"
+        onClick={() => playAudio(id, 'word')}
+        style={{ cursor: "pointer", fontSize: '1.2rem', color: '#2196f3' }}
+      />
+    )}
+  </div>
+
+  {entry.altSpelling && (
+    <div className="altSpelling mb-2" style={{ 
+      fontWeight: 'bold', 
+      color: '#666',
+      fontSize: '0.9rem' 
+    }}>
+      GACL spelling: {entry.altSpelling}
+    </div>
+  )}
+  
+  <div className="translationEntry mb-3" style={{ 
+    fontSize: '1rem', 
+    color: '#333' 
+  }}>
+    {entry.translatedWords ? entry.translatedWords.join(", ") : ""}
+  </div>
+  
+  {entry.type && (
+    <div className="mb-3" style={{ fontSize: '0.9rem', color: '#666' }}>
+      <strong>Categories:</strong> {Array.isArray(entry.type) ? entry.type.join(", ") : entry.type}
+    </div>
+  )}
+  
+  {entry.pairWords && entry.pairWords.length > 0 && (
+    <div className="card pair mb-3" style={{ 
+      border: '1px solid #ddd', 
+      borderRadius: '4px', 
+      padding: '8px' 
+    }}>
+      <div className="card-header" style={{ 
+        fontWeight: 'bold', 
+        fontSize: '0.9rem', 
+        marginBottom: '4px' 
+      }}>
+        Paired Word
+      </div>
+      <div className="card-body">
+        {entry.pairWords.map((pair, idx) => (
+          <div key={idx} style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>
+            {pair}
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+  
+  {entry.mankonSentences && entry.mankonSentences.length > 0 && (
+    <div className="card sentences" style={{ 
+      border: '1px solid #ddd', 
+      borderRadius: '4px', 
+      padding: '8px' 
+    }}>
+      <div className="card-header" style={{ 
+        fontWeight: 'bold', 
+        fontSize: '0.9rem', 
+        marginBottom: '8px' 
+      }}>
+        Sentence Examples
+      </div>
+      <div className="card-body">
+        {entry.mankonSentences.map((example, index) => (
+          <div key={index} style={{ 
+            marginBottom: '8px', 
+            padding: '4px 0' 
+          }}>
+            <div style={{ 
+              fontWeight: 'bold', 
+              fontSize: '0.9rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              <span>{example}</span>
+              {entry.sentenceAudioFilenames && 
+               entry.sentenceAudioFilenames[index] && 
+               audioUrls[`${id}_sentence_${index}`] && (
+                <VolumeUpIcon 
+                  className="pronunciation" 
+                  onClick={() => playAudio(id, 'sentence', index)}
+                  style={{ cursor: "pointer", fontSize: '1rem', color: '#2196f3' }}
+                />
+              )}
+            </div>
+            <div style={{ 
+              fontStyle: 'italic', 
+              fontSize: '0.85rem', 
+              color: '#666',
+              marginTop: '2px'
+            }}>
+              {entry.translatedSentences && entry.translatedSentences[index] 
+                ? entry.translatedSentences[index] 
+                : ""}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+
+  {/* Additional metadata in smaller text */}
+  <div className="metadata mt-3 pt-2" style={{ 
+    borderTop: '1px solid #e0e0e0', 
+    fontSize: '0.8rem', 
+    color: '#888' 
+  }}>
+    <div>Audio Files: {entry.wordAudioFilenames?.join(", ")} | {entry.sentenceAudioFilenames?.join(", ")}</div>
+    {entry.contributorUUIDs && (
+      <div>Contributor: {entry.contributorUUIDs.join(", ")}</div>
+    )}
+  </div>
+</div>
+
+                            
+
+                            
+
+                            {/* Approval Button */}
+                            <div className="center-buttons border-t pt-4">
+                                <button
+                                    onClick={() => approveEntry(id, entry)}
+                                    disabled={approving[id]}
+                                    className="next-button bg-green-600 hover:bg-green-700 disabled:bg-gray-400"
+                                >
+                                    {approving[id] ? 'Approving...' : 'Approve Entry'}
+                                </button>
+                            </div>
                         </div>
                     )}
                 </div>
@@ -437,7 +761,12 @@ export default function RenderProposalsInterface({filteredEntries, state}: {filt
             {/* Show a message if no entries are found */}
             {lettersWithEntries.length === 0 && (
                 <div className="text-center my-12">
-                    <p className="text-xl">No entries found for the current filter.</p>
+                    <p className="text-xl">
+                        {state === "Approve Proposals" 
+                            ? "No complete proposals ready for approval." 
+                            : "No entries found for the current filter."
+                        }
+                    </p>
                 </div>
             )}
         </div>
